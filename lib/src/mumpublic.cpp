@@ -22,13 +22,11 @@
 // SOFTWARE.
 //
 
-
 #include "mumpublic.h"
 #include "mumengine.h"
 #include "stdio.h"
 #include <string.h>
 #include "assert.h"
-
 
 EMumError MumEncryptedSize(void *mev, uint32_t plaintextSize, uint32_t *encryptedSize)
 {
@@ -41,8 +39,6 @@ EMumError MumEncryptedSize(void *mev, uint32_t plaintextSize, uint32_t *encrypte
     return MUM_ERROR_OK;
 }
 
-
-
 void MumDestroyEngine(void *mev)
 {
     CMumEngine *me = (CMumEngine *)mev;
@@ -52,25 +48,22 @@ void MumDestroyEngine(void *mev)
 EMumError MumPlaintextBlockSize(void *mev, uint32_t *plaintextBlockSize)
 {
     CMumEngine *me = (CMumEngine *)mev;
-    *plaintextBlockSize =  me->PlaintextBlockSize();
+    *plaintextBlockSize = me->PlaintextBlockSize();
     return MUM_ERROR_OK;
 }
-
 
 EMumError MumEncryptedBlockSize(void *mev, uint32_t *encryptedBlockSize)
 {
     CMumEngine *me = (CMumEngine *)mev;
-    *encryptedBlockSize =  me->EncryptedBlockSize();
+    *encryptedBlockSize = me->EncryptedBlockSize();
     return MUM_ERROR_OK;
 }
-
 
 EMumError MumInitKey(void *mev, uint8_t *key)
 {
     CMumEngine *me = (CMumEngine *)mev;
     return me->InitKey(key);
 }
-
 
 EMumError MumLoadKey(void *mev, const char *keyfile)
 {
@@ -84,13 +77,11 @@ EMumError MumEncryptFile(void *mev, const char *srcfile, const char *dstfile)
     return me->EncryptFile(srcfile, dstfile);
 }
 
-
 EMumError MumDecryptFile(void *mev, const char *srcfile, const char *dstfile)
 {
     CMumEngine *me = (CMumEngine *)mev;
     return me->DecryptFile(srcfile, dstfile);
 }
-
 
 EMumError MumEncrypt(void *mev, uint8_t *src, uint8_t *dst, uint32_t length, uint32_t *outlength, uint16_t seqNum)
 {
@@ -103,7 +94,6 @@ EMumError MumDecrypt(void *mev, uint8_t *src, uint8_t *dst, uint32_t length, uin
     CMumEngine *me = (CMumEngine *)mev;
     return me->Decrypt(src, dst, length, outlength);
 }
-
 
 EMumError MumEncryptBlock(void *mev, uint8_t *src, uint8_t *dst, uint32_t length, uint32_t seqnum)
 {
@@ -123,26 +113,24 @@ EMumError MumGetSubkey(void *mev, uint32_t index, uint8_t *subkey)
     return me->GetSubkey(index, subkey);
 }
 
-
 void *MumCreateEngine(EMumEngineType engineType, EMumBlockType blockType, EMumPaddingType paddingType, uint32_t numThreads)
 {
-    if ( engineType < MUM_ENGINE_TYPE_CPU)
+    if (engineType < MUM_ENGINE_TYPE_CPU)
         return NULL;
 #ifdef USE_MUM_OPENGL
-    if ( engineType > MUM_ENGINE_TYPE_GPU_B)
+    if (engineType > MUM_ENGINE_TYPE_GPU_B)
         return NULL;
 #else
-    if ( engineType > MUM_ENGINE_TYPE_CPU)
+    if (engineType > MUM_ENGINE_TYPE_CPU)
         return NULL;
 #endif
     CMumEngine *me = new CMumEngine(engineType, blockType, paddingType, numThreads);
     return me;
 }
 
-
 EMumError MumCreateEncryptedFileName(EMumBlockType blockType, const char *infilename, char *outfilename, size_t outlength)
 {
-    sprintf(outfilename, "%s.mu%d",infilename, blockType);
+    sprintf(outfilename, "%s.mu%d", infilename, blockType);
     return MUM_ERROR_OK;
 }
 
@@ -153,7 +141,7 @@ EMumError MumGetInfoFromEncryptedFileName(const char *infilename, EMumBlockType 
         return MUM_ERROR_INVALID_FILE_EXTENSION;
 
     char ext[8];
-    memcpy(ext, &infilename[len-4], 4);
+    memcpy(ext, &infilename[len - 4], 4);
     ext[4] = 0;
 
     if (!strcmp(ext, ".mu1"))
@@ -174,10 +162,7 @@ EMumError MumGetInfoFromEncryptedFileName(const char *infilename, EMumBlockType 
     if (outlength < len - 3)
         return MUM_ERROR_LENGTH_TOO_SMALL;
 
-    memcpy(outfilename, infilename, len-4);
+    memcpy(outfilename, infilename, len - 4);
     outfilename[len - 4] = 0;
     return MUM_ERROR_OK;
 }
-
-
-

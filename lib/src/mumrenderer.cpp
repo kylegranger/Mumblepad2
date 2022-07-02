@@ -22,13 +22,11 @@
 // SOFTWARE.
 //
 
-
 #include <assert.h>
 #include <string.h>
 #include "stdio.h"
 #include "stdlib.h"
 #include "mumrenderer.h"
-
 
 CMumRenderer::CMumRenderer(TMumInfo *mumInfo)
 {
@@ -89,7 +87,6 @@ CMumRenderer::CMumRenderer(TMumInfo *mumInfo)
         packData = &CMumRenderer::PackDataR1;
         unpackData = &CMumRenderer::UnpackDataR1;
         break;
-
     }
 
     numEncryptedBlocks = 0;
@@ -106,9 +103,6 @@ CMumRenderer::~CMumRenderer()
     }
 }
 
-
-
-
 EMumError CMumRenderer::Encrypt(uint8_t *src, uint8_t *dst, uint32_t length, uint32_t *outlength, uint16_t seqNum)
 {
     uint32_t encryptSize = 0;
@@ -117,26 +111,26 @@ EMumError CMumRenderer::Encrypt(uint8_t *src, uint8_t *dst, uint32_t length, uin
     uint8_t dummy[MUM_MAX_BLOCK_SIZE];
 
     *outlength = 0;
-    while (length > 0 )
+    while (length > 0)
     {
-        if ( length >= mMumInfo->plaintextBlockSize)
+        if (length >= mMumInfo->plaintextBlockSize)
             encryptSize = mMumInfo->plaintextBlockSize;
         else
         {
             encryptSize = length;
-            memcpy(dummy,src, encryptSize);
+            memcpy(dummy, src, encryptSize);
             src = dummy;
         }
         length -= encryptSize;
         error = EncryptBlock(src, dst, encryptSize, seqNum++);
-        if ( error == MUM_ERROR_BUFFER_WAIT_ENCRYPT)
-             latency++;
-        else if ( error != MUM_ERROR_OK)
+        if (error == MUM_ERROR_BUFFER_WAIT_ENCRYPT)
+            latency++;
+        else if (error != MUM_ERROR_OK)
             return error;
         else
         {
             dst += mMumInfo->encryptedBlockSize;
-           *outlength += mMumInfo->encryptedBlockSize;
+            *outlength += mMumInfo->encryptedBlockSize;
         }
         src += mMumInfo->plaintextBlockSize;
     }
@@ -145,9 +139,9 @@ EMumError CMumRenderer::Encrypt(uint8_t *src, uint8_t *dst, uint32_t length, uin
         uint8_t dummy[MUM_MAX_BLOCK_SIZE];
         memset(dummy, seqNum, MUM_MAX_BLOCK_SIZE);
         error = EncryptBlock(dummy, dst, encryptSize, seqNum++);
-        if ( error == MUM_ERROR_BUFFER_WAIT_ENCRYPT)
+        if (error == MUM_ERROR_BUFFER_WAIT_ENCRYPT)
             continue;
-        if ( error != MUM_ERROR_OK)
+        if (error != MUM_ERROR_OK)
             return error;
         dst += mMumInfo->encryptedBlockSize;
         *outlength += mMumInfo->encryptedBlockSize;
@@ -171,9 +165,9 @@ EMumError CMumRenderer::Decrypt(uint8_t *src, uint8_t *dst, uint32_t length, uin
     {
         uint32_t encryptSize = 0;
         EMumError error = DecryptBlock(src, dst, &encryptSize, &seqnum);
-        if ( error == MUM_ERROR_BUFFER_WAIT_DECRYPT)
-             latency++;
-        else if ( error != MUM_ERROR_OK)
+        if (error == MUM_ERROR_BUFFER_WAIT_DECRYPT)
+            latency++;
+        else if (error != MUM_ERROR_OK)
             return error;
         else
         {
@@ -187,17 +181,16 @@ EMumError CMumRenderer::Decrypt(uint8_t *src, uint8_t *dst, uint32_t length, uin
     {
         uint32_t encryptSize = 0;
         error = DecryptBlock(firstBlock, dst, &encryptSize, &seqnum);
-        if ( error == MUM_ERROR_BUFFER_WAIT_DECRYPT)
+        if (error == MUM_ERROR_BUFFER_WAIT_DECRYPT)
             continue;
-        if ( error != MUM_ERROR_OK)
+        if (error != MUM_ERROR_OK)
             return error;
-         dst += encryptSize;
-         *outlength += encryptSize;
+        dst += encryptSize;
+        *outlength += encryptSize;
         latency--;
     }
     return MUM_ERROR_OK;
 }
-
 
 EMumError CMumRenderer::EncryptBlock(uint8_t *src, uint8_t *dst, uint32_t length, uint32_t seqnum)
 {
@@ -205,7 +198,8 @@ EMumError CMumRenderer::EncryptBlock(uint8_t *src, uint8_t *dst, uint32_t length
     {
         SetPadding(src, length);
         EMumError error = (this->*packData)(src, length, seqnum);
-        if (error != MUM_ERROR_OK) return error;
+        if (error != MUM_ERROR_OK)
+            return error;
         EncryptUpload(mPackedData);
     }
     else
@@ -230,7 +224,7 @@ EMumError CMumRenderer::EncryptBlock(uint8_t *src, uint8_t *dst, uint32_t length
 EMumError CMumRenderer::DecryptBlock(uint8_t *src, uint8_t *dst, uint32_t *length, uint32_t *seqnum)
 {
     DecryptUpload(src);
-    for (int r = mMumInfo->numRoundsPerBlock - 1; r >= 0; r-- )
+    for (int r = mMumInfo->numRoundsPerBlock - 1; r >= 0; r--)
     {
         DecryptConfuse((uint32_t)r);
         DecryptDiffuse((uint32_t)r);
@@ -242,7 +236,8 @@ EMumError CMumRenderer::DecryptBlock(uint8_t *src, uint8_t *dst, uint32_t *lengt
     {
         DecryptDownload(mPackedData);
         EMumError error = (this->*unpackData)(dst, length, seqnum);
-        if (error != MUM_ERROR_OK) return error;
+        if (error != MUM_ERROR_OK)
+            return error;
     }
     else
     {
@@ -251,7 +246,6 @@ EMumError CMumRenderer::DecryptBlock(uint8_t *src, uint8_t *dst, uint32_t *lengt
     }
     return MUM_ERROR_OK;
 }
-
 
 EMumError CMumRenderer::PackDataR32(uint8_t *unpackedData, uint32_t length, uint32_t seqnum)
 {
@@ -284,7 +278,6 @@ EMumError CMumRenderer::PackDataR32(uint8_t *unpackedData, uint32_t length, uint
     block->length[1] = (uint8_t)(length / 256);
     block->seqnum[0] = (uint8_t)(seqnum % 256);
     block->seqnum[1] = (uint8_t)(seqnum / 256);
-
 
     // third part of padding
     memcpy(block->paddingC, &mPadding[44], 12);
@@ -331,7 +324,6 @@ EMumError CMumRenderer::UnpackDataR32(uint8_t *unpackedData, uint32_t *length, u
     return MUM_ERROR_OK;
 }
 
-
 EMumError CMumRenderer::PackDataR16(uint8_t *unpackedData, uint32_t length, uint32_t seqnum)
 {
     TMumBlockR16 *block = (TMumBlockR16 *)mPackedData;
@@ -351,7 +343,6 @@ EMumError CMumRenderer::PackDataR16(uint8_t *unpackedData, uint32_t length, uint
     // second part of padding
     memcpy(block->paddingB, &mPadding[16], 4);
 
-
     block->checksum[0] = (uint8_t)checksum;
     checksum >>= 8;
     block->checksum[1] = (uint8_t)checksum;
@@ -364,7 +355,6 @@ EMumError CMumRenderer::PackDataR16(uint8_t *unpackedData, uint32_t length, uint
     block->length[1] = (uint8_t)(length / 256);
     block->seqnum[0] = (uint8_t)(seqnum % 256);
     block->seqnum[1] = (uint8_t)(seqnum / 256);
-
 
     // third part of padding
     memcpy(block->paddingC, &mPadding[20], 4);
@@ -411,7 +401,6 @@ EMumError CMumRenderer::UnpackDataR16(uint8_t *unpackedData, uint32_t *length, u
     return MUM_ERROR_OK;
 }
 
-
 EMumError CMumRenderer::PackDataR8(uint8_t *unpackedData, uint32_t length, uint32_t seqnum)
 {
     TMumBlockR8 *block = (TMumBlockR8 *)mPackedData;
@@ -430,7 +419,6 @@ EMumError CMumRenderer::PackDataR8(uint8_t *unpackedData, uint32_t length, uint3
 
     // second part of padding
     memcpy(block->paddingB, &mPadding[4], 4);
-
 
     block->checksum[0] = (uint8_t)checksum;
     checksum >>= 8;
@@ -490,7 +478,6 @@ EMumError CMumRenderer::UnpackDataR8(uint8_t *unpackedData, uint32_t *length, ui
     return MUM_ERROR_OK;
 }
 
-
 EMumError CMumRenderer::PackDataR4(uint8_t *unpackedData, uint32_t length, uint32_t seqnum)
 {
     TMumBlockR4 *block = (TMumBlockR4 *)mPackedData;
@@ -510,7 +497,6 @@ EMumError CMumRenderer::PackDataR4(uint8_t *unpackedData, uint32_t length, uint3
     // second part of padding
     memcpy(block->paddingB, &mPadding[2], 2);
 
-
     block->checksum[0] = (uint8_t)checksum;
     checksum >>= 8;
     block->checksum[1] = (uint8_t)checksum;
@@ -523,7 +509,6 @@ EMumError CMumRenderer::PackDataR4(uint8_t *unpackedData, uint32_t length, uint3
     block->length[1] = (uint8_t)(length / 256);
     block->seqnum[0] = (uint8_t)(seqnum % 256);
     block->seqnum[1] = (uint8_t)(seqnum / 256);
-
 
     // third part of padding
     memcpy(block->paddingC, &mPadding[4], 2);
@@ -570,7 +555,6 @@ EMumError CMumRenderer::UnpackDataR4(uint8_t *unpackedData, uint32_t *length, ui
     return MUM_ERROR_OK;
 }
 
-
 EMumError CMumRenderer::PackDataR2(uint8_t *unpackedData, uint32_t length, uint32_t seqnum)
 {
     TMumBlockR2 *block = (TMumBlockR2 *)mPackedData;
@@ -589,7 +573,6 @@ EMumError CMumRenderer::PackDataR2(uint8_t *unpackedData, uint32_t length, uint3
 
     // second part of padding
     memcpy(block->paddingB, &mPadding[2], 2);
-
 
     block->checksum[0] = (uint8_t)checksum;
     checksum >>= 8;
@@ -649,7 +632,6 @@ EMumError CMumRenderer::UnpackDataR2(uint8_t *unpackedData, uint32_t *length, ui
     return MUM_ERROR_OK;
 }
 
-
 EMumError CMumRenderer::PackDataR1(uint8_t *unpackedData, uint32_t length, uint32_t seqnum)
 {
     TMumBlockR1 *block = (TMumBlockR1 *)mPackedData;
@@ -681,7 +663,6 @@ EMumError CMumRenderer::PackDataR1(uint8_t *unpackedData, uint32_t length, uint3
     block->length[1] = (uint8_t)(length / 256);
     block->seqnum[0] = (uint8_t)(seqnum % 256);
     block->seqnum[1] = (uint8_t)(seqnum / 256);
-
 
     // third part of padding
     memcpy(block->paddingC, &mPadding[4], 2);
@@ -737,14 +718,9 @@ uint32_t CMumRenderer::ComputeChecksum(uint8_t *data, uint32_t size)
     return checksum;
 }
 
-
 void CMumRenderer::SetPadding(uint8_t *src, uint32_t length)
 {
     mPrng->Fetch(mPadding, mMumInfo->paddingSize);
     if (length < mMumInfo->plaintextBlockSize)
         mPrng->Fetch(&src[length], mMumInfo->plaintextBlockSize - length);
 }
-
-
-
-

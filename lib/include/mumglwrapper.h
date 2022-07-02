@@ -66,76 +66,76 @@
 //GLuint ESUTIL_API esLoadShader ( GLenum type, const char *shaderSrc );
 //GLuint ESUTIL_API esLoadProgram ( const char *vertShaderSrc, const char *fragShaderSrc );
 
-typedef void (APIENTRYP PFNGLBINDTEXTUREPROC ) ( GLenum target, GLuint texture );
-typedef void (APIENTRYP PFNGLDELETETEXTURESPROC ) ( GLsizei n, const GLuint* textures );
-typedef void (APIENTRYP PFNGLDISABLEPROC ) ( GLenum cap );
-typedef void (APIENTRYP PFNGLDRAWELEMENTSPROC ) ( GLenum mode, GLsizei count, GLenum type, const GLvoid* indices );
-typedef void (APIENTRYP PFNGLENABLEPROC ) ( GLenum cap );
-typedef void (APIENTRYP PFNGLGENTEXTURESPROC ) ( GLsizei n, GLuint* textures );
-typedef void (APIENTRYP PFNGLREADPIXELSPROC ) ( GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLvoid* pixels );
-typedef void (APIENTRYP PFNGLTEXIMAGE2DPROC ) ( GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid* pixels );
-typedef void (APIENTRYP PFNGLTEXPARAMETERIPROC ) ( GLenum target, GLenum pname, GLint param );
-typedef void (APIENTRYP PFNGLTEXSUBIMAGE2DPROC ) ( GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid* pixels );
-typedef void (APIENTRYP PFNGLVIEWPORTPROC ) ( GLint x, GLint y, GLsizei width, GLsizei height );
+// typedef void (APIENTRYP PFNGLBINDTEXTUREPROC ) ( GLenum target, GLuint texture );
+// typedef void (APIENTRYP PFNGLDELETETEXTURESPROC ) ( GLsizei n, const GLuint* textures );
+// typedef void (APIENTRYP PFNGLDISABLEPROC ) ( GLenum cap );
+// typedef void (APIENTRYP PFNGLDRAWELEMENTSPROC ) ( GLenum mode, GLsizei count, GLenum type, const GLvoid* indices );
+// typedef void (APIENTRYP PFNGLENABLEPROC ) ( GLenum cap );
+// typedef void (APIENTRYP PFNGLGENTEXTURESPROC ) ( GLsizei n, GLuint* textures );
+// typedef void (APIENTRYP PFNGLREADPIXELSPROC ) ( GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLvoid* pixels );
+// typedef void (APIENTRYP PFNGLTEXIMAGE2DPROC ) ( GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid* pixels );
+// typedef void (APIENTRYP PFNGLTEXPARAMETERIPROC ) ( GLenum target, GLenum pname, GLint param );
+// typedef void (APIENTRYP PFNGLTEXSUBIMAGE2DPROC ) ( GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid* pixels );
+// typedef void (APIENTRYP PFNGLVIEWPORTPROC ) ( GLint x, GLint y, GLsizei width, GLsizei height );
 
 class CMumGlWrapper
 {
 public:
     CMumGlWrapper();
     ~CMumGlWrapper();
-    void Init();
+    bool Init();
     GLuint LoadShader ( GLenum type, const char *shaderSrc );
 
-    PFNGLATTACHSHADERPROC glAttachShader;
+    // PFNGLATTACHSHADERPROC glAttachShader;
 
-    PFNGLBINDTEXTUREPROC glBindTexture;
+    // PFNGLBINDTEXTUREPROC glBindTexture;
 
-    PFNGLCOMPILESHADERPROC glCompileShader;
+    // PFNGLCOMPILESHADERPROC glCompileShader;
 
 
-    PFNGLGENTEXTURESPROC glGenTextures;
-    PFNGLTEXIMAGE2DPROC glTexImage2D;
-    PFNGLREADPIXELSPROC glReadPixels;
-    PFNGLCREATEPROGRAMPROC glCreateProgram;
+    // PFNGLGENTEXTURESPROC glGenTextures;
+    // PFNGLTEXIMAGE2DPROC glTexImage2D;
+    // PFNGLREADPIXELSPROC glReadPixels;
+    // PFNGLCREATEPROGRAMPROC glCreateProgram;
 
-    PFNGLDELETESHADERPROC glDeleteShader;
-    PFNGLDELETEPROGRAMPROC glDeleteProgram;
-    PFNGLDELETETEXTURESPROC glDeleteTextures;
-    PFNGLDRAWELEMENTSPROC glDrawElements;
-    PFNGLDRAWBUFFERSPROC glDrawBuffers; 
-    PFNGLDISABLEPROC glDisable;
+    // PFNGLDELETESHADERPROC glDeleteShader;
+    // PFNGLDELETEPROGRAMPROC glDeleteProgram;
+    // PFNGLDELETETEXTURESPROC glDeleteTextures;
+    // PFNGLDRAWELEMENTSPROC glDrawElements;
+    // PFNGLDRAWBUFFERSPROC glDrawBuffers; 
+    // PFNGLDISABLEPROC glDisable;
 
-    PFNGLENABLEPROC glEnable;
+    // PFNGLENABLEPROC glEnable;
 
-    PFNGLGETPROGRAMINFOLOGPROC glGetProgramInfoLog;
-    PFNGLGETSHADERINFOLOGPROC glGetShaderInfoLog;
+    // PFNGLGETPROGRAMINFOLOGPROC glGetProgramInfoLog;
+    // PFNGLGETSHADERINFOLOGPROC glGetShaderInfoLog;
 
-    PFNGLGETPROGRAMIVPROC glGetProgramiv;
-    PFNGLLINKPROGRAMPROC glLinkProgram;
-    PFNGLUSEPROGRAMPROC glUseProgram;
-    PFNGLACTIVETEXTUREPROC glActiveTexture;
-    PFNGLGETUNIFORMLOCATIONPROC glGetUniformLocation;
-    PFNGLBINDFRAMEBUFFERPROC glBindFramebuffer;
-    PFNGLDELETEFRAMEBUFFERSPROC glDeleteFramebuffers;
-    PFNGLGENFRAMEBUFFERSPROC glGenFramebuffers;
-    PFNGLFRAMEBUFFERTEXTURE2DPROC glFramebufferTexture2D;
-    PFNGLCHECKFRAMEBUFFERSTATUSPROC glCheckFramebufferStatus;
-    PFNGLFRAMEBUFFERTEXTUREPROC glFramebufferTexture;
-    PFNGLUNIFORM1IPROC glUniform1i;
-    PFNGLGETSHADERIVPROC glGetShaderiv;
-    PFNGLGETATTRIBLOCATIONPROC glGetAttribLocation;
-    PFNGLVERTEXATTRIBPOINTERPROC glVertexAttribPointer;
-    PFNGLENABLEVERTEXATTRIBARRAYPROC glEnableVertexAttribArray;
-    PFNGLBINDBUFFERPROC glBindBuffer;
-    PFNGLGENBUFFERSPROC glGenBuffers;
-    PFNGLBUFFERDATAPROC glBufferData;
-    PFNGLCREATESHADERPROC glCreateShader;
-    PFNGLSHADERSOURCEPROC glShaderSource;
+    // PFNGLGETPROGRAMIVPROC glGetProgramiv;
+    // PFNGLLINKPROGRAMPROC glLinkProgram;
+    // PFNGLUSEPROGRAMPROC glUseProgram;
+    // PFNGLACTIVETEXTUREPROC glActiveTexture;
+    // PFNGLGETUNIFORMLOCATIONPROC glGetUniformLocation;
+    // PFNGLBINDFRAMEBUFFERPROC glBindFramebuffer;
+    // PFNGLDELETEFRAMEBUFFERSPROC glDeleteFramebuffers;
+    // PFNGLGENFRAMEBUFFERSPROC glGenFramebuffers;
+    // PFNGLFRAMEBUFFERTEXTURE2DPROC glFramebufferTexture2D;
+    // PFNGLCHECKFRAMEBUFFERSTATUSPROC glCheckFramebufferStatus;
+    // PFNGLFRAMEBUFFERTEXTUREPROC glFramebufferTexture;
+    // PFNGLUNIFORM1IPROC glUniform1i;
+    // PFNGLGETSHADERIVPROC glGetShaderiv;
+    // PFNGLGETATTRIBLOCATIONPROC glGetAttribLocation;
+    // PFNGLVERTEXATTRIBPOINTERPROC glVertexAttribPointer;
+    // PFNGLENABLEVERTEXATTRIBARRAYPROC glEnableVertexAttribArray;
+    // PFNGLBINDBUFFERPROC glBindBuffer;
+    // PFNGLGENBUFFERSPROC glGenBuffers;
+    // PFNGLBUFFERDATAPROC glBufferData;
+    // PFNGLCREATESHADERPROC glCreateShader;
+    // PFNGLSHADERSOURCEPROC glShaderSource;
 
-    PFNGLTEXSUBIMAGE2DPROC glTexSubImage2D;
-    PFNGLTEXPARAMETERIPROC glTexParameteri;
+    // PFNGLTEXSUBIMAGE2DPROC glTexSubImage2D;
+    // PFNGLTEXPARAMETERIPROC glTexParameteri;
 
-    PFNGLVIEWPORTPROC glViewport;
+    // PFNGLVIEWPORTPROC glViewport;
 
 
 private:

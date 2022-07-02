@@ -22,21 +22,20 @@
 // SOFTWARE.
 //
 
-
 #include "mumblepadthread.h"
 #include "malloc.h"
 #include "string.h"
 #include "assert.h"
 #include "stdio.h"
 
-int MumRun(void * param)
+int MumRun(void *param)
 {
-    CMumblepadThread *mumblepadThread = (CMumblepadThread*)param;
+    CMumblepadThread *mumblepadThread = (CMumblepadThread *)param;
     mumblepadThread->Run();
     return 0;
 }
 
-CMumblepadThread::CMumblepadThread(TMumInfo *mumInfo, uint32_t id, CSignal * serverSignal) : CMumRenderer(mumInfo)
+CMumblepadThread::CMumblepadThread(TMumInfo *mumInfo, uint32_t id, CSignal *serverSignal) : CMumRenderer(mumInfo)
 {
     mMumInfo = mumInfo;
     mId = id;
@@ -46,13 +45,12 @@ CMumblepadThread::CMumblepadThread(TMumInfo *mumInfo, uint32_t id, CSignal * ser
     // each of 16 threads gets their own set of 16 subkeys (64KB in total) for the PRNG
     mPrng = new CMumPrng(mMumInfo->subkeys[MUM_PRNG_SUBKEY_INDEX + (mId & 15) * 16]);
 
-    //char signalname[32];
-    //sprintf_s(signalname, "mWorkerThreadSignal-%d", id);
+    // char signalname[32];
+    // sprintf_s(signalname, "mWorkerThreadSignal-%d", id);
     mWorkerSignal = new CSignal();
     mServerSignal = serverSignal;
-    mThreadHandle = new std::thread (MumRun, this);
+    mThreadHandle = new std::thread(MumRun, this);
 }
-
 
 CMumblepadThread::~CMumblepadThread()
 {
@@ -81,7 +79,6 @@ void CMumblepadThread::InitKey()
     }
 }
 
-
 void CMumblepadThread::EncryptUpload(uint8_t *data)
 {
     memcpy(mPingPongBlock[0], data, mMumInfo->encryptedBlockSize);
@@ -91,8 +88,6 @@ void CMumblepadThread::DecryptUpload(uint8_t *data)
 {
     EncryptUpload(data);
 }
-
-
 
 void CMumblepadThread::EncryptDiffuse(uint32_t round)
 {
@@ -112,9 +107,9 @@ void CMumblepadThread::EncryptDiffuse(uint32_t round)
     maskB = mMumInfo->bitmasks[round][1];
     maskC = mMumInfo->bitmasks[round][2];
     maskD = mMumInfo->bitmasks[round][3];
-    for ( y = 0; y < numRows; y++ )
+    for (y = 0; y < numRows; y++)
     {
-        for ( x = 0; x < MUM_CELLS_X; x++ )
+        for (x = 0; x < MUM_CELLS_X; x++)
         {
             srcPosX1 = mMumInfo->positionTables5bitX[round][y][x][0];
             srcPosY1 = mMumInfo->positionTables5bitY[round][y][x][0];
@@ -137,7 +132,6 @@ void CMumblepadThread::EncryptDiffuse(uint32_t round)
     }
 }
 
-
 void CMumblepadThread::EncryptConfuse(uint32_t round)
 {
     uint32_t x, y;
@@ -153,19 +147,18 @@ void CMumblepadThread::EncryptConfuse(uint32_t round)
     dst = mPingPongBlock[0];
     clav = mMumInfo->subkeys[round];
 
-    for ( y = 0; y < numRows; y++ )
+    for (y = 0; y < numRows; y++)
     {
         prm = mMumInfo->permuteTables8bit[round][y];
-        for ( x = 0; x < MUM_CELLS_X; x++ )
+        for (x = 0; x < MUM_CELLS_X; x++)
         {
-            *dst++ = (uint8_t)prm[ (uint8_t)(*src++ ^ *clav++) ];
-            *dst++ = (uint8_t)prm[ (uint8_t)(*src++ ^ *clav++) ];
-            *dst++ = (uint8_t)prm[ (uint8_t)(*src++ ^ *clav++) ];
-            *dst++ = (uint8_t)prm[ (uint8_t)(*src++ ^ *clav++) ];
+            *dst++ = (uint8_t)prm[(uint8_t)(*src++ ^ *clav++)];
+            *dst++ = (uint8_t)prm[(uint8_t)(*src++ ^ *clav++)];
+            *dst++ = (uint8_t)prm[(uint8_t)(*src++ ^ *clav++)];
+            *dst++ = (uint8_t)prm[(uint8_t)(*src++ ^ *clav++)];
         }
     }
 }
-
 
 void CMumblepadThread::DecryptConfuse(uint32_t round)
 {
@@ -180,10 +173,10 @@ void CMumblepadThread::DecryptConfuse(uint32_t round)
     dst = mPingPongBlock[1];
 
     clav = mMumInfo->subkeys[round];
-    for ( y = 0; y < numRows; y++ )
+    for (y = 0; y < numRows; y++)
     {
         prm = mMumInfo->permuteTables8bitI[round][y];
-        for ( x = 0; x < MUM_CELLS_X; x++ )
+        for (x = 0; x < MUM_CELLS_X; x++)
         {
             *dst++ = (uint8_t)prm[*src++] ^ *clav++;
             *dst++ = (uint8_t)prm[*src++] ^ *clav++;
@@ -214,22 +207,22 @@ void CMumblepadThread::DecryptDiffuse(uint32_t round)
     maskB = mMumInfo->bitmasks[round][1];
     maskC = mMumInfo->bitmasks[round][2];
     maskD = mMumInfo->bitmasks[round][3];
-    for ( y = 0; y < numRows; y++ )
+    for (y = 0; y < numRows; y++)
     {
-        for ( x = 0; x < MUM_CELLS_X; x++ )
+        for (x = 0; x < MUM_CELLS_X; x++)
         {
             srcPosX1 = mMumInfo->positionTables5bitXI[round][y][x][0];
             srcPosY1 = mMumInfo->positionTables5bitYI[round][y][x][0];
-            mappedSrc1 = src + srcPosX1 * MUM_CELL_SIZE + srcPosY1 * MUM_CELLS_X* MUM_CELL_SIZE;
+            mappedSrc1 = src + srcPosX1 * MUM_CELL_SIZE + srcPosY1 * MUM_CELLS_X * MUM_CELL_SIZE;
             srcPosX2 = mMumInfo->positionTables5bitXI[round][y][x][1];
             srcPosY2 = mMumInfo->positionTables5bitYI[round][y][x][1];
-            mappedSrc2 = src + srcPosX2 * MUM_CELL_SIZE + srcPosY2 * MUM_CELLS_X* MUM_CELL_SIZE;
+            mappedSrc2 = src + srcPosX2 * MUM_CELL_SIZE + srcPosY2 * MUM_CELLS_X * MUM_CELL_SIZE;
             srcPosX3 = mMumInfo->positionTables5bitXI[round][y][x][2];
             srcPosY3 = mMumInfo->positionTables5bitYI[round][y][x][2];
-            mappedSrc3 = src + srcPosX3 * MUM_CELL_SIZE + srcPosY3 * MUM_CELLS_X* MUM_CELL_SIZE;
+            mappedSrc3 = src + srcPosX3 * MUM_CELL_SIZE + srcPosY3 * MUM_CELLS_X * MUM_CELL_SIZE;
             srcPosX4 = mMumInfo->positionTables5bitXI[round][y][x][3];
             srcPosY4 = mMumInfo->positionTables5bitYI[round][y][x][3];
-            mappedSrc4 = src + srcPosX4 * MUM_CELL_SIZE + srcPosY4 * MUM_CELLS_X* MUM_CELL_SIZE;
+            mappedSrc4 = src + srcPosX4 * MUM_CELL_SIZE + srcPosY4 * MUM_CELLS_X * MUM_CELL_SIZE;
             *dst++ = (mappedSrc1[0] & maskA) + (mappedSrc2[3] & maskB) + (mappedSrc3[2] & maskC) + (mappedSrc4[1] & maskD);
             *dst++ = (mappedSrc1[3] & maskA) + (mappedSrc2[2] & maskB) + (mappedSrc3[1] & maskC) + (mappedSrc4[0] & maskD);
             *dst++ = (mappedSrc1[1] & maskA) + (mappedSrc2[0] & maskB) + (mappedSrc3[3] & maskC) + (mappedSrc4[2] & maskD);
@@ -240,13 +233,12 @@ void CMumblepadThread::DecryptDiffuse(uint32_t round)
 
 void CMumblepadThread::EncryptDownload(uint8_t *data)
 {
-    memcpy( data, mPingPongBlock[0], mMumInfo->encryptedBlockSize);
+    memcpy(data, mPingPongBlock[0], mMumInfo->encryptedBlockSize);
 }
 void CMumblepadThread::DecryptDownload(uint8_t *data)
 {
     EncryptDownload(data);
 }
-
 
 void CMumblepadThread::Run()
 {
