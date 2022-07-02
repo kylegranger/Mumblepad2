@@ -44,15 +44,15 @@ public:
     virtual EMumError Encrypt(uint8_t *src, uint8_t *dst, uint32_t length, uint32_t *outlength, uint16_t seqNum);
     virtual EMumError Decrypt(uint8_t *src, uint8_t *dst, uint32_t length, uint32_t *outlength);
 
-    virtual void EncryptDiffuse(uint32_t round);
-    virtual void EncryptConfuse(uint32_t round);
-    virtual void DecryptConfuse(uint32_t round);
-    virtual void DecryptDiffuse(uint32_t round);
-    virtual void EncryptUpload(uint8_t *data);
-    virtual void EncryptDownload(uint8_t *data);
-    virtual void DecryptUpload(uint8_t *data);
-    virtual void DecryptDownload(uint8_t *data);
-    virtual void InitKey() { return;  }
+    virtual void EncryptDiffuse(uint32_t round) {}
+    virtual void EncryptConfuse(uint32_t round) {}
+    virtual void DecryptConfuse(uint32_t round) {}
+    virtual void DecryptDiffuse(uint32_t round) {}
+    virtual void EncryptUpload(uint8_t *data) {}
+    virtual void EncryptDownload(uint8_t *data) {}
+    virtual void DecryptUpload(uint8_t *data) {}
+    virtual void DecryptDownload(uint8_t *data) {}
+    virtual void InitKey() {}
 private:
     uint32_t mNumThreads;
     CMumblepadThread *mThreads[MUM_MAX_THREADS];

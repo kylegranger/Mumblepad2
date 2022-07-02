@@ -32,7 +32,6 @@
 
 CMumblepadMt::CMumblepadMt(TMumInfo *mumInfo, uint32_t numThreads) : CMumRenderer(mumInfo)
 {
-    printf("CMumblepadMt\n");
     mMumInfo = mumInfo;
     mNumThreads = numThreads;
     mStarted = false;
@@ -41,8 +40,6 @@ CMumblepadMt::CMumblepadMt(TMumInfo *mumInfo, uint32_t numThreads) : CMumRendere
     mServerSignal = new CSignal();
     for (uint32_t i = 0; i < mNumThreads; i++)
         mThreads[i] = new CMumblepadThread(mMumInfo, i + 1, mServerSignal);
-    //Start();
-    //Sleep(100);
 }
 
 CMumblepadMt::~CMumblepadMt()
@@ -54,19 +51,10 @@ CMumblepadMt::~CMumblepadMt()
 }
 
 
-// void CMumblepadMt::Start()
-// {
-//     mStarted = true;
-//     for (uint32_t i = 0; i < mNumThreads; i++)
-//         mThreads[i]->Start();
-// }
-
 void CMumblepadMt::Stop()
 {
     for (uint32_t i = 0; i < mNumThreads; i++)
         mThreads[i]->Stop();
-    //Sleep(100);
-    //mStarted = false;
 }
 
 EMumError CMumblepadMt::EncryptBlock(uint8_t *src, uint8_t *dst, uint32_t length, uint32_t seqnum)
@@ -98,7 +86,6 @@ EMumError CMumblepadMt::Encrypt(uint8_t *src, uint8_t *dst, uint32_t length, uin
         TMumJob job;
 
         // Prepare a job
-        //
         if (length >= mMumInfo->plaintextBlockSize * blocksPerJob)
             plaintextSize = mMumInfo->plaintextBlockSize * blocksPerJob;
         else
@@ -172,7 +159,6 @@ EMumError CMumblepadMt::Decrypt(uint8_t *src, uint8_t *dst, uint32_t length, uin
         TMumJob job;
 
         // Prepare a job
-        //
         if (length >= mMumInfo->encryptedBlockSize * blocksPerJob)
             encryptedSize = mMumInfo->encryptedBlockSize * blocksPerJob;
         else
@@ -230,38 +216,3 @@ EMumError CMumblepadMt::Decrypt(uint8_t *src, uint8_t *dst, uint32_t length, uin
         *outlength += mThreads[i]->mDecryptLength;
     return MUM_ERROR_OK;
 }
-
-
-void CMumblepadMt::EncryptUpload(uint8_t *data)
-{
-}
-
-void CMumblepadMt::DecryptUpload(uint8_t *data)
-{
-}
-
-void CMumblepadMt::EncryptDiffuse(uint32_t round)
-{
-}
-
-void CMumblepadMt::EncryptConfuse(uint32_t round)
-{
-}
-
-void CMumblepadMt::DecryptConfuse(uint32_t round)
-{
-}
-
-void CMumblepadMt::DecryptDiffuse(uint32_t round)
-{
-}
-
-void CMumblepadMt::EncryptDownload(uint8_t *data)
-{
-}
-
-void CMumblepadMt::DecryptDownload(uint8_t *data)
-{
-}
-
-
