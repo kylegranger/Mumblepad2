@@ -115,14 +115,16 @@ EMumError MumGetSubkey(void *mev, uint32_t index, uint8_t *subkey)
 
 void *MumCreateEngine(EMumEngineType engineType, EMumBlockType blockType, EMumPaddingType paddingType, uint32_t numThreads)
 {
-    if (engineType < MUM_ENGINE_TYPE_CPU)
+#ifdef USE_OPENGL
+    if (engineType > MUM_ENGINE_TYPE_GPU_B) {
+        printf("what? engineType is %d", engineType);
         return NULL;
-#ifdef USE_MUM_OPENGL
-    if (engineType > MUM_ENGINE_TYPE_GPU_B)
-        return NULL;
+    }
 #else
-    if (engineType > MUM_ENGINE_TYPE_CPU)
+    if (engineType > MUM_ENGINE_TYPE_CPU_MT) {
+        printf("what what? engineType is %d\n", engineType);
         return NULL;
+    }
 #endif
     CMumEngine *me = new CMumEngine(engineType, blockType, paddingType, numThreads);
     return me;

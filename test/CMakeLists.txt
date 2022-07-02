@@ -4,10 +4,17 @@ add_executable(test
     src/main.cpp
 )
 
-target_link_libraries(test
-    mumblepad
-    pthread
-    dl
-    glfw
-    GL
-)
+if(USE_OPENGL)
+    target_link_libraries(test
+        mumblepad
+        pthread
+        dl
+        glfw
+        GL
+    )
+else()
+    target_link_libraries(test
+        mumblepad
+        pthread
+    )
+endif()

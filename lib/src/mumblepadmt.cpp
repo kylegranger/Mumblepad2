@@ -32,6 +32,7 @@
 
 CMumblepadMt::CMumblepadMt(TMumInfo *mumInfo, uint32_t numThreads) : CMumRenderer(mumInfo)
 {
+    printf("CMumblepadMt\n");
     mMumInfo = mumInfo;
     mNumThreads = numThreads;
     mStarted = false;
@@ -50,7 +51,6 @@ CMumblepadMt::~CMumblepadMt()
     for (uint32_t i = 0; i < mNumThreads; i++)
         delete mThreads[i];
     delete mServerSignal;
-    //CloseHandle(mServerSignal);
 }
 
 

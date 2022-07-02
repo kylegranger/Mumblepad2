@@ -28,7 +28,7 @@
 #include "mumdefines.h"
 #include "mumprng.h"
 #include "mumrenderer.h"
-#ifdef USE_MUM_OPENGL
+#ifdef USE_OPENGL
 #include "mumglwrapper.h"
 #endif
 
@@ -59,7 +59,7 @@ private:
     void CreatePermuteTable(uint8_t *subkey, uint32_t numEntries, uint32_t *outTable);
     void CreatePrimeCycleWithOffset(uint32_t primeIndex, uint32_t offset, uint8_t *outCycle);
 
-#ifdef USE_MUM_OPENGL
+#ifdef USE_OPENGL
     static CMumGlWrapper *mMumGlWrapper;
 #endif
 

@@ -28,7 +28,7 @@
 #include "../gl/gl3w.h"
 #include "mumblepadgla.h"
 
-#ifdef USE_MUM_OPENGL
+#ifdef USE_OPENGL
 
 static float wholeSquareVertices[] = {
     -1.0f,

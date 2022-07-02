@@ -28,7 +28,7 @@
 
 #include "mumrenderer.h"
 
-#ifdef USE_MUM_OPENGL
+#ifdef USE_OPENGL
 
 #include "mumglwrapper.h"
 

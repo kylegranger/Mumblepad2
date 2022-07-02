@@ -28,8 +28,6 @@
 #include "stddef.h"
 #include "stdint.h"
 
-#define USE_MUM_OPENGL
-
 #define MUM_KEY_SIZE          4096
 #define MUM_NUM_SUBKEYS        560
 #define MUM_PRNG_SUBKEY_INDEX  304

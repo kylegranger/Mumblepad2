@@ -29,7 +29,7 @@
 #include "mumengine.h"
 #include "mumblepad.h"
 #include "mumblepadmt.h"
-#ifdef USE_MUM_OPENGL
+#ifdef USE_OPENGL
 #include "mumblepadgla.h"
 #include "mumblepadglb.h"
 #endif
@@ -70,7 +70,7 @@ static uint32_t primeNumberTable[256] = {
     2447, 1523, 673, 4093, 2399, 797, 251, 593,
     2083, 3613, 109, 1871, 1811, 3469, 1787, 2777};
 
-#ifdef USE_MUM_OPENGL
+#ifdef USE_OPENGL
 CMumGlWrapper *CMumEngine::mMumGlWrapper = NULL;
 #endif
 
@@ -82,14 +82,14 @@ CMumEngine::CMumEngine(EMumEngineType engineType, EMumBlockType blockType, EMumP
     mMumInfo.keyInitialized = false;
 
     mMumInfo.numRoundsPerBlock = 8;
-#ifdef USE_MUM_OPENGL
+#ifdef USE_OPENGL
     if (engineType >= MUM_ENGINE_TYPE_GPU_B)
         mMumInfo.numRoundsPerBlock = 1;
 #endif
 
     InitXorTextureData();
 
-#ifdef USE_MUM_OPENGL
+#ifdef USE_OPENGL
     if (engineType >= MUM_ENGINE_TYPE_GPU_A)
     {
         if (mMumGlWrapper == NULL)
@@ -107,7 +107,7 @@ CMumEngine::CMumEngine(EMumEngineType engineType, EMumBlockType blockType, EMumP
     case MUM_ENGINE_TYPE_CPU_MT:
         mMumRenderer = new CMumblepadMt(&mMumInfo, numThreads);
         break;
-#ifdef USE_MUM_OPENGL
+#ifdef USE_OPENGL
     case MUM_ENGINE_TYPE_GPU_A:
         mMumRenderer = new CMumblepadGla(&mMumInfo, mMumGlWrapper);
         break;

@@ -9,6 +9,7 @@
 #define NUM_TEST_FILES 2
 #define NUM_ENTROPY_ITERATIONS 25000
 #define TEST_MUM_NUM_THREADS 8
+#define LARGE_TEST_SIZE 128000000
 
 // store the file as binary chunk
 uint8_t *urFileData[NUM_TEST_FILES];
@@ -49,36 +50,47 @@ std::string referenceFiles[NUM_REFERENCE_FILES] = {
     "../referencefiles/constitution.pdf"
 };
 
-
-#define TEST_NUM_ENGINES 4
+#ifdef USE_OPENGL
+#define TEST_NUM_ENGINES 3
+#else
+#define TEST_NUM_ENGINES 2
+#endif
 EMumEngineType engineList[TEST_NUM_ENGINES] = {
     MUM_ENGINE_TYPE_CPU,
 	MUM_ENGINE_TYPE_CPU_MT,
+#ifdef USE_OPENGL
 	MUM_ENGINE_TYPE_GPU_A,
-	MUM_ENGINE_TYPE_GPU_B,
+//	MUM_ENGINE_TYPE_GPU_B,
+#endif
 };
 
 // the GPU-B engine only supports 4K block size
 EMumBlockType firstTestBlockTypeList[TEST_NUM_ENGINES] = {
     MUM_BLOCKTYPE_128,
     MUM_BLOCKTYPE_128,
+#ifdef USE_OPENGL
     MUM_BLOCKTYPE_128,
-    MUM_BLOCKTYPE_4096
+ //   MUM_BLOCKTYPE_4096
+#endif
 };
 
 // We'll only profile 4K block size for GPU-A
 EMumBlockType firstProfilingBlockTypeList[TEST_NUM_ENGINES] = {
     MUM_BLOCKTYPE_128,
     MUM_BLOCKTYPE_128,
+#ifdef USE_OPENGL
     MUM_BLOCKTYPE_4096,
-    MUM_BLOCKTYPE_4096
+//    MUM_BLOCKTYPE_4096
+#endif
 };
 
 std::string engineName[TEST_NUM_ENGINES] = {
     "CPU-engine",
     "CPU-MT-engine",
+#ifdef USE_OPENGL
     "GPU-A-engine",
-    "GPU-B-engine",
+ //   "GPU-B-engine",
+#endif
 };
 
 // #define TEST_WITH_PADDING_OFF
@@ -110,9 +122,6 @@ std::string paddingName[TEST_NUM_PADDING_TYPES] = {
 
 
 
-double pcfreq = 0.0;
-double counterstart = 0;
-
 double utilGetTime() {
     struct timespec tp;
     clockid_t clk_id;
@@ -130,15 +139,6 @@ uint64_t utilGetTimeMillis() {
 uint64_t utilGetTimeMicros() {
     return static_cast<uint64_t> (utilGetTime() * 1000000.0);
 }
-
-void startCounter() {
-    counterstart = utilGetTime();
-}
-
-double getCounter() {
-    return utilGetTime() - counterstart;
-}
-
 
 void fillRandomly(uint8_t *data, uint32_t size)
 {
@@ -217,7 +217,7 @@ void init()
         bitsSet[i] = total;
     }
 
-    uint32_t plaintextSize = 256000000;
+    uint32_t plaintextSize = LARGE_TEST_SIZE;
     uint32_t encryptBufferSize = plaintextSize * 5 / 4;
 
     largePlaintext = new uint8_t[plaintextSize];
@@ -624,6 +624,7 @@ bool testSimpleBlocks(void *engine, char *engineDesc)
     uint8_t encrypt[4096];
     uint8_t decrypt[4096];
     uint32_t length, i;
+    printf("testSimpleBlocks\n");
 
     uint32_t encryptedBlockSize, plaintextBlockSize;
     error = MumPlaintextBlockSize(engine, &plaintextBlockSize);
@@ -635,16 +636,20 @@ bool testSimpleBlocks(void *engine, char *engineDesc)
     uint32_t seqIn = 0;
 
     error = MumEncryptBlock(engine, plaintext, encrypt, plaintextBlockSize, seqOut++);
-    while (error == MUM_ERROR_BUFFER_WAIT_ENCRYPT)
+    while (error == MUM_ERROR_BUFFER_WAIT_ENCRYPT) {
         error = MumEncryptBlock(engine, random, encrypt, plaintextBlockSize, seqOut++);
+    }
     if (error != MUM_ERROR_OK)
         return false;
 
     error = MumDecryptBlock(engine, encrypt, decrypt, &length, &seqIn);
-    while (error == MUM_ERROR_BUFFER_WAIT_DECRYPT)
+    while (error == MUM_ERROR_BUFFER_WAIT_DECRYPT) {
         error = MumDecryptBlock(engine, random, decrypt, &length, &seqIn);
-    if (error != MUM_ERROR_OK)
+    }
+
+    if (error != MUM_ERROR_OK) {
         return false;
+    }
 
     for (i = 0; i < plaintextBlockSize; i++)
     {
@@ -754,7 +759,7 @@ bool profileLargeBlocks(void *engine, char *engineDesc)
 {
 	EMumError error;
 	uint32_t i;
-	uint32_t plaintextSize = 256000000;
+	uint32_t plaintextSize = LARGE_TEST_SIZE;
 	uint32_t encryptBufferSize = plaintextSize*5/4;
 
     uint32_t encryptedBlockSize, plaintextBlockSize;
@@ -770,26 +775,26 @@ bool profileLargeBlocks(void *engine, char *engineDesc)
 	memset(largeDecrypt, 9, plaintextSize + encryptedBlockSize);
 
     uint32_t encrypted = 0;
-    startCounter();
+    auto t = utilGetTime();
     error = MumEncrypt(engine, largePlaintext, largeEncrypt, plaintextSize, &encrypted, 0);
     if (error != MUM_ERROR_OK)
 		return false;
-    double encryptTime = getCounter();
+    auto encryptTime = utilGetTime() - t;
 
     uint32_t decrypted = 0;
     uint32_t predicted;
     MumEncryptedSize(engine, plaintextSize, &predicted);
-    startCounter();
+    t = utilGetTime();
     error = MumDecrypt(engine, largeEncrypt, largeDecrypt, predicted, &decrypted);
     if (error != MUM_ERROR_OK)
         return false;
-    double decryptTime = getCounter();
+    double decryptTime = utilGetTime() - t;
 
     float mb = (float)(plaintextSize) / 1000000.0f;
     printf("profileLargeBlocks: engine %s, encrypt size %d, total bytes %d\n",
         engineDesc, plaintextBlockSize, plaintextSize);
-    printf("   encrypt time %f ms, MB/sec %f \n", encryptTime, mb / (encryptTime / 1000.0));
-    printf("   decrypt time %f ms, MB/sec %f\n\n", decryptTime, mb / (decryptTime / 1000.0));
+    printf("   encrypt time %f ms, MB/sec %f \n", encryptTime, mb / encryptTime);
+    printf("   decrypt time %f ms, MB/sec %f\n\n", decryptTime, mb / decryptTime);
 
     for (i = 0; i < plaintextSize; i++)
     {
@@ -819,7 +824,7 @@ bool doTest(void *engine, char *engineDesc, EMumPaddingType paddingType, EMumBlo
     fillRandomly(clavier, MUM_KEY_SIZE);
     error = MumInitKey(engine, clavier);
     if (!testSimpleBlocks(engine, engineDesc)) {
-        printf("failed testUnitializedEngine\n");
+        printf("failed testSimpleBlocks\n");
         //return false;
     }
     if (!testRandomlySizedBlocks(engine, engineDesc, paddingType)) {
@@ -838,7 +843,7 @@ bool doTest(void *engine, char *engineDesc, EMumPaddingType paddingType, EMumBlo
         printf("failed testFileEncrypt\n");
         //return false;
     }
-    // if (paddingType == MUM_PADDING_TYPE_ON && !testReferenceFileDecrypt(engine, engineType, blockType)) {
+    // if (paddingType == MUM_PADDING_TYPE_ON && !testReferenceFileDecrypt(engine, engineDesc, blockType)) {
     //     printf("failed testUnitializedEngine\n");
     //     return false;
     // }
@@ -850,6 +855,8 @@ bool doProfiling(void *engine, char *engineDesc, bool withPadding)
 {
 	uint8_t clavier[MUM_KEY_SIZE];
 	EMumError error;
+
+    printf("  doProfiling %s\n", engineDesc);
 
     fillRandomly(clavier, MUM_KEY_SIZE);
 	error = MumInitKey(engine, clavier);
@@ -961,16 +968,16 @@ bool doTests()
         {
             for (int blockType = firstTestBlockTypeList[engineIndex]; blockType <= MUM_BLOCKTYPE_4096; blockType++)
             {
+                printf("pi %d ei %d bt %d\n", paddingIndex, engineIndex, blockType);
                 void * engine = MumCreateEngine(engineList[engineIndex], (EMumBlockType)blockType, paddingList[paddingIndex], TEST_MUM_NUM_THREADS);
-
+                printf("a...engine %p\n", engine);
                 uint32_t encryptedBlockSize;
                 MumEncryptedBlockSize(engine, &encryptedBlockSize);
-
-
-
-                char testName[256];
-                sprintf(testName, "%s:%s:blocksize-%u", engineName[engineIndex].c_str(), paddingName[paddingIndex].c_str(), encryptedBlockSize);
-                if (!doTest(engine, testName, paddingList[paddingIndex], (EMumBlockType)blockType))
+                printf("aa\n");
+                char engineDesc[256];
+                sprintf(engineDesc, "%s:%s:blocksize-%u", engineName[engineIndex].c_str(), paddingName[paddingIndex].c_str(), encryptedBlockSize);
+                printf("aaa\n");
+                if (!doTest(engine, engineDesc, paddingList[paddingIndex], (EMumBlockType)blockType))
                     return false;
                 MumDestroyEngine(engine);
                 engine = NULL;
@@ -1045,9 +1052,11 @@ bool doProfilings()
                 for (int i = 0; i < 1; i++)
                 {
                     void * engine = MumCreateEngine(engineList[engineIndex], (EMumBlockType)blockType, paddingList[paddingIndex], TEST_MUM_NUM_THREADS);
-                    char testName[128];
-                    sprintf(testName, "%s:%s", engineName[engineIndex].c_str(), paddingName[paddingIndex].c_str());
-                    if (!doProfiling(engine, testName, (paddingIndex == 1)))
+                    uint32_t encryptedBlockSize;
+                    MumEncryptedBlockSize(engine, &encryptedBlockSize);
+                    char engineDesc[256];
+                    sprintf(engineDesc, "%s:%s:blocksize-%u", engineName[engineIndex].c_str(), paddingName[paddingIndex].c_str(), encryptedBlockSize);
+                    if (!doProfiling(engine, engineDesc, (paddingIndex == 1)))
                         return false;
                     MumDestroyEngine(engine);
                     engine = NULL;
@@ -1089,6 +1098,12 @@ int main(int argc, char* argv[])
         return -1;
 #endif
 
+#ifdef USE_OPENGL
+    printf("Testing library with OpenGL enabled\n");
+#else
+    printf("Testing library without OpenGL enabled\n");
+#endif
+
     init();
 
     srand(utilGetTimeMillis());
@@ -1099,8 +1114,8 @@ int main(int argc, char* argv[])
 	if (!doTests() )
         result = -1;
 
-    // if (!doProfilings())
-    //     result = -1;
+    if (!doProfilings())
+        result = -1;
 
     // if (!doMultiEngineTests() )
     // return -1;

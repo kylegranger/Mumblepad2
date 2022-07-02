@@ -27,7 +27,7 @@
 #include "../gl/gl3w.h"
 #include "malloc.h"
 
-#ifdef USE_MUM_OPENGL
+#ifdef USE_OPENGL
 
 struct graphics_context
 {
@@ -43,10 +43,12 @@ struct graphics_context
 
 CMumGlWrapper::CMumGlWrapper()
 {
+    printf("CMumGlWrapper::CMumGlWrapper\n");
 }
 
 bool CMumGlWrapper::Init()
 {
+        printf("CMumGlWrapper::Init\n");
 
     /* Options */
     // bool fullscreen = false;
