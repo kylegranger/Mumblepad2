@@ -25,7 +25,6 @@
 #include "mumglwrapper.h"
 #include "malloc.h"
 
-#define USE_OPENGL
 #ifdef USE_OPENGL
 
 
@@ -106,63 +105,63 @@ GLuint CMumGlWrapper::LoadShader(GLenum type, const char *shaderSrc)
     return shader;
 }
 
-GLuint CMumGlWrapper::LoadProgram(const char *vertShaderSrc, const char *fragShaderSrc)
-{
-    GLuint vertexShader;
-    GLuint fragmentShader;
-    GLuint programObject;
-    GLint linked;
+// GLuint CMumGlWrapper::LoadProgram(const char *vertShaderSrc, const char *fragShaderSrc)
+// {
+//     GLuint vertexShader;
+//     GLuint fragmentShader;
+//     GLuint programObject;
+//     GLint linked;
 
-    // Load the vertex/fragment shaders
-    vertexShader = LoadShader(GL_VERTEX_SHADER, vertShaderSrc);
-    if (vertexShader == 0)
-        return 0;
+//     // Load the vertex/fragment shaders
+//     vertexShader = LoadShader(GL_VERTEX_SHADER, vertShaderSrc);
+//     if (vertexShader == 0)
+//         return 0;
 
-    fragmentShader = LoadShader(GL_FRAGMENT_SHADER, fragShaderSrc);
-    if (fragmentShader == 0)
-    {
-        glDeleteShader(vertexShader);
-        return 0;
-    }
+//     fragmentShader = LoadShader(GL_FRAGMENT_SHADER, fragShaderSrc);
+//     if (fragmentShader == 0)
+//     {
+//         glDeleteShader(vertexShader);
+//         return 0;
+//     }
 
-    // Create the program object
-    programObject = glCreateProgram();
+//     // Create the program object
+//     programObject = glCreateProgram();
 
-    if (programObject == 0)
-        return 0;
+//     if (programObject == 0)
+//         return 0;
 
-    glAttachShader(programObject, vertexShader);
-    glAttachShader(programObject, fragmentShader);
+//     glAttachShader(programObject, vertexShader);
+//     glAttachShader(programObject, fragmentShader);
 
-    // Link the program
-    glLinkProgram(programObject);
+//     // Link the program
+//     glLinkProgram(programObject);
 
-    // Check the link status
-    glGetProgramiv(programObject, GL_LINK_STATUS, &linked);
+//     // Check the link status
+//     glGetProgramiv(programObject, GL_LINK_STATUS, &linked);
 
-    if (!linked)
-    {
-        GLint infoLen = 0;
+//     if (!linked)
+//     {
+//         GLint infoLen = 0;
 
-        glGetProgramiv(programObject, GL_INFO_LOG_LENGTH, &infoLen);
+//         glGetProgramiv(programObject, GL_INFO_LOG_LENGTH, &infoLen);
 
-        if (infoLen > 1)
-        {
-            char *infoLog = (char *)malloc(sizeof(char) * infoLen);
-            glGetProgramInfoLog(programObject, infoLen, NULL, infoLog);
-            free(infoLog);
-        }
+//         if (infoLen > 1)
+//         {
+//             char *infoLog = (char *)malloc(sizeof(char) * infoLen);
+//             glGetProgramInfoLog(programObject, infoLen, NULL, infoLog);
+//             free(infoLog);
+//         }
 
-        glDeleteProgram(programObject);
-        return 0;
-    }
+//         glDeleteProgram(programObject);
+//         return 0;
+//     }
 
-    // Free up no longer needed shader resources
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
+//     // Free up no longer needed shader resources
+//     glDeleteShader(vertexShader);
+//     glDeleteShader(fragmentShader);
 
-    return programObject;
-}
+//     return programObject;
+// }
 
 // void* CMumGlWrapper::GetGlProcAddress(char* procName)
 // {

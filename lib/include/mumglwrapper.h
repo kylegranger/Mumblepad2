@@ -40,7 +40,6 @@
 
 #include "mumrenderer.h"
 
-#define USE_OPENGL
 #ifdef USE_OPENGL
 
 
@@ -160,7 +159,7 @@ private:
     // bool EnableOpenGL(ESContext *esContext);
     // bool WinCreate ( ESContext *esContext, const char *title );
     // bool esCreateWindow ( ESContext *esContext, const char* title, GLint width, GLint height, GLuint flags );
-    GLuint LoadProgram ( const char *vertShaderSrc, const char *fragShaderSrc );
+    // GLuint LoadProgram ( const char *vertShaderSrc, const char *fragShaderSrc );
 
     // HDC mHDC;
     // HGLRC mHGLRC;

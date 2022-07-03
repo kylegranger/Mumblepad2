@@ -843,10 +843,10 @@ bool doTest(void *engine, char *engineDesc, EMumPaddingType paddingType, EMumBlo
 
     fillRandomly(clavier, MUM_KEY_SIZE);
     error = MumInitKey(engine, clavier);
-    // if (!testSimpleBlocks(engine, engineDesc)) {
-    //     printf("failed testSimpleBlocks\n");
-    //     //return false;
-    // }
+    if (!testSimpleBlocks(engine, engineDesc)) {
+        printf("failed testSimpleBlocks\n");
+        //return false;
+    }
     // if (!testRandomlySizedBlocks(engine, engineDesc, paddingType)) {
     //     printf("failed testRandomlySizedBlocks\n");
     //     //return false;

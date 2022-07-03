@@ -54,6 +54,7 @@ private:
     bool CreateLutTextures();
     bool CreateFrameBuffers();
     bool CreateShaders();
+    bool CreateVertexBuffer();
     void DeleteFrameBuffers();
     void DeleteLutTextures();
     void WriteTextures();
@@ -77,6 +78,10 @@ private:
     GLuint mPositionTexturesY[MUM_NUM_ROUNDS];
     GLuint mPositionTexturesXI[MUM_NUM_ROUNDS];
     GLuint mPositionTexturesYI[MUM_NUM_ROUNDS];
+
+    GLuint coords_vbo;
+    GLuint uv_vbo;
+    GLuint vao;
 
 };
 

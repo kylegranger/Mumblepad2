@@ -29,25 +29,24 @@
 #include "../gl/gl3w.h"
 #include "mumblepadgla.h"
 
-#define USE_OPENGL
 #ifdef USE_OPENGL
 
 // struct graphics_context contexti;
-// #define ATTRIB_POINT 0
-// #define ATTRIB_POINT 1
+#define ATTRIB_POINT 0
+#define ATTRIB_POINT 1
 
-// const float SQUARE[] = {
-//     -1.0f,  1.0f,
-//     -1.0f, -1.0f,
-//      1.0f,  1.0f,
-//      1.0f, -1.0f
-// };
-// const float UV[] = {
-//      0.0f,  1.0f,
-//      0.0f,  0.0f,
-//      1.0f,  1.0f,
-//      1.0f,  0.0f
-// };
+const float SQUARE[] = {
+    -1.0f,  1.0f, 0.0f,
+    -1.0f, -1.0f, 0.0f,
+     1.0f, -1.0f, 0.0f,
+     1.0f,  1.0f, 0.0f
+};
+const float UV[] = {
+     0.0f,  1.0f,
+     0.0f,  0.0f,
+     1.0f,  0.0f,
+     1.0f,  1.0f
+};
 static float wholeSquareVertices[] = {
     -1.0f,
     1.0f,
@@ -70,12 +69,12 @@ static float wholeSquareUv[] = {
 static unsigned short wholeSquareIndices[] = {0, 1, 2, 0, 2, 3};
 
 static char vertexShaderText[] =
-    "attribute vec4 a_position;   \n"
+    "attribute vec3 a_position;   \n"
     "attribute vec2 a_texCoord;   \n"
     "varying vec2 v_texCoord;     \n"
     "void main()                  \n"
     "{                            \n"
-    "   gl_Position = a_position; \n"
+    "   gl_Position = vec4(a_position.x, a_position.y, a_position.z, 1.0); \n"
     "   v_texCoord = a_texCoord;  \n"
     "}                            \n";
 
@@ -109,7 +108,6 @@ void main(void)\n\
         texture2D(bitmasks,vec2(src2[0],0.375))[0] + \
         texture2D(bitmasks,vec2(src3[2],0.625))[0] + \
         texture2D(bitmasks,vec2(src4[3],0.875))[0];\n\
-    gl_FragColor = vec4(1.0, 0.5, 0.25, 1.0);\n\
 }";
 
 static char encryptConfuseText[] =
@@ -131,7 +129,6 @@ void main(void)\n\
     gl_FragColor[1] = texture2D(lutPermute,vec2(xorKey[1],v_texCoord[1]))[0];\n\
     gl_FragColor[2] = texture2D(lutPermute,vec2(xorKey[2],v_texCoord[1]))[0];\n\
     gl_FragColor[3] = texture2D(lutPermute,vec2(xorKey[3],v_texCoord[1]))[0];\n\
-    gl_FragColor = vec4(1.0, 0.5, 0.25, 1.0);\n\
 }";
 
 static char decryptDiffuseText[] =
@@ -164,7 +161,6 @@ void main(void)\n\
         texture2D(bitmasks,vec2(src2[1],0.375))[0] + \
         texture2D(bitmasks,vec2(src3[0],0.625))[0] + \
         texture2D(bitmasks,vec2(src4[3],0.875))[0];\n\
-    gl_FragColor = vec4(1.0, 0.5, 0.25, 1.0);\n\
 }";
 
 static char decryptConfuseText[] =
@@ -187,7 +183,6 @@ void main(void)\n\
     gl_FragColor[1] = texture2D(lutXor,vec2(prm.g,clav.g))[0];\n\
     gl_FragColor[2] = texture2D(lutXor,vec2(prm.b,clav.b))[0];\n\
     gl_FragColor[3] = texture2D(lutXor,vec2(prm.a,clav.a))[0];\n\
-    gl_FragColor = vec4(1.0, 0.5, 0.25, 1.0);\n\
 }";
 
 CMumblepadGla::CMumblepadGla(TMumInfo *mumInfo, CMumGlWrapper *mumGlWrapper) : CMumRenderer(mumInfo)
@@ -217,6 +212,7 @@ CMumblepadGla::CMumblepadGla(TMumInfo *mumInfo, CMumGlWrapper *mumGlWrapper) : C
         mPositionTexturesYI[round] = -1;
     }
     mLutTextureXor = -1;
+    printf("call InitTextures\n");
     if (!InitTextures())
         assert(0);
 }
@@ -289,42 +285,69 @@ bool CMumblepadGla::CreateFrameBuffers()
     glGenTextures(2, mPingPongTexture);
     glGenFramebuffers(2, mPingPongFBuffer);
 
-    glBindTexture(GL_TEXTURE_2D, mPingPongTexture[0]);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, MUM_CELLS_X, mMumInfo->numRows,
-                 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-    glBindFramebuffer(GL_FRAMEBUFFER, mPingPongFBuffer[0]);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mPingPongTexture[0], 0);
+    for (int i = i; i < 2; i++) 
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, mPingPongFBuffer[i]);
+        glBindTexture(GL_TEXTURE_2D, mPingPongTexture[i]);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, MUM_CELLS_X, mMumInfo->numRows,
+                    0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 
-    result = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-    if (result != GL_FRAMEBUFFER_COMPLETE)
-        return false;
+        GLuint depthrenderbuffer;
+        glGenRenderbuffers(1, &depthrenderbuffer);
+        glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, MUM_CELLS_X, mMumInfo->numRows);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
 
-    glBindTexture(GL_TEXTURE_2D, mPingPongTexture[1]);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, MUM_CELLS_X, mMumInfo->numRows,
-                 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-    glBindFramebuffer(GL_FRAMEBUFFER, mPingPongFBuffer[1]);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mPingPongTexture[1], 0);
 
-    result = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-    if (result != GL_FRAMEBUFFER_COMPLETE)
-        return false;
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mPingPongTexture[i], 0);
+
+        result = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+        printf("glCheckFramebufferStatus is %d\n", result);
+        if (result != GL_FRAMEBUFFER_COMPLETE) {
+            assert(0);
+            return false;
+        }
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+    // glBindTexture(GL_TEXTURE_2D, mPingPongTexture[0]);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, MUM_CELLS_X, mMumInfo->numRows,
+    //              0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    // glBindFramebuffer(GL_FRAMEBUFFER, mPingPongFBuffer[0]);
+    // glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mPingPongTexture[0], 0);
+
+    // result = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    // if (result != GL_FRAMEBUFFER_COMPLETE)
+    //     return false;
+
+    // glBindTexture(GL_TEXTURE_2D, mPingPongTexture[1]);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, MUM_CELLS_X, mMumInfo->numRows,
+    //              0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    // glBindFramebuffer(GL_FRAMEBUFFER, mPingPongFBuffer[1]);
+    // glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mPingPongTexture[1], 0);
+
+    // result = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    // if (result != GL_FRAMEBUFFER_COMPLETE)
+    //     return false;
+    // glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    printf("framebuffers ok\n");
     return true;
 }
 
 bool CMumblepadGla::CreateLutTextures()
 {
     uint32_t round;
-
-    printf("CreateLutTextures\n");
 
     glGenTextures(1, &mLutTextureXor);
     glBindTexture(GL_TEXTURE_2D, mLutTextureXor);
@@ -470,7 +493,7 @@ GLuint CMumblepadGla::CreateShader(const char *vertShaderSrc, const char *fragSh
     GLuint programObject;
     GLint linked;
 
-    printf("CreateShader");
+    printf("\n");
 
 
     vertexShader = mGlw->LoadShader(GL_VERTEX_SHADER, vertShaderSrc);
@@ -497,6 +520,9 @@ GLuint CMumblepadGla::CreateShader(const char *vertShaderSrc, const char *fragSh
 
     glAttachShader(programObject, vertexShader);
     glAttachShader(programObject, fragmentShader);
+
+    glBindAttribLocation(programObject, 0, "a_position");
+    glBindAttribLocation(programObject, 1, "a_texCoord");
 
     // Link the program
     glLinkProgram(programObject);
@@ -534,9 +560,36 @@ bool CMumblepadGla::CreateShaders()
     return true;
 }
 
+
+bool CMumblepadGla::CreateVertexBuffer()
+{
+    printf("CreateVertexBuffer A\n");
+    coords_vbo = 0;
+    glGenBuffers(1, &coords_vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, coords_vbo);
+    glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), SQUARE, GL_STATIC_DRAW);
+
+    uv_vbo = 0;
+    glGenBuffers(1, &uv_vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, uv_vbo);
+    glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(float), UV, GL_STATIC_DRAW);
+
+    vao = 0;
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+    glBindBuffer(GL_ARRAY_BUFFER, coords_vbo);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+    glBindBuffer(GL_ARRAY_BUFFER, uv_vbo);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    printf("CreateVertexBuffer B\n");
+    return true;
+}
+
 bool CMumblepadGla::InitTextures()
 {
-                printf("InitTextures ???\n");
+    printf("InitTextures xxx\n");
 
     glEnable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);
@@ -548,6 +601,8 @@ bool CMumblepadGla::InitTextures()
         return false;
     if (!CreateShaders())
         return false;
+    if (!CreateVertexBuffer())
+        return false;
     printf("InitTextures ok\n");
     return true;
 }
@@ -558,7 +613,6 @@ void CMumblepadGla::EncryptDiffuse(uint32_t round)
     uint32_t positionLoc;
     uint32_t texCoordLoc;
 
-    //
     // destination is ping pong 1
     glBindFramebuffer(GL_FRAMEBUFFER, mPingPongFBuffer[1]);
     // jkl glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mPingPongTexture[1], 0);
@@ -611,12 +665,12 @@ void CMumblepadGla::EncryptDiffuse(uint32_t round)
 
 
 
-    glVertexAttribPointer(positionLoc, 3, GL_FLOAT,
-                          GL_FALSE, 3 * sizeof(GLfloat), wholeSquareVertices);
-    glVertexAttribPointer(texCoordLoc, 2, GL_FLOAT,
-                          GL_FALSE, 2 * sizeof(GLfloat), wholeSquareUv);
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
+    // glVertexAttribPointer(positionLoc, 3, GL_FLOAT,
+    //                       GL_FALSE, 3 * sizeof(GLfloat), wholeSquareVertices);
+    // glVertexAttribPointer(texCoordLoc, 2, GL_FLOAT,
+    //                       GL_FALSE, 2 * sizeof(GLfloat), wholeSquareUv);
+    // glEnableVertexAttribArray(0);
+    // glEnableVertexAttribArray(1);
 
     glActiveTexture(GL_TEXTURE0);
     // source is ping pong 0
@@ -643,7 +697,12 @@ void CMumblepadGla::EncryptDiffuse(uint32_t round)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, wholeSquareIndices);
+    // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, wholeSquareIndices);
+    //glDrawArrays(GL_TRIANGLE_STRIP, 0, 2);
+
+    glBindVertexArray(vao);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -656,9 +715,9 @@ void CMumblepadGla::EncryptConfuse(uint32_t round)
     // destination is ping pong 0
     glBindFramebuffer(GL_FRAMEBUFFER, mPingPongFBuffer[0]);
 
-// glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // we're not using the stencil buffer now
-glDisable(GL_DEPTH_TEST);
+    // glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // we're not using the stencil buffer now
+    glDisable(GL_DEPTH_TEST);
 
 
     // jklglEnable(GL_TEXTURE_2D);
@@ -679,12 +738,12 @@ glDisable(GL_DEPTH_TEST);
     positionLoc = glGetAttribLocation(mEncryptConfuseProgram, "a_position");
     texCoordLoc = glGetAttribLocation(mEncryptConfuseProgram, "a_texCoord");
 
-    glVertexAttribPointer(positionLoc, 3, GL_FLOAT,
-                          GL_FALSE, 3 * sizeof(GLfloat), wholeSquareVertices);
-    glVertexAttribPointer(texCoordLoc, 2, GL_FLOAT,
-                          GL_FALSE, 2 * sizeof(GLfloat), wholeSquareUv);
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
+    // glVertexAttribPointer(positionLoc, 3, GL_FLOAT,
+    //                       GL_FALSE, 3 * sizeof(GLfloat), wholeSquareVertices);
+    // glVertexAttribPointer(texCoordLoc, 2, GL_FLOAT,
+    //                       GL_FALSE, 2 * sizeof(GLfloat), wholeSquareUv);
+    // glEnableVertexAttribArray(0);
+    // glEnableVertexAttribArray(1);
 
     glActiveTexture(GL_TEXTURE0);
     // source is ping pong 1
@@ -711,7 +770,11 @@ glDisable(GL_DEPTH_TEST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, wholeSquareIndices);
+    // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, wholeSquareIndices);
+
+    glBindVertexArray(vao);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -741,12 +804,12 @@ void CMumblepadGla::DecryptDiffuse(uint32_t round)
     positionLoc = glGetAttribLocation(mDecryptDiffuseProgram, "a_position");
     texCoordLoc = glGetAttribLocation(mDecryptDiffuseProgram, "a_texCoord");
 
-    glVertexAttribPointer(positionLoc, 3, GL_FLOAT,
-                          GL_FALSE, 3 * sizeof(GLfloat), wholeSquareVertices);
-    glVertexAttribPointer(texCoordLoc, 2, GL_FLOAT,
-                          GL_FALSE, 2 * sizeof(GLfloat), wholeSquareUv);
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
+    // glVertexAttribPointer(positionLoc, 3, GL_FLOAT,
+    //                       GL_FALSE, 3 * sizeof(GLfloat), wholeSquareVertices);
+    // glVertexAttribPointer(texCoordLoc, 2, GL_FLOAT,
+    //                       GL_FALSE, 2 * sizeof(GLfloat), wholeSquareUv);
+    // glEnableVertexAttribArray(0);
+    // glEnableVertexAttribArray(1);
 
     // second pass for decrypt
     // source ping pong is 1
@@ -774,7 +837,10 @@ void CMumblepadGla::DecryptDiffuse(uint32_t round)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, wholeSquareIndices);
+    // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, wholeSquareIndices);
+    glBindVertexArray(vao);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -806,12 +872,12 @@ void CMumblepadGla::DecryptConfuse(uint32_t round)
     positionLoc = glGetAttribLocation(mDecryptConfuseProgram, "a_position");
     texCoordLoc = glGetAttribLocation(mDecryptConfuseProgram, "a_texCoord");
 
-    glVertexAttribPointer(positionLoc, 3, GL_FLOAT,
-                          GL_FALSE, 3 * sizeof(GLfloat), wholeSquareVertices);
-    glVertexAttribPointer(texCoordLoc, 2, GL_FLOAT,
-                          GL_FALSE, 2 * sizeof(GLfloat), wholeSquareUv);
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
+    // glVertexAttribPointer(positionLoc, 3, GL_FLOAT,
+    //                       GL_FALSE, 3 * sizeof(GLfloat), wholeSquareVertices);
+    // glVertexAttribPointer(texCoordLoc, 2, GL_FLOAT,
+    //                       GL_FALSE, 2 * sizeof(GLfloat), wholeSquareUv);
+    // glEnableVertexAttribArray(0);
+    // glEnableVertexAttribArray(1);
 
     // first pass for decrypt
     // source ping pong is 0
@@ -839,13 +905,16 @@ void CMumblepadGla::DecryptConfuse(uint32_t round)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, wholeSquareIndices);
+    // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, wholeSquareIndices);
+    glBindVertexArray(vao);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void CMumblepadGla::EncryptDownload(uint8_t *data)
 {
     printf("EncryptDownload\n");
+    memset(data,44,112);
     glBindFramebuffer(GL_FRAMEBUFFER, mPingPongFBuffer[0]);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mPingPongTexture[0]);
