@@ -685,12 +685,12 @@ EMumError CMumRenderer::UnpackDataR1(uint8_t *unpackedData, uint32_t *length, ui
     uint32_t lengthField = block->length[0];
     lengthField += block->length[1] << 8;
     if (((lengthField & MUM_LENGTH_BLOCKTYPE_MASK) >> MUM_LENGTH_BLOCKTYPE_SHIFT) != MUM_BLOCKTYPE_128)
-        return MUM_ERROR_INVALID_ENCRYPTED_BLOCK;
+        return MUM_ERROR_INVALID_ENCRYPTED_BLOCK_BLOCKTYPE;
     *length = (lengthField & MUM_LENGTH_LENGTH_MASK);
     if (*length > MUM_ENCRYPT_SIZE_R1)
     {
         *length = 0;
-        return MUM_ERROR_INVALID_ENCRYPTED_BLOCK;
+        return MUM_ERROR_INVALID_ENCRYPTED_BLOCK_LENGTH;
     }
 
     uint32_t checksumA = block->checksum[0];
@@ -701,7 +701,7 @@ EMumError CMumRenderer::UnpackDataR1(uint8_t *unpackedData, uint32_t *length, ui
     if (checksumA != checksumB)
     {
         *length = 0;
-        return MUM_ERROR_INVALID_ENCRYPTED_BLOCK;
+        return MUM_ERROR_INVALID_ENCRYPTED_BLOCK_CHECKSUM;
     }
 
     *seqnum = block->seqnum[0];

@@ -69,7 +69,7 @@ std::string referenceFiles[NUM_REFERENCE_FILES] = {
     "../referencefiles/constitution.pdf"};
 
 #ifdef USE_OPENGL
-#define TEST_NUM_ENGINES 3
+#define TEST_NUM_ENGINES 4
 #else
 #define TEST_NUM_ENGINES 2
 #endif
@@ -78,7 +78,7 @@ EMumEngineType engineList[TEST_NUM_ENGINES] = {
     MUM_ENGINE_TYPE_CPU_MT,
 #ifdef USE_OPENGL
     MUM_ENGINE_TYPE_GPU_A,
-    // MUM_ENGINE_TYPE_GPU_B,
+    MUM_ENGINE_TYPE_GPU_B,
 #endif
 };
 
@@ -87,8 +87,8 @@ EMumBlockType firstTestBlockTypeList[TEST_NUM_ENGINES] = {
     MUM_BLOCKTYPE_128,
     MUM_BLOCKTYPE_128,
 #ifdef USE_OPENGL
-    MUM_BLOCKTYPE_512,
-    // MUM_BLOCKTYPE_4096
+    MUM_BLOCKTYPE_1024,
+    MUM_BLOCKTYPE_4096
 #endif
 };
 
@@ -97,8 +97,8 @@ EMumBlockType firstProfilingBlockTypeList[TEST_NUM_ENGINES] = {
     MUM_BLOCKTYPE_128,
     MUM_BLOCKTYPE_128,
 #ifdef USE_OPENGL
-    MUM_BLOCKTYPE_4096,
-    // MUM_BLOCKTYPE_4096
+    MUM_BLOCKTYPE_1024,
+    MUM_BLOCKTYPE_4096
 #endif
 };
 
@@ -107,7 +107,7 @@ std::string engineName[TEST_NUM_ENGINES] = {
     "CPU-MT-engine",
 #ifdef USE_OPENGL
     "GPU-A-engine",
-    // "GPU-B-engine",
+    "GPU-B-engine",
 #endif
 };
 
@@ -607,8 +607,10 @@ bool testSimpleBlocks(void *engine, char *engineDesc)
     {
         error = MumEncryptBlock(engine, random, encrypt, plaintextBlockSize, seqOut++);
     }
-    if (error != MUM_ERROR_OK)
+    if (error != MUM_ERROR_OK) {
+        printf("MumEncryptBlock error %d\n", error);
         return false;
+    }
 
     error = MumDecryptBlock(engine, encrypt, decrypt, &length, &seqIn);
     while (error == MUM_ERROR_BUFFER_WAIT_DECRYPT)
@@ -618,6 +620,8 @@ bool testSimpleBlocks(void *engine, char *engineDesc)
 
     if (error != MUM_ERROR_OK)
     {
+        printf("MumDecryptBlock error %d\n", error);
+        //dumpBlock("MumDecrypt\n", encrypt, 128);
         return false;
     }
 
@@ -693,21 +697,22 @@ bool testRandomlySizedBlocks(void *engine, char *engineDesc, EMumPaddingType pad
         else
             fillSequentially(plaintext, plaintextSize);
 
-        uint32_t encrypted = 0;
-        error = MumEncrypt(engine, plaintext, encrypt, plaintextSize, &encrypted, 0);
+        uint32_t encryptedLen = 0;
+        error = MumEncrypt(engine, plaintext, encrypt, plaintextSize, &encryptedLen, 0);
         if (error != MUM_ERROR_OK) {
             printf("testRandomlySizedBlocks MumEncrypt error %d\n", error);
             return false;
         }
 
-        uint32_t decrypted = 0;
-        error = MumDecrypt(engine, encrypt, decrypt, encrypted, &decrypted);
+        uint32_t decryptedLen = 0;
+        error = MumDecrypt(engine, encrypt, decrypt, encryptedLen, &decryptedLen);
         if (error != MUM_ERROR_OK) {
-            printf("testRandomlySizedBlocks error %d\n", error);
+            printf("testRandomlySizedBlocks error %d, encryptedLen %d\n", error, encryptedLen);
+            dumpBlock("MumDecrypt\n", encrypt, encryptedLen);
             return false;
         }
-        if (paddingType == MUM_PADDING_TYPE_ON && plaintextSize != decrypted) {
-            printf("testRandomlySizedBlocks plaintextSize != decrypted, %d %d\n", plaintextSize, decrypted);
+        if (paddingType == MUM_PADDING_TYPE_ON && plaintextSize != decryptedLen) {
+            printf("testRandomlySizedBlocks plaintextSize != decrypted, %d %d\n", plaintextSize, decryptedLen);
             return false;
         }
         if (!blockChecker(plaintext, decrypt, plaintextSize))
