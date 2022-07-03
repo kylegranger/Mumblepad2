@@ -569,6 +569,7 @@ void CMumEngine::InitPermuteTables()
 
 EMumError CMumEngine::InitKey(uint8_t *key)
 {
+    printf("InitKey\n");
     memcpy(mMumInfo.key, key, MUM_KEY_SIZE);
     InitSubkeys();
     InitPermuteTables();
@@ -582,14 +583,18 @@ EMumError CMumEngine::InitKey(uint8_t *key)
 EMumError CMumEngine::LoadKey(const char *keyfile)
 {
     FILE *f = fopen(keyfile, "rb");
-    if (!f)
+    if (!f) {
+        printf("cannot open file %s\n",keyfile);
         return MUM_ERROR_KEYFILE_READ;
+    }
 
     uint8_t key[MUM_KEY_SIZE];
     size_t res = fread(key, 1, MUM_KEY_SIZE, f);
     fclose(f);
-    if (res != MUM_KEY_SIZE)
+    if (res != MUM_KEY_SIZE) {
+        printf("bad res for key read %ld\n",res);
         return MUM_ERROR_KEYFILE_READ;
+    }
     return InitKey(key);
 }
 

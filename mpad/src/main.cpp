@@ -1,3 +1,26 @@
+//
+// MIT License
+//
+// Copyright (c) 2022 Kyle Granger
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//
 
 #include "assert.h"
 #include <string>
@@ -29,7 +52,7 @@ void printUsage() {
     printf("         is optional, default is cpu\n");
     printf("      -b 128 | 256 | 512 | 1024 | 2048 | 4096 \n");
     printf("         this is the block size\n");
-    printf("         is optional, default is 128\n");
+    printf("         is optional for encrypt, default is 128\n");
 }
 
 bool parseCommandLine(int argc, char *argv[], TJob &job) {
@@ -45,7 +68,6 @@ bool parseCommandLine(int argc, char *argv[], TJob &job) {
         printf("must specify encrypt or decrypt as first command line parameter\n");
         return 0;
     }
-
 
     std::string engine = "cpu";
     std::string block = "128";
@@ -126,6 +148,58 @@ bool parseCommandLine(int argc, char *argv[], TJob &job) {
 }
 
 
+bool encrypt(TJob job) {
+    void *engine = MumCreateEngine(job.engineType, job.blockType, MUM_PADDING_TYPE_ON, job.numThreads);
+    auto error = MumLoadKey(engine, job.keyfile.c_str());
+    if (error != MUM_ERROR_OK)
+    {
+        printf("failed MumLoadKey %s, error %d\n",
+            job.keyfile.c_str(),
+            error);
+        MumDestroyEngine(engine);
+        return false;
+    }
+
+    error = MumEncryptFile(engine, job.infile.c_str(), job.outfile.c_str());
+    if (error != MUM_ERROR_OK)
+    {
+        printf("failed MumEncryptFile %s %s, error %d\n",
+            job.infile.c_str(),
+            job.outfile.c_str(),
+            error);
+        MumDestroyEngine(engine);
+        return false;
+    }
+    MumDestroyEngine(engine);
+    return true;
+}
+
+bool decrypt(TJob job) {
+    void *engine = MumCreateEngine(job.engineType, job.blockType, MUM_PADDING_TYPE_ON, job.numThreads);
+    auto error = MumLoadKey(engine, job.keyfile.c_str());
+    if (error != MUM_ERROR_OK)
+    {
+        printf("failed MumLoadKey %s, error %d\n",
+            job.keyfile.c_str(),
+            error);
+        MumDestroyEngine(engine);
+        return false;
+    }
+
+    error = MumDecryptFile(engine, job.infile.c_str(), job.outfile.c_str());
+    if (error != MUM_ERROR_OK)
+    {
+        printf("failed MumEncryptFile %s %s, error %d\n",
+            job.infile.c_str(),
+            job.outfile.c_str(),
+            error);
+        MumDestroyEngine(engine);
+        return false;
+    }
+    MumDestroyEngine(engine);
+    return true;
+}
+
 int main(int argc, char *argv[])
 {
     TJob job;
@@ -134,6 +208,11 @@ int main(int argc, char *argv[])
         return 0;
     }
 
+    if (job.doEncrypt) {
+        encrypt(job);
+    } else {
+        decrypt(job);
+    }
 
     return 1;
 }
