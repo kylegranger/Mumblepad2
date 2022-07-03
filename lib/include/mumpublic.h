@@ -35,7 +35,7 @@
 
 typedef enum EMumEngineType {
     MUM_ENGINE_TYPE_NONE   = -1,
-    MUM_ENGINE_TYPE_CPU       = 100,
+    MUM_ENGINE_TYPE_CPU    = 100,
     MUM_ENGINE_TYPE_CPU_MT = 101,
     MUM_ENGINE_TYPE_GPU_A  = 102,
     MUM_ENGINE_TYPE_GPU_B  = 103,
@@ -81,9 +81,7 @@ typedef enum EMumBlockType {
 } EMumBlockType;
 
 typedef enum EMumPaddingType {
-    // maximum encrypt size is 112 bytes
     MUM_PADDING_TYPE_OFF = 0,
-    // maximum encrypt size is 240 bytes
     MUM_PADDING_TYPE_ON = 1,
 } EMumPaddingType;
 

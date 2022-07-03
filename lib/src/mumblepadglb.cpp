@@ -209,7 +209,7 @@ CMumblepadGlb::CMumblepadGlb(TMumInfo *mumInfo, CMumGlWrapper *gelbGlWrapper) : 
     mLutTextureKey = -1;
     mLutTextureKeyI = -1;
     mLutTextureXor = -1;
-    if (!InitTextures())
+    if (!InitGl())
         assert(0);
 }
 
@@ -534,7 +534,7 @@ bool CMumblepadGlb::CreateShaders()
     return 1;
 }
 
-bool CMumblepadGlb::InitTextures()
+bool CMumblepadGlb::InitGl()
 {
     mGlw->glEnable(GL_TEXTURE_2D);
     mGlw->glDisable(GL_BLEND);
@@ -781,7 +781,6 @@ void CMumblepadGlb::DecryptConfuse(uint32_t /*round*/)
                                 GL_FALSE, 2 * sizeof(GLfloat), wholeSquareUvOffset);
     mGlw->glEnableVertexAttribArray(0);
     mGlw->glEnableVertexAttribArray(1);
-
     // first pass for decrypt
     // source ping pong is 0
     mGlw->glActiveTexture(GL_TEXTURE0);

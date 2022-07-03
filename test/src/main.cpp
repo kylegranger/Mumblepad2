@@ -621,7 +621,6 @@ bool testSimpleBlocks(void *engine, char *engineDesc)
     if (error != MUM_ERROR_OK)
     {
         printf("MumDecryptBlock error %d\n", error);
-        //dumpBlock("MumDecrypt\n", encrypt, 128);
         return false;
     }
 
@@ -708,7 +707,6 @@ bool testRandomlySizedBlocks(void *engine, char *engineDesc, EMumPaddingType pad
         error = MumDecrypt(engine, encrypt, decrypt, encryptedLen, &decryptedLen);
         if (error != MUM_ERROR_OK) {
             printf("testRandomlySizedBlocks error %d, encryptedLen %d\n", error, encryptedLen);
-            dumpBlock("MumDecrypt\n", encrypt, encryptedLen);
             return false;
         }
         if (paddingType == MUM_PADDING_TYPE_ON && plaintextSize != decryptedLen) {

@@ -51,7 +51,7 @@ public:
 private:
     TMumInfo *mMumInfo;
     CMumGlWrapper *mGlw;
-    bool InitTextures();
+    bool InitGl();
     bool CreateLutTextures();
     bool CreateFrameBuffers();
     bool CreateShaders();
