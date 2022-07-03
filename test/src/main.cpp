@@ -34,7 +34,7 @@
 #define NUM_ENTROPY_ITERATIONS 5000
 #define NUM_RANDOMSIZED_ITERATIONS 100
 #define TEST_MUM_NUM_THREADS 8
-#define LARGE_TEST_SIZE 128000000
+#define MAX_TEST_SIZE 512000000
 
 uint8_t *originalFileData[NUM_TEST_FILES];
 uint8_t *decryptFileData[NUM_TEST_FILES];
@@ -99,6 +99,16 @@ EMumBlockType firstProfilingBlockTypeList[TEST_NUM_ENGINES] = {
 #ifdef USE_OPENGL
     MUM_BLOCKTYPE_1024,
     MUM_BLOCKTYPE_4096
+#endif
+};
+
+// We'll only profile 4K block size for GPU-A
+uint32_t largeBlockSize[TEST_NUM_ENGINES] = {
+    MAX_TEST_SIZE/4,
+    MAX_TEST_SIZE,
+#ifdef USE_OPENGL
+    MAX_TEST_SIZE/16,
+    MAX_TEST_SIZE/16
 #endif
 };
 
@@ -253,7 +263,7 @@ void init()
         bitsSet[i] = total;
     }
 
-    uint32_t plaintextSize = LARGE_TEST_SIZE;
+    uint32_t plaintextSize = MAX_TEST_SIZE;
     uint32_t encryptBufferSize = plaintextSize * 5 / 4;
 
     largePlaintext = new uint8_t[plaintextSize];
@@ -417,11 +427,11 @@ void createRandomBlocksWithOneBitDifference(uint8_t *block1, uint8_t *block2, ui
 bool testEntropy(void *engine, char *engineDesc, EMumPaddingType paddingType)
 {
     EMumError error;
-    uint8_t plaintext[4096];
-    uint8_t encrypt1[4096];
-    uint8_t encrypt2[4096];
-    uint8_t decrypt1[4096];
-    uint8_t decrypt2[4096];
+    uint8_t plaintext[MUM_MAX_BLOCK_SIZE];
+    uint8_t encrypt1[MUM_MAX_BLOCK_SIZE];
+    uint8_t encrypt2[MUM_MAX_BLOCK_SIZE];
+    uint8_t decrypt1[MUM_MAX_BLOCK_SIZE];
+    uint8_t decrypt2[MUM_MAX_BLOCK_SIZE];
     uint32_t outlength, i, iter;
     uint32_t bitsChanged, bitsTotal;
     uint32_t bytesChanged, bytesTotal;
@@ -587,10 +597,10 @@ bool testSubkeyEntropy(void *engine, char *engineDesc, EMumPaddingType paddingTy
 bool testSimpleBlocks(void *engine, char *engineDesc)
 {
     EMumError error;
-    uint8_t plaintext[4096];
-    uint8_t random[4096];
-    uint8_t encrypt[4096];
-    uint8_t decrypt[4096];
+    uint8_t plaintext[MUM_MAX_BLOCK_SIZE];
+    uint8_t random[MUM_MAX_BLOCK_SIZE];
+    uint8_t encrypt[MUM_MAX_BLOCK_SIZE];
+    uint8_t decrypt[MUM_MAX_BLOCK_SIZE];
     uint32_t length, i;
 
     uint32_t encryptedBlockSize, plaintextBlockSize;
@@ -637,9 +647,9 @@ bool testSimpleBlocks(void *engine, char *engineDesc)
 bool testUnitializedEngine(void *engine, char *engineDesc)
 {
     EMumError error;
-    uint8_t plaintext[4096];
-    uint8_t encrypt[4096];
-    uint8_t decrypt[4096];
+    uint8_t plaintext[MUM_MAX_BLOCK_SIZE];
+    uint8_t encrypt[MUM_MAX_BLOCK_SIZE];
+    uint8_t decrypt[MUM_MAX_BLOCK_SIZE];
     uint32_t length;
 
     uint32_t encryptedBlockSize, plaintextBlockSize;
@@ -682,9 +692,9 @@ bool testRandomlySizedBlocks(void *engine, char *engineDesc, EMumPaddingType pad
     error = MumEncryptedBlockSize(engine, &encryptedBlockSize);
 
     int maxsize = 512*1024;
-    uint8_t *plaintext = new uint8_t[maxsize + 4096];
+    uint8_t *plaintext = new uint8_t[maxsize + MUM_MAX_BLOCK_SIZE];
     uint8_t *encrypt = new uint8_t[maxsize*5/4];
-    uint8_t *decrypt = new uint8_t[maxsize + 4096];
+    uint8_t *decrypt = new uint8_t[maxsize + MUM_MAX_BLOCK_SIZE];
     for (int test = 0; test < NUM_RANDOMSIZED_ITERATIONS; test++)
     {
         // Pick random number between 1 and 512*1024
@@ -727,11 +737,11 @@ bool testRandomlySizedBlocks(void *engine, char *engineDesc, EMumPaddingType pad
     return true;
 }
 
-bool profileLargeBlocks(void *engine, char *engineDesc)
+bool profileLargeBlocks(void *engine, char *engineDesc, uint32_t size)
 {
     EMumError error;
     uint32_t i;
-    uint32_t plaintextSize = LARGE_TEST_SIZE;
+    uint32_t plaintextSize = size;
     uint32_t encryptBufferSize = plaintextSize * 5 / 4;
 
     uint32_t encryptedBlockSize, plaintextBlockSize;
@@ -821,7 +831,7 @@ bool doTest(void *engine, char *engineDesc, EMumPaddingType paddingType, EMumBlo
     return true;
 }
 
-bool doProfiling(void *engine, char *engineDesc, bool withPadding)
+bool doProfiling(void *engine, char *engineDesc, uint32_t size)
 {
     uint8_t clavier[MUM_KEY_SIZE];
     EMumError error;
@@ -830,7 +840,7 @@ bool doProfiling(void *engine, char *engineDesc, bool withPadding)
 
     fillRandomly(clavier, MUM_KEY_SIZE);
     error = MumInitKey(engine, clavier);
-    if (!profileLargeBlocks(engine, engineDesc))
+    if (!profileLargeBlocks(engine, engineDesc, size))
         return false;
     return true;
 }
@@ -1017,7 +1027,7 @@ bool doProfilings()
                     MumEncryptedBlockSize(engine, &encryptedBlockSize);
                     char engineDesc[256];
                     sprintf(engineDesc, "%s:%s:blocksize-%u", engineName[engineIndex].c_str(), paddingName[paddingIndex].c_str(), encryptedBlockSize);
-                    if (!doProfiling(engine, engineDesc, (paddingIndex == 1)))
+                    if (!doProfiling(engine, engineDesc, largeBlockSize[engineIndex]))
                         return false;
                     MumDestroyEngine(engine);
                     engine = NULL;
@@ -1071,8 +1081,8 @@ int main(int argc, char *argv[])
     if (!loadTestFiles())
         result = -1;
 
-    if (!doTests())
-        result = -1;
+    // if (!doTests())
+    //     result = -1;
 
     if (!doProfilings())
         result = -1;

@@ -28,7 +28,6 @@
 #include "mumpublic.h"
 
 #define MUM_NUM_ROUNDS 8
-#define MUM_MAX_BLOCK_SIZE     4096
 #define MUM_KEY_MASK        4095
 // 8 subkeys, 1 per round for confusion pass, XOR
 // 8 subkeyss, 1 per round for 3-bit tables, diffusion pass bitmasks

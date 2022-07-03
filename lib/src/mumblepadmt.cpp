@@ -196,8 +196,6 @@ EMumError CMumblepadMt::Decrypt(uint8_t *src, uint8_t *dst, uint32_t length, uin
             {
                 mServerSignal->WaitForSignal();
             }
-            else
-                break;
         }
     }
 

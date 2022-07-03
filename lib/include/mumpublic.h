@@ -29,8 +29,9 @@
 #include "stdint.h"
 
 #define MUM_KEY_SIZE          4096
-#define MUM_NUM_SUBKEYS        560
-#define MUM_PRNG_SUBKEY_INDEX  304
+#define MUM_MAX_BLOCK_SIZE    4096
+#define MUM_NUM_SUBKEYS       560
+#define MUM_PRNG_SUBKEY_INDEX 304
 
 
 typedef enum EMumEngineType {
