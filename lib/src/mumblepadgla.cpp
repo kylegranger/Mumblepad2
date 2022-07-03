@@ -198,7 +198,7 @@ CMumblepadGla::CMumblepadGla(TMumInfo *mumInfo, CMumGlWrapper *mumGlWrapper) : C
         mPositionTexturesYI[round] = -1;
     }
     mLutTextureXor = -1;
-    if (!InitTextures())
+    if (!InitGl())
         assert(0);
 }
 
@@ -499,7 +499,7 @@ bool CMumblepadGla::CreateShaders()
     return true;
 }
 
-bool CMumblepadGla::InitTextures()
+bool CMumblepadGla::InitGl()
 {
     mGlw->glEnable(GL_TEXTURE_2D);
     mGlw->glDisable(GL_BLEND);
@@ -511,16 +511,23 @@ bool CMumblepadGla::InitTextures()
         return false;
     if (!CreateShaders())
         return false;
+
+    mGlw->glVertexAttribPointer(0, 3, GL_FLOAT,
+                                GL_FALSE, 3 * sizeof(GLfloat), wholeSquareVertices);
+    mGlw->glVertexAttribPointer(1, 2, GL_FLOAT,
+                                GL_FALSE, 2 * sizeof(GLfloat), wholeSquareUv);
+    mGlw->glEnableVertexAttribArray(0);
+    mGlw->glEnableVertexAttribArray(1);
+
+
+
     return true;
 }
 
 void CMumblepadGla::EncryptDiffuse(uint32_t round)
 {
     uint32_t location;
-    uint32_t positionLoc;
-    uint32_t texCoordLoc;
 
-    //
     // destination is ping pong 1
     mGlw->glBindFramebuffer(GL_FRAMEBUFFER, mPingPongFBuffer[1]);
     mGlw->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mPingPongTexture[1], 0);
@@ -536,41 +543,16 @@ void CMumblepadGla::EncryptDiffuse(uint32_t round)
     location = mGlw->glGetUniformLocation(mEncryptDiffuseProgram, "positionY");
     mGlw->glUniform1i(location, 3);
 
-    // precompute!
-    positionLoc = mGlw->glGetAttribLocation(mEncryptDiffuseProgram, "a_position");
-    texCoordLoc = mGlw->glGetAttribLocation(mEncryptDiffuseProgram, "a_texCoord");
-
-    mGlw->glVertexAttribPointer(positionLoc, 3, GL_FLOAT,
-                                GL_FALSE, 3 * sizeof(GLfloat), wholeSquareVertices);
-    mGlw->glVertexAttribPointer(texCoordLoc, 2, GL_FLOAT,
-                                GL_FALSE, 2 * sizeof(GLfloat), wholeSquareUv);
-    mGlw->glEnableVertexAttribArray(0);
-    mGlw->glEnableVertexAttribArray(1);
-
     mGlw->glActiveTexture(GL_TEXTURE0);
     // source is ping pong 0
     mGlw->glBindTexture(GL_TEXTURE_2D, mPingPongTexture[0]);
 
     mGlw->glActiveTexture(GL_TEXTURE1);
     mGlw->glBindTexture(GL_TEXTURE_2D, mLutTextureBitmask[round]);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
     mGlw->glActiveTexture(GL_TEXTURE2);
     mGlw->glBindTexture(GL_TEXTURE_2D, mPositionTexturesX[round]);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
     mGlw->glActiveTexture(GL_TEXTURE3);
     mGlw->glBindTexture(GL_TEXTURE_2D, mPositionTexturesY[round]);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
     mGlw->glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, wholeSquareIndices);
     mGlw->glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -579,8 +561,6 @@ void CMumblepadGla::EncryptDiffuse(uint32_t round)
 void CMumblepadGla::EncryptConfuse(uint32_t round)
 {
     uint32_t location;
-    uint32_t positionLoc;
-    uint32_t texCoordLoc;
 
     // destination is ping pong 0
     mGlw->glBindFramebuffer(GL_FRAMEBUFFER, mPingPongFBuffer[0]);
@@ -597,41 +577,16 @@ void CMumblepadGla::EncryptConfuse(uint32_t round)
     location = mGlw->glGetUniformLocation(mEncryptConfuseProgram, "lutPermute");
     mGlw->glUniform1i(location, 3);
 
-    // precompute!
-    positionLoc = mGlw->glGetAttribLocation(mEncryptConfuseProgram, "a_position");
-    texCoordLoc = mGlw->glGetAttribLocation(mEncryptConfuseProgram, "a_texCoord");
-
-    mGlw->glVertexAttribPointer(positionLoc, 3, GL_FLOAT,
-                                GL_FALSE, 3 * sizeof(GLfloat), wholeSquareVertices);
-    mGlw->glVertexAttribPointer(texCoordLoc, 2, GL_FLOAT,
-                                GL_FALSE, 2 * sizeof(GLfloat), wholeSquareUv);
-    mGlw->glEnableVertexAttribArray(0);
-    mGlw->glEnableVertexAttribArray(1);
-
     mGlw->glActiveTexture(GL_TEXTURE0);
     // source is ping pong 1
     mGlw->glBindTexture(GL_TEXTURE_2D, mPingPongTexture[1]);
 
     mGlw->glActiveTexture(GL_TEXTURE1);
     mGlw->glBindTexture(GL_TEXTURE_2D, mLutTextureKey[round]);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
     mGlw->glActiveTexture(GL_TEXTURE2);
     mGlw->glBindTexture(GL_TEXTURE_2D, mLutTextureXor);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
     mGlw->glActiveTexture(GL_TEXTURE3);
     mGlw->glBindTexture(GL_TEXTURE_2D, mLutTexturePermute[round]);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
     mGlw->glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, wholeSquareIndices);
     mGlw->glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -640,8 +595,6 @@ void CMumblepadGla::EncryptConfuse(uint32_t round)
 void CMumblepadGla::DecryptDiffuse(uint32_t round)
 {
     uint32_t location;
-    uint32_t positionLoc;
-    uint32_t texCoordLoc;
 
     // second pass for decrypt
     // destination ping pong is 0
@@ -659,17 +612,6 @@ void CMumblepadGla::DecryptDiffuse(uint32_t round)
     location = mGlw->glGetUniformLocation(mDecryptDiffuseProgram, "positionY");
     mGlw->glUniform1i(location, 3);
 
-    // precompute!
-    positionLoc = mGlw->glGetAttribLocation(mDecryptDiffuseProgram, "a_position");
-    texCoordLoc = mGlw->glGetAttribLocation(mDecryptDiffuseProgram, "a_texCoord");
-
-    mGlw->glVertexAttribPointer(positionLoc, 3, GL_FLOAT,
-                                GL_FALSE, 3 * sizeof(GLfloat), wholeSquareVertices);
-    mGlw->glVertexAttribPointer(texCoordLoc, 2, GL_FLOAT,
-                                GL_FALSE, 2 * sizeof(GLfloat), wholeSquareUv);
-    mGlw->glEnableVertexAttribArray(0);
-    mGlw->glEnableVertexAttribArray(1);
-
     // second pass for decrypt
     // source ping pong is 1
     mGlw->glActiveTexture(GL_TEXTURE0);
@@ -677,25 +619,10 @@ void CMumblepadGla::DecryptDiffuse(uint32_t round)
 
     mGlw->glActiveTexture(GL_TEXTURE1);
     mGlw->glBindTexture(GL_TEXTURE_2D, mLutTextureBitmask[round]);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
     mGlw->glActiveTexture(GL_TEXTURE2);
     mGlw->glBindTexture(GL_TEXTURE_2D, mPositionTexturesXI[round]);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
     mGlw->glActiveTexture(GL_TEXTURE3);
     mGlw->glBindTexture(GL_TEXTURE_2D, mPositionTexturesYI[round]);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
     mGlw->glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, wholeSquareIndices);
     mGlw->glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -703,8 +630,6 @@ void CMumblepadGla::DecryptDiffuse(uint32_t round)
 void CMumblepadGla::DecryptConfuse(uint32_t round)
 {
     uint32_t location;
-    uint32_t positionLoc;
-    uint32_t texCoordLoc;
 
     // first pass for decrypt
     // destination ping pong is 1
@@ -724,17 +649,6 @@ void CMumblepadGla::DecryptConfuse(uint32_t round)
     location = mGlw->glGetUniformLocation(mDecryptConfuseProgram, "lutPermute");
     mGlw->glUniform1i(location, 3);
 
-    // precompute!
-    positionLoc = mGlw->glGetAttribLocation(mDecryptConfuseProgram, "a_position");
-    texCoordLoc = mGlw->glGetAttribLocation(mDecryptConfuseProgram, "a_texCoord");
-
-    mGlw->glVertexAttribPointer(positionLoc, 3, GL_FLOAT,
-                                GL_FALSE, 3 * sizeof(GLfloat), wholeSquareVertices);
-    mGlw->glVertexAttribPointer(texCoordLoc, 2, GL_FLOAT,
-                                GL_FALSE, 2 * sizeof(GLfloat), wholeSquareUv);
-    mGlw->glEnableVertexAttribArray(0);
-    mGlw->glEnableVertexAttribArray(1);
-
     // first pass for decrypt
     // source ping pong is 0
     mGlw->glActiveTexture(GL_TEXTURE0);
@@ -742,25 +656,10 @@ void CMumblepadGla::DecryptConfuse(uint32_t round)
 
     mGlw->glActiveTexture(GL_TEXTURE1);
     mGlw->glBindTexture(GL_TEXTURE_2D, mLutTextureKey[round]);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
     mGlw->glActiveTexture(GL_TEXTURE2);
     mGlw->glBindTexture(GL_TEXTURE_2D, mLutTextureXor);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
     mGlw->glActiveTexture(GL_TEXTURE3);
     mGlw->glBindTexture(GL_TEXTURE_2D, mLutTexturePermuteI[round]);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    mGlw->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
     mGlw->glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, wholeSquareIndices);
     mGlw->glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

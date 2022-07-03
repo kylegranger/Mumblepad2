@@ -758,8 +758,8 @@ bool profileLargeBlocks(void *engine, char *engineDesc)
     float mb = (float)(plaintextSize) / 1000000.0f;
     printf("profileLargeBlocks: engine %s, encrypt size %d, total bytes %d\n",
            engineDesc, plaintextBlockSize, plaintextSize);
-    printf("   encrypt time %f ms, MB/sec %f \n", encryptTime, mb / encryptTime);
-    printf("   decrypt time %f ms, MB/sec %f\n\n", decryptTime, mb / decryptTime);
+    printf("   encrypt time %f sec, MB/sec %f \n", encryptTime, mb / encryptTime);
+    printf("   decrypt time %f sec, MB/sec %f\n\n", decryptTime, mb / decryptTime);
 
     if (!blockChecker(largePlaintext, largeDecrypt, plaintextSize))
     {
