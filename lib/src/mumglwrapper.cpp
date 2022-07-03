@@ -22,8 +22,6 @@
 // SOFTWARE.
 //
 
-
-
 #include <string.h>
 #include <malloc.h>
 //#include "../gl/gl3w.h"
@@ -34,7 +32,6 @@
 
 struct graphics_context context;
 
-
 extern GL3WglProc get_proc(const char *proc);
 
 CMumGlWrapper::CMumGlWrapper()
@@ -43,7 +40,7 @@ CMumGlWrapper::CMumGlWrapper()
 
 bool CMumGlWrapper::Init()
 {
-    memset( this, 0, sizeof(CMumGlWrapper) );
+    memset(this, 0, sizeof(CMumGlWrapper));
 
     // // use this to obtain GL 1.0 entry points
     // mOpenGlHandle = ::LoadLibrary( "opengl32.dll" );
@@ -62,7 +59,7 @@ bool CMumGlWrapper::Init()
         printf("GLFW3: failed to initialize\n");
         return false;
     }
-    //glfwWindowHint(GLFW_SAMPLES, 4);
+    // glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
@@ -74,57 +71,53 @@ bool CMumGlWrapper::Init()
     glfwMakeContextCurrent(context.window);
     glfwSwapInterval(1);
 
+    glActiveTexture = (PFNGLACTIVETEXTUREPROC)get_proc("glActiveTexture");
+    glAttachShader = (PFNGLATTACHSHADERPROC)get_proc("glAttachShader");
+    glBindBuffer = (PFNGLBINDBUFFERPROC)get_proc("glBindBuffer");
+    glBindFramebuffer = (PFNGLBINDFRAMEBUFFERPROC)get_proc("glBindFramebuffer");
+    glBindTexture = (PFNGLBINDTEXTUREPROC)get_proc("glBindTexture");
+    glBufferData = (PFNGLBUFFERDATAPROC)get_proc("glBufferData");
+    glCheckFramebufferStatus = (PFNGLCHECKFRAMEBUFFERSTATUSPROC)get_proc("glCheckFramebufferStatus");
+    glCompileShader = (PFNGLCOMPILESHADERPROC)get_proc("glCompileShader");
+    glCreateProgram = (PFNGLCREATEPROGRAMPROC)get_proc("glCreateProgram");
+    glCreateShader = (PFNGLCREATESHADERPROC)get_proc("glCreateShader");
+    glDeleteFramebuffers = (PFNGLDELETEFRAMEBUFFERSPROC)get_proc("glDeleteFramebuffers");
+    glDeleteProgram = (PFNGLDELETEPROGRAMPROC)get_proc("glDeleteProgram");
+    glDeleteShader = (PFNGLDELETESHADERPROC)get_proc("glDeleteShader");
+    glDeleteTextures = (PFNGLDELETETEXTURESPROC)get_proc("glDeleteTextures");
+    glDisable = (PFNGLDISABLEPROC)get_proc("glDisable");
+    glDrawBuffers = (PFNGLDRAWBUFFERSPROC)get_proc("glDrawBuffers");
+    glDrawElements = (PFNGLDRAWELEMENTSPROC)get_proc("glDrawElements");
+    glEnable = (PFNGLENABLEPROC)get_proc("glEnable");
+    glEnableVertexAttribArray = (PFNGLENABLEVERTEXATTRIBARRAYPROC)get_proc("glEnableVertexAttribArray");
 
+    glTexSubImage2D = (PFNGLTEXSUBIMAGE2DPROC)get_proc("glTexSubImage2D");
+    glGenTextures = (PFNGLGENTEXTURESPROC)get_proc("glGenTextures");
 
-    glActiveTexture = (PFNGLACTIVETEXTUREPROC) get_proc("glActiveTexture");
-    glAttachShader = (PFNGLATTACHSHADERPROC) get_proc("glAttachShader");
-    glBindBuffer = (PFNGLBINDBUFFERPROC) get_proc("glBindBuffer");
-    glBindFramebuffer = (PFNGLBINDFRAMEBUFFERPROC) get_proc("glBindFramebuffer");
-    glBindTexture = (PFNGLBINDTEXTUREPROC) get_proc("glBindTexture");
-    glBufferData = (PFNGLBUFFERDATAPROC) get_proc("glBufferData");
-    glCheckFramebufferStatus = (PFNGLCHECKFRAMEBUFFERSTATUSPROC) get_proc("glCheckFramebufferStatus");
-    glCompileShader = (PFNGLCOMPILESHADERPROC) get_proc("glCompileShader");
-    glCreateProgram = (PFNGLCREATEPROGRAMPROC) get_proc("glCreateProgram");
-    glCreateShader = (PFNGLCREATESHADERPROC) get_proc("glCreateShader");
-    glDeleteFramebuffers = (PFNGLDELETEFRAMEBUFFERSPROC) get_proc("glDeleteFramebuffers");
-    glDeleteProgram = (PFNGLDELETEPROGRAMPROC) get_proc("glDeleteProgram");
-    glDeleteShader = (PFNGLDELETESHADERPROC) get_proc("glDeleteShader");
-    glDeleteTextures = (PFNGLDELETETEXTURESPROC) get_proc("glDeleteTextures");
-    glDisable = (PFNGLDISABLEPROC) get_proc("glDisable");
-    glDrawBuffers = (PFNGLDRAWBUFFERSPROC) get_proc("glDrawBuffers");
-    glDrawElements = (PFNGLDRAWELEMENTSPROC) get_proc("glDrawElements");
-    glEnable = (PFNGLENABLEPROC) get_proc("glEnable");
-    glEnableVertexAttribArray = (PFNGLENABLEVERTEXATTRIBARRAYPROC) get_proc("glEnableVertexAttribArray");
+    glGetProgramInfoLog = (PFNGLGETPROGRAMINFOLOGPROC)get_proc("glGetProgramInfoLog");
 
-    glTexSubImage2D = (PFNGLTEXSUBIMAGE2DPROC) get_proc("glTexSubImage2D");
-    glGenTextures = (PFNGLGENTEXTURESPROC) get_proc("glGenTextures");
-
-    glGetProgramInfoLog = (PFNGLGETPROGRAMINFOLOGPROC) get_proc("glGetProgramInfoLog");
-
-    glGenFramebuffers = (PFNGLGENFRAMEBUFFERSPROC) get_proc("glGenFramebuffers");
-    glFramebufferTexture2D = (PFNGLFRAMEBUFFERTEXTURE2DPROC) get_proc("glFramebufferTexture2D");
-    glFramebufferTexture = (PFNGLFRAMEBUFFERTEXTUREPROC) get_proc("glFramebufferTexture");
-    glGetShaderiv = (PFNGLGETSHADERIVPROC) get_proc("glGetShaderiv");
-    glGenBuffers = (PFNGLGENBUFFERSPROC) get_proc("glGenBuffers");
-    glGetShaderInfoLog = (PFNGLGETSHADERINFOLOGPROC) get_proc("glGetShaderInfoLog");
-    glGetShaderiv = (PFNGLGETSHADERIVPROC) get_proc("glGetShaderiv");
-    glGetAttribLocation = (PFNGLGETATTRIBLOCATIONPROC) get_proc("glGetAttribLocation");
-    glGetProgramiv = (PFNGLGETPROGRAMIVPROC) get_proc("glGetProgramiv");
-    glGetUniformLocation = (PFNGLGETUNIFORMLOCATIONPROC) get_proc("glGetUniformLocation");
-    glLinkProgram = (PFNGLLINKPROGRAMPROC) get_proc("glLinkProgram");
-    glReadPixels = (PFNGLREADPIXELSPROC) get_proc("glReadPixels");
-    glShaderSource = (PFNGLSHADERSOURCEPROC) get_proc("glShaderSource");
-    glTexParameteri = (PFNGLTEXPARAMETERIPROC) get_proc("glTexParameteri");
-    glTexImage2D = (PFNGLTEXIMAGE2DPROC) get_proc("glTexImage2D");
-    glUniform1i = (PFNGLUNIFORM1IPROC) get_proc("glUniform1i");
-    glUseProgram = (PFNGLUSEPROGRAMPROC) get_proc("glUseProgram");
-    glVertexAttribPointer = (PFNGLVERTEXATTRIBPOINTERPROC) get_proc("glVertexAttribPointer");
-    glViewport = (PFNGLVIEWPORTPROC) get_proc("glViewport");
-
+    glGenFramebuffers = (PFNGLGENFRAMEBUFFERSPROC)get_proc("glGenFramebuffers");
+    glFramebufferTexture2D = (PFNGLFRAMEBUFFERTEXTURE2DPROC)get_proc("glFramebufferTexture2D");
+    glFramebufferTexture = (PFNGLFRAMEBUFFERTEXTUREPROC)get_proc("glFramebufferTexture");
+    glGetShaderiv = (PFNGLGETSHADERIVPROC)get_proc("glGetShaderiv");
+    glGenBuffers = (PFNGLGENBUFFERSPROC)get_proc("glGenBuffers");
+    glGetShaderInfoLog = (PFNGLGETSHADERINFOLOGPROC)get_proc("glGetShaderInfoLog");
+    glGetShaderiv = (PFNGLGETSHADERIVPROC)get_proc("glGetShaderiv");
+    glGetAttribLocation = (PFNGLGETATTRIBLOCATIONPROC)get_proc("glGetAttribLocation");
+    glGetProgramiv = (PFNGLGETPROGRAMIVPROC)get_proc("glGetProgramiv");
+    glGetUniformLocation = (PFNGLGETUNIFORMLOCATIONPROC)get_proc("glGetUniformLocation");
+    glLinkProgram = (PFNGLLINKPROGRAMPROC)get_proc("glLinkProgram");
+    glReadPixels = (PFNGLREADPIXELSPROC)get_proc("glReadPixels");
+    glShaderSource = (PFNGLSHADERSOURCEPROC)get_proc("glShaderSource");
+    glTexParameteri = (PFNGLTEXPARAMETERIPROC)get_proc("glTexParameteri");
+    glTexImage2D = (PFNGLTEXIMAGE2DPROC)get_proc("glTexImage2D");
+    glUniform1i = (PFNGLUNIFORM1IPROC)get_proc("glUniform1i");
+    glUseProgram = (PFNGLUSEPROGRAMPROC)get_proc("glUseProgram");
+    glVertexAttribPointer = (PFNGLVERTEXATTRIBPOINTERPROC)get_proc("glVertexAttribPointer");
+    glViewport = (PFNGLVIEWPORTPROC)get_proc("glViewport");
 
     printf("gl3w: ok to go!\n");
     return true;
-
 }
 
 // bool CMumGlWrapper::EnableOpenGL(ESContext *esContext)
@@ -132,23 +125,23 @@ bool CMumGlWrapper::Init()
 //     PIXELFORMATDESCRIPTOR pfd;
 //     int format;
 //     BOOL res;
-    
+
 //     mHDC = GetDC( esContext->hWnd );
-    
+
 //     // set the pixel format for the DC
 //     ZeroMemory( &pfd, sizeof( pfd ) );
 //     pfd.nSize = sizeof( pfd );
 //     pfd.nVersion = 1;
-//     pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER | PFD_STEREO; 
+//     pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER | PFD_STEREO;
 //     pfd.iPixelType = PFD_TYPE_RGBA;
 //     pfd.cColorBits = 24;
 //     // pfd.cColorBits = 32;
 //     // pfd.cDepthBits = 0;
 //     pfd.cDepthBits = 16;
-//     pfd.cAccumBits = 0; 
-//     pfd.cStencilBits = 0; 
+//     pfd.cAccumBits = 0;
+//     pfd.cStencilBits = 0;
 //     pfd.iLayerType = PFD_MAIN_PLANE;
-//     pfd.dwLayerMask = PFD_MAIN_PLANE; 
+//     pfd.dwLayerMask = PFD_MAIN_PLANE;
 //     format = ChoosePixelFormat( mHDC, &pfd );
 //     res = SetPixelFormat( mHDC, format, &pfd );
 //     if (!res)
@@ -158,21 +151,20 @@ bool CMumGlWrapper::Init()
 //         //    format, error );
 //         //MessageBox(NULL,text, "OpenGL Initialization", MB_OK );
 //     }
-    
+
 //     // create and enable the render context (RC)
 //     mHGLRC = wglCreateContext( mHDC );
 //     BOOL result = wglMakeCurrent( mHDC, mHGLRC );
 //     return (result == TRUE);
 // }
 
-
-// LRESULT WINAPI ESWindowProc ( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam ) 
+// LRESULT WINAPI ESWindowProc ( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 // {
-//     LRESULT lres = 1; 
+//     LRESULT lres = 1;
 //     ESContext *esContext = NULL;
 
-//     switch (uMsg) 
-//     { 
+//     switch (uMsg)
+//     {
 //         case WM_CREATE:
 //             break;
 //         case WM_PAINT:
@@ -181,39 +173,36 @@ bool CMumGlWrapper::Init()
 //             break;
 //         case WM_DESTROY:
 //             PostQuitMessage(0);
-//             break; 
+//             break;
 //         case WM_CHAR:
 //             break;
-//         default: 
-//             lres = DefWindowProc (hWnd, uMsg, wParam, lParam); 
-//             break; 
-//     } 
+//         default:
+//             lres = DefWindowProc (hWnd, uMsg, wParam, lParam);
+//             break;
+//     }
 
-//     return lres; 
+//     return lres;
 // }
-
-
 
 // bool CMumGlWrapper::WinCreate ( ESContext *esContext, const char *title )
 // {
-//     WNDCLASS wndclass = {0}; 
+//     WNDCLASS wndclass = {0};
 //     DWORD wStyle  = 0;
 //     RECT windowRect;
 //     HINSTANCE hInstance = GetModuleHandle(NULL);
 //     LPCSTR wstr = (LPCSTR) "opengles2.0";
 
-
 //     wndclass.style = CS_OWNDC;
-//     wndclass.lpfnWndProc   = (WNDPROC)ESWindowProc; 
-//     wndclass.hInstance     = hInstance; 
-//     wndclass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH); 
-//     wndclass.lpszClassName = wstr; 
+//     wndclass.lpfnWndProc   = (WNDPROC)ESWindowProc;
+//     wndclass.hInstance     = hInstance;
+//     wndclass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+//     wndclass.lpszClassName = wstr;
 
-//     if (!RegisterClass (&wndclass) ) 
-//         return FALSE; 
+//     if (!RegisterClass (&wndclass) )
+//         return FALSE;
 
 //     wStyle = WS_VISIBLE | WS_POPUP | WS_BORDER | WS_SYSMENU | WS_CAPTION;
-    
+
 //     // Adjust the window rectangle so that the client area has
 //     // the correct number of pixels
 //     windowRect.left = 0;
@@ -246,10 +235,6 @@ bool CMumGlWrapper::Init()
 //     return GL_TRUE;
 // }
 
-
-
-
-
 // bool CMumGlWrapper::esCreateWindow ( ESContext *esContext, const char* title, GLint width, GLint height, GLuint flags )
 // {
 //     esContext->width = width;
@@ -260,49 +245,46 @@ bool CMumGlWrapper::Init()
 //         return GL_FALSE;
 //     }
 
-
 //     if ( !EnableOpenGL(esContext) )
 //         return false;
 
 //     return true;
 // }
 
-GLuint CMumGlWrapper::LoadShader ( GLenum type, const char *shaderSrc )
+GLuint CMumGlWrapper::LoadShader(GLenum type, const char *shaderSrc)
 {
     GLuint shader;
     GLint compiled;
-    
-    shader = glCreateShader ( type );
-    if ( shader == 0 )
+
+    shader = glCreateShader(type);
+    if (shader == 0)
         return 0;
 
-    glShaderSource ( shader, 1, &shaderSrc, NULL );
-    glCompileShader ( shader );
-    glGetShaderiv ( shader, GL_COMPILE_STATUS, &compiled );
+    glShaderSource(shader, 1, &shaderSrc, NULL);
+    glCompileShader(shader);
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
 
-    if ( !compiled ) 
+    if (!compiled)
     {
         GLint infoLen = 0;
 
-        glGetShaderiv ( shader, GL_INFO_LOG_LENGTH, &infoLen );
-        
-        if ( infoLen > 1 )
+        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLen);
+
+        if (infoLen > 1)
         {
-            char* infoLog = (char* ) malloc (sizeof(char) * infoLen );
-            glGetShaderInfoLog ( shader, infoLen, NULL, infoLog );
-            free ( infoLog );
+            char *infoLog = (char *)malloc(sizeof(char) * infoLen);
+            glGetShaderInfoLog(shader, infoLen, NULL, infoLog);
+            free(infoLog);
         }
 
-        glDeleteShader ( shader );
+        glDeleteShader(shader);
         return 0;
     }
 
     return shader;
-
 }
 
-
-GLuint CMumGlWrapper::LoadProgram ( const char *vertShaderSrc, const char *fragShaderSrc )
+GLuint CMumGlWrapper::LoadProgram(const char *vertShaderSrc, const char *fragShaderSrc)
 {
     GLuint vertexShader;
     GLuint fragmentShader;
@@ -310,56 +292,54 @@ GLuint CMumGlWrapper::LoadProgram ( const char *vertShaderSrc, const char *fragS
     GLint linked;
 
     // Load the vertex/fragment shaders
-    vertexShader = LoadShader ( GL_VERTEX_SHADER, vertShaderSrc );
-    if ( vertexShader == 0 )
+    vertexShader = LoadShader(GL_VERTEX_SHADER, vertShaderSrc);
+    if (vertexShader == 0)
         return 0;
 
-    fragmentShader = LoadShader ( GL_FRAGMENT_SHADER, fragShaderSrc );
-    if ( fragmentShader == 0 )
+    fragmentShader = LoadShader(GL_FRAGMENT_SHADER, fragShaderSrc);
+    if (fragmentShader == 0)
     {
-        glDeleteShader( vertexShader );
+        glDeleteShader(vertexShader);
         return 0;
     }
 
     // Create the program object
-    programObject = glCreateProgram ( );
-    
-    if ( programObject == 0 )
+    programObject = glCreateProgram();
+
+    if (programObject == 0)
         return 0;
 
-    glAttachShader ( programObject, vertexShader );
-    glAttachShader ( programObject, fragmentShader );
+    glAttachShader(programObject, vertexShader);
+    glAttachShader(programObject, fragmentShader);
 
     // Link the program
-    glLinkProgram ( programObject );
+    glLinkProgram(programObject);
 
     // Check the link status
-    glGetProgramiv ( programObject, GL_LINK_STATUS, &linked );
+    glGetProgramiv(programObject, GL_LINK_STATUS, &linked);
 
-    if ( !linked ) 
+    if (!linked)
     {
         GLint infoLen = 0;
 
-        glGetProgramiv ( programObject, GL_INFO_LOG_LENGTH, &infoLen );
-        
-        if ( infoLen > 1 )
+        glGetProgramiv(programObject, GL_INFO_LOG_LENGTH, &infoLen);
+
+        if (infoLen > 1)
         {
-            char* infoLog = (char* ) malloc (sizeof(char) * infoLen );
-            glGetProgramInfoLog ( programObject, infoLen, NULL, infoLog );
-            free ( infoLog );
+            char *infoLog = (char *)malloc(sizeof(char) * infoLen);
+            glGetProgramInfoLog(programObject, infoLen, NULL, infoLog);
+            free(infoLog);
         }
 
-        glDeleteProgram ( programObject );
+        glDeleteProgram(programObject);
         return 0;
     }
 
     // Free up no longer needed shader resources
-    glDeleteShader ( vertexShader );
-    glDeleteShader ( fragmentShader );
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
 
     return programObject;
 }
-
-
 
 #endif

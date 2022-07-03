@@ -15,3 +15,4 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 add_subdirectory(lib)
 add_subdirectory(test)
+add_subdirectory(mpad)

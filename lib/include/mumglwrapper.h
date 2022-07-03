@@ -67,18 +67,6 @@ struct graphics_context
     double lastframe;
 };
 
-// typedef struct
-// {
-//     GLint width;
-//     GLint height;
-//     HWND  hWnd;
-// } ESContext;
-
-//void ESUTIL_API esInitContext ( ESContext *esContext );
-//GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, const char *title, GLint width, GLint height, GLuint flags );
-//GLuint ESUTIL_API esLoadShader ( GLenum type, const char *shaderSrc );
-//GLuint ESUTIL_API esLoadProgram ( const char *vertShaderSrc, const char *fragShaderSrc );
-
 typedef void (APIENTRYP PFNGLBINDTEXTUREPROC ) ( GLenum target, GLuint texture );
 typedef void (APIENTRYP PFNGLDELETETEXTURESPROC ) ( GLsizei n, const GLuint* textures );
 typedef void (APIENTRYP PFNGLDISABLEPROC ) ( GLenum cap );
@@ -91,13 +79,6 @@ typedef void (APIENTRYP PFNGLTEXPARAMETERIPROC ) ( GLenum target, GLenum pname, 
 typedef void (APIENTRYP PFNGLTEXSUBIMAGE2DPROC ) ( GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid* pixels );
 typedef void (APIENTRYP PFNGLVIEWPORTPROC ) ( GLint x, GLint y, GLsizei width, GLsizei height );
 
-// typedef HGLRC ( WINAPI* PFNWGLCREATECONTEXTPROC )( HDC );
-// typedef BOOL  ( WINAPI* PFNWGLDELETECONTEXTPROC )( HGLRC );
-// typedef HGLRC ( WINAPI* PFNWGLGETCURRENTCONTEXTPROC )( void );
-// typedef PROC  ( WINAPI* PFNWGLGETPROCADDRESSPROC )( LPCSTR );
-// typedef BOOL  ( WINAPI* PFNWGLMAKECURRENTPROC )( HDC, HGLRC );
-
-
 class CMumGlWrapper
 {
 public:
@@ -107,29 +88,21 @@ public:
     GLuint LoadShader ( GLenum type, const char *shaderSrc );
 
     PFNGLATTACHSHADERPROC glAttachShader;
-
     PFNGLBINDTEXTUREPROC glBindTexture;
-
     PFNGLCOMPILESHADERPROC glCompileShader;
-
-
     PFNGLGENTEXTURESPROC glGenTextures;
     PFNGLTEXIMAGE2DPROC glTexImage2D;
     PFNGLREADPIXELSPROC glReadPixels;
     PFNGLCREATEPROGRAMPROC glCreateProgram;
-
     PFNGLDELETESHADERPROC glDeleteShader;
     PFNGLDELETEPROGRAMPROC glDeleteProgram;
     PFNGLDELETETEXTURESPROC glDeleteTextures;
     PFNGLDRAWELEMENTSPROC glDrawElements;
     PFNGLDRAWBUFFERSPROC glDrawBuffers; 
     PFNGLDISABLEPROC glDisable;
-
     PFNGLENABLEPROC glEnable;
-
     PFNGLGETPROGRAMINFOLOGPROC glGetProgramInfoLog;
     PFNGLGETSHADERINFOLOGPROC glGetShaderInfoLog;
-
     PFNGLGETPROGRAMIVPROC glGetProgramiv;
     PFNGLLINKPROGRAMPROC glLinkProgram;
     PFNGLUSEPROGRAMPROC glUseProgram;
@@ -151,30 +124,13 @@ public:
     PFNGLBUFFERDATAPROC glBufferData;
     PFNGLCREATESHADERPROC glCreateShader;
     PFNGLSHADERSOURCEPROC glShaderSource;
-
     PFNGLTEXSUBIMAGE2DPROC glTexSubImage2D;
     PFNGLTEXPARAMETERIPROC glTexParameteri;
-
     PFNGLVIEWPORTPROC glViewport;
 
 
 private:
-    // bool EnableOpenGL(ESContext *esContext);
-    // bool WinCreate ( ESContext *esContext, const char *title );
-    // bool esCreateWindow ( ESContext *esContext, const char* title, GLint width, GLint height, GLuint flags );
     GLuint LoadProgram ( const char *vertShaderSrc, const char *fragShaderSrc );
-
-    // // HDC mHDC;
-    // // HGLRC mHGLRC;
-    // // ESContext mContext;
-    // // HMODULE mOpenGlHandle;
-    // void *GetGlProcAddress(char * procName);
-
-    // PFNWGLCREATECONTEXTPROC     mwglCreateContext;
-    // PFNWGLDELETECONTEXTPROC     mwglDeleteContext;
-    // PFNWGLGETCURRENTCONTEXTPROC mwglGetCurrentContext;
-    // PFNWGLGETPROCADDRESSPROC    mwglGetProcAddress;
-    // PFNWGLMAKECURRENTPROC       mwglMakeCurrent;
 
 };
 

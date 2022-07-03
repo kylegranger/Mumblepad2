@@ -55,25 +55,6 @@ GL3WglProc get_proc(const char *proc)
 	return res;
 }
 
-// static struct {
-// 	int major, minor;
-// } version;
-
-// static int parse_version(void)
-// {
-// 	if (!glGetIntegerv)
-// 		return -1;
-
-// 	glGetIntegerv(GL_MAJOR_VERSION, &version.major);
-// 	glGetIntegerv(GL_MINOR_VERSION, &version.minor);
-
-// 	if (version.major < 3)
-// 		return -1;
-// 	return 0;
-// }
-
-//static void load_procs(void);
-
 int gl3wInit(void)
 {
 	open_libgl();
