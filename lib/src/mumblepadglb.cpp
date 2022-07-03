@@ -22,64 +22,66 @@
 // SOFTWARE.
 //
 
-#include "stdio.h"
-#include "string.h"
-#include "malloc.h"
-#include "assert.h"
-#include "../gl/gl3w.h"
+
+
+#include <stdio.h>
+#include <malloc.h>
+#include <assert.h>
+#include <string.h>
 #include "mumblepadglb.h"
 
 #ifdef USE_OPENGL
 
 static float wholeSquareVertices[] = {
-    -1.0f,
-    1.0f,
-    0.0f,
-    -1.0f,
-    -1.0f,
-    0.0f,
-    1.0f,
-    -1.0f,
-    0.0f,
-    1.0f,
-    1.0f,
-    0.0f,
+    -1.0f,  1.0f, 0.0f,
+    -1.0f, -1.0f, 0.0f,
+     1.0f, -1.0f, 0.0f,
+     1.0f,  1.0f, 0.0f,
 };
 
 static float wholeSquareUv[] = {
-    0.0f, 1.0f,
-    0.0f, 0.0f,
-    1.0f, 0.0f,
-    1.0f, 1.0f};
+     0.0f,  1.0f,
+     0.0f,  0.0f,
+     1.0f,  0.0f,
+     1.0f,  1.0f
+};
 
 static float wholeSquareUvOffset[] = {
-    0.0f, 0.875f,
-    0.0f, -0.125f,
-    1.0f, -0.125f,
-    1.0f, 0.875f};
+     0.0f,   0.875f,
+     0.0f,  -0.125f,
+     1.0f,  -0.125f,
+     1.0f,   0.875f
+};
 
-static unsigned short wholeSquareIndices[] = {0, 1, 2, 0, 2, 3};
 
-static char vertexShaderText[] =
-    "attribute vec4 a_position;   \n"
-    "attribute vec2 a_texCoord;   \n"
-    "varying vec2 v_texCoord;     \n"
-    "void main()                  \n"
-    "{                            \n"
-    "   gl_Position = a_position; \n"
-    "   v_texCoord = a_texCoord;  \n"
-    "}                            \n";
+static unsigned short wholeSquareIndices[] = { 0, 1, 2, 0, 2, 3 };
 
-static char nullShaderText[] =
-    "varying vec2 v_texCoord;\n\
+
+
+static char vertexShaderText[] = 
+"attribute vec4 a_position;   \n"
+"attribute vec2 a_texCoord;   \n"
+"varying vec2 v_texCoord;     \n"
+"void main()                  \n"
+"{                            \n"
+"   gl_Position = a_position; \n"
+"   v_texCoord = a_texCoord;  \n"
+"}                            \n";
+
+
+static char nullShaderText[] = 
+"precision mediump float;\n\
+varying vec2 v_texCoord;\n\
 uniform sampler2D source;\n\
 void main(void)\n\
 {\n\
     gl_FragColor  = texture2D(source, v_texCoord);\n\
 }";
 
-static char encryptDiffuseText[] =
-    "varying vec2 v_texCoord;\n\
+
+static char encryptDiffuseText[] = 
+"precision mediump float;\n\
+varying vec2 v_texCoord;\n\
 uniform sampler2D source;\n\
 uniform sampler2D bitmasks;\n\
 uniform sampler2D positionX;\n\
@@ -112,8 +114,11 @@ void main(void)\n\
         texture2D(bitmasks,vec2(src4[3],offset+0.09375))[0];\n\
 }";
 
-static char encryptConfuseText[] =
-    "varying vec2 v_texCoord;\n\
+
+
+static char encryptConfuseText[] = 
+"precision mediump float;\n\
+varying vec2 v_texCoord;\n\
 uniform sampler2D source;\n\
 uniform sampler2D lutKey;\n\
 uniform sampler2D lutXor;\n\
@@ -133,8 +138,12 @@ void main(void)\n\
     gl_FragColor[3] = texture2D(lutPermute,vec2(xorKey[3],v_texCoord[1]))[0];\n\
 }";
 
-static char decryptDiffuseText[] =
-    "varying vec2 v_texCoord;\n\
+
+
+
+static char decryptDiffuseText[] = 
+"precision mediump float;\n\
+varying vec2 v_texCoord;\n\
 uniform sampler2D source;\n\
 uniform sampler2D bitmasks;\n\
 uniform sampler2D positionX;\n\
@@ -167,8 +176,11 @@ void main(void)\n\
         texture2D(bitmasks,vec2(src4[3],offset+0.09375))[0];\n\
 }";
 
-static char decryptConfuseText[] =
-    "varying vec2 v_texCoord;\n\
+
+
+static char decryptConfuseText[] = 
+"precision mediump float;\n\
+varying vec2 v_texCoord;\n\
 uniform sampler2D source;\n\
 uniform sampler2D lutKey;\n\
 uniform sampler2D lutXor;\n\
@@ -188,6 +200,8 @@ void main(void)\n\
     gl_FragColor[3] = texture2D(lutXor,vec2(prm.a,clav.a))[0];\n\
 }";
 
+
+
 CMumblepadGlb::CMumblepadGlb(TMumInfo *mumInfo, CMumGlWrapper *gelbGlWrapper) : CMumRenderer(mumInfo)
 {
     mMumInfo = mumInfo;
@@ -205,38 +219,38 @@ CMumblepadGlb::CMumblepadGlb(TMumInfo *mumInfo, CMumGlWrapper *gelbGlWrapper) : 
     mLutTextureKey = -1;
     mLutTextureKeyI = -1;
     mLutTextureXor = -1;
-    if (!InitTextures())
+    if ( !InitTextures() )
         assert(0);
 }
 
 void CMumblepadGlb::DeleteFrameBuffers()
 {
     glDeleteTextures(2, mPingPongTexture);
-    glDeleteFramebuffers(2, mPingPongFBuffer);
+    mGlw->glDeleteFramebuffers(2, mPingPongFBuffer);
 }
 
 void CMumblepadGlb::DeleteLutTextures()
 {
-    glDeleteTextures(1, &mLutTextureKey);
-    glDeleteTextures(1, &mLutTextureKeyI);
-    glDeleteTextures(1, &mLutTextureXor);
+    glDeleteTextures(1,&mLutTextureKey);
+    glDeleteTextures(1,&mLutTextureKeyI);
+    glDeleteTextures(1,&mLutTextureXor);
 
-    glDeleteTextures(1, &mLutTextureBitmask);
-    glDeleteTextures(1, &mLutTextureBitmaskI);
-    glDeleteTextures(1, &mPositionTexturesX);
-    glDeleteTextures(1, &mPositionTexturesY);
-    glDeleteTextures(1, &mPositionTexturesXI);
-    glDeleteTextures(1, &mPositionTexturesYI);
-    glDeleteTextures(1, &mLutTexturePermute);
-    glDeleteTextures(1, &mLutTexturePermuteI);
+    glDeleteTextures(1,&mLutTextureBitmask);
+    glDeleteTextures(1,&mLutTextureBitmaskI);
+    glDeleteTextures(1,&mPositionTexturesX);
+    glDeleteTextures(1,&mPositionTexturesY);
+    glDeleteTextures(1,&mPositionTexturesXI);
+    glDeleteTextures(1,&mPositionTexturesYI);
+    glDeleteTextures(1,&mLutTexturePermute);
+    glDeleteTextures(1,&mLutTexturePermuteI);
 }
 
 CMumblepadGlb::~CMumblepadGlb()
 {
-    glDeleteProgram(mEncryptDiffuseProgram);
-    glDeleteProgram(mEncryptConfuseProgram);
-    glDeleteProgram(mDecryptDiffuseProgram);
-    glDeleteProgram(mDecryptConfuseProgram);
+    mGlw->glDeleteProgram(mEncryptDiffuseProgram); 
+    mGlw->glDeleteProgram(mEncryptConfuseProgram); 
+    mGlw->glDeleteProgram(mDecryptDiffuseProgram); 
+    mGlw->glDeleteProgram(mDecryptConfuseProgram); 
     DeleteFrameBuffers();
     DeleteLutTextures();
     if (mPrng != nullptr)
@@ -248,158 +262,158 @@ CMumblepadGlb::~CMumblepadGlb()
 
 void CMumblepadGlb::EncryptUpload(uint8_t *data)
 {
-    glBindTexture(GL_TEXTURE_2D, mPingPongTexture[0]);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, MUM_CELLS_X,
-                    MUM_CELLS_MAX_Y, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mPingPongTexture[0] );
+    mGlw->glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, MUM_CELLS_X,
+        MUM_CELLS_MAX_Y, GL_RGBA, GL_UNSIGNED_BYTE, data);
 }
 
 void CMumblepadGlb::DecryptUpload(uint8_t *data)
 {
-    glBindTexture(GL_TEXTURE_2D, mPingPongTexture[0]);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 7 * MUM_CELLS_MAX_Y, MUM_CELLS_X,
-                    MUM_CELLS_MAX_Y, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    glBindTexture( GL_TEXTURE_2D, mPingPongTexture[0] );
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 7*MUM_CELLS_MAX_Y, MUM_CELLS_X,
+        MUM_CELLS_MAX_Y, GL_RGBA, GL_UNSIGNED_BYTE, data);
 }
 
 bool CMumblepadGlb::CreateFrameBuffers()
 {
     GLenum result;
-    glGenTextures(2, mPingPongTexture);
-    glGenFramebuffers(2, mPingPongFBuffer);
+    mGlw->glGenTextures(2, mPingPongTexture);
+    mGlw->glGenFramebuffers(2, mPingPongFBuffer);
 
     uint32_t size = MUM_CELLS_X * MUM_CELLS_YB * 4;
     uint8_t *black = new uint8_t[size];
     memset(black, 0, size);
-    glBindTexture(GL_TEXTURE_2D, mPingPongTexture[0]);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, MUM_CELLS_X, MUM_CELLS_YB,
-                 0, GL_RGBA, GL_UNSIGNED_BYTE, black);
-    glBindFramebuffer(GL_FRAMEBUFFER, mPingPongFBuffer[0]);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mPingPongTexture[0], 0);
+    mGlw->glBindTexture(GL_TEXTURE_2D, mPingPongTexture[0]);
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+    mGlw->glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, MUM_CELLS_X, MUM_CELLS_YB,
+        0, GL_RGBA, GL_UNSIGNED_BYTE, black);
+    mGlw->glBindFramebuffer(GL_FRAMEBUFFER, mPingPongFBuffer[0]);
+    mGlw->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mPingPongTexture[0], 0);
 
-    result = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    result = mGlw->glCheckFramebufferStatus(GL_FRAMEBUFFER);
     if (result != GL_FRAMEBUFFER_COMPLETE)
         return false;
 
-    glBindTexture(GL_TEXTURE_2D, mPingPongTexture[1]);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, MUM_CELLS_X, MUM_CELLS_YB,
-                 0, GL_RGBA, GL_UNSIGNED_BYTE, black);
-    glBindFramebuffer(GL_FRAMEBUFFER, mPingPongFBuffer[1]);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mPingPongTexture[1], 0);
+    mGlw->glBindTexture(GL_TEXTURE_2D, mPingPongTexture[1]);
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+    mGlw->glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, MUM_CELLS_X, MUM_CELLS_YB,
+        0, GL_RGBA, GL_UNSIGNED_BYTE, black);
+    mGlw->glBindFramebuffer(GL_FRAMEBUFFER, mPingPongFBuffer[1]);
+    mGlw->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mPingPongTexture[1], 0);
     delete[] black;
-    result = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    result = mGlw->glCheckFramebufferStatus(GL_FRAMEBUFFER);
     if (result != GL_FRAMEBUFFER_COMPLETE)
         return false;
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    mGlw->glBindFramebuffer(GL_FRAMEBUFFER, 0);
     return true;
 }
 
 bool CMumblepadGlb::CreateLutTextures()
 {
-    glGenTextures(1, &mLutTextureKey);
-    glBindTexture(GL_TEXTURE_2D, mLutTextureKey);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, MUM_CELLS_X, MUM_CELLS_YB,
-                 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    mGlw->glGenTextures(1,&mLutTextureKey);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mLutTextureKey );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+    mGlw->glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, MUM_CELLS_X, MUM_CELLS_YB,
+        0, GL_RGBA, GL_UNSIGNED_BYTE, NULL );
 
-    glGenTextures(1, &mLutTextureKeyI);
-    glBindTexture(GL_TEXTURE_2D, mLutTextureKeyI);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, MUM_CELLS_X, MUM_CELLS_YB,
-                 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    mGlw->glGenTextures(1,&mLutTextureKeyI);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mLutTextureKeyI );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+    mGlw->glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, MUM_CELLS_X, MUM_CELLS_YB,
+        0, GL_RGBA, GL_UNSIGNED_BYTE, NULL );
 
-    glGenTextures(1, &mLutTextureXor);
-    glBindTexture(GL_TEXTURE_2D, mLutTextureXor);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, MUM_NUM_8BIT_VALUES, MUM_NUM_8BIT_VALUES, 0, GL_RED,
-                 GL_UNSIGNED_BYTE, mMumInfo->xorTextureData);
+    mGlw->glGenTextures(1,&mLutTextureXor);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mLutTextureXor );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+    mGlw->glTexImage2D( GL_TEXTURE_2D, 0, GL_LUMINANCE, MUM_NUM_8BIT_VALUES, MUM_NUM_8BIT_VALUES, 0, GL_LUMINANCE, 
+        GL_UNSIGNED_BYTE, mMumInfo->xorTextureData );
 
-    glGenTextures(1, &mLutTextureBitmask);
-    glBindTexture(GL_TEXTURE_2D, mLutTextureBitmask);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, MUM_NUM_8BIT_VALUES, MUM_MASK_TABLE_ROWS * MUM_NUM_ROUNDS, 0, GL_RED,
-                 GL_UNSIGNED_BYTE, NULL);
+    mGlw->glGenTextures(1,&mLutTextureBitmask);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mLutTextureBitmask );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT ); 
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT ); 
+    mGlw->glTexImage2D( GL_TEXTURE_2D, 0, GL_LUMINANCE, MUM_NUM_8BIT_VALUES, MUM_MASK_TABLE_ROWS*MUM_NUM_ROUNDS, 0, GL_LUMINANCE, 
+        GL_UNSIGNED_BYTE, NULL );
 
-    glGenTextures(1, &mLutTextureBitmaskI);
-    glBindTexture(GL_TEXTURE_2D, mLutTextureBitmaskI);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, MUM_NUM_8BIT_VALUES, MUM_MASK_TABLE_ROWS * MUM_NUM_ROUNDS, 0, GL_RED,
-                 GL_UNSIGNED_BYTE, NULL);
+    mGlw->glGenTextures(1,&mLutTextureBitmaskI);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mLutTextureBitmaskI );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT ); 
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT ); 
+    mGlw->glTexImage2D( GL_TEXTURE_2D, 0, GL_LUMINANCE, MUM_NUM_8BIT_VALUES, MUM_MASK_TABLE_ROWS*MUM_NUM_ROUNDS, 0, GL_LUMINANCE, 
+        GL_UNSIGNED_BYTE, NULL );
 
-    glGenTextures(1, &mPositionTexturesX);
-    glBindTexture(GL_TEXTURE_2D, mPositionTexturesX);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, MUM_CELLS_X, MUM_CELLS_YB, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, NULL);
+    mGlw->glGenTextures(1,&mPositionTexturesX);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mPositionTexturesX );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE ); 
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE ); 
+    mGlw->glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, MUM_CELLS_X, MUM_CELLS_YB, 0, GL_RGBA, 
+        GL_UNSIGNED_BYTE, NULL );
 
-    glGenTextures(1, &mPositionTexturesY);
-    glBindTexture(GL_TEXTURE_2D, mPositionTexturesY);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, MUM_CELLS_X, MUM_CELLS_YB, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, NULL);
+    mGlw->glGenTextures(1,&mPositionTexturesY);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mPositionTexturesY );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE ); 
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE ); 
+    mGlw->glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, MUM_CELLS_X, MUM_CELLS_YB, 0, GL_RGBA, 
+        GL_UNSIGNED_BYTE, NULL );
 
-    glGenTextures(1, &mPositionTexturesXI);
-    glBindTexture(GL_TEXTURE_2D, mPositionTexturesXI);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, MUM_CELLS_X, MUM_CELLS_YB, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, NULL);
+    mGlw->glGenTextures(1,&mPositionTexturesXI);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mPositionTexturesXI );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE ); 
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE ); 
+    mGlw->glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, MUM_CELLS_X, MUM_CELLS_YB, 0, GL_RGBA, 
+        GL_UNSIGNED_BYTE, NULL );
 
-    glGenTextures(1, &mPositionTexturesYI);
-    glBindTexture(GL_TEXTURE_2D, mPositionTexturesYI);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, MUM_CELLS_X, MUM_CELLS_YB, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, NULL);
+    mGlw->glGenTextures(1,&mPositionTexturesYI);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mPositionTexturesYI );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE ); 
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE ); 
+    mGlw->glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, MUM_CELLS_X, MUM_CELLS_YB, 0, GL_RGBA, 
+        GL_UNSIGNED_BYTE, NULL );
 
-    glGenTextures(1, &mLutTexturePermute);
-    glBindTexture(GL_TEXTURE_2D, mLutTexturePermute);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, MUM_NUM_8BIT_VALUES, MUM_CELLS_YB, 0, GL_RED,
-                 GL_UNSIGNED_BYTE, NULL);
+    mGlw->glGenTextures(1,&mLutTexturePermute);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mLutTexturePermute );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT ); 
+    mGlw->glTexImage2D( GL_TEXTURE_2D, 0, GL_LUMINANCE, MUM_NUM_8BIT_VALUES, MUM_CELLS_YB, 0, GL_LUMINANCE, 
+        GL_UNSIGNED_BYTE, NULL );
 
-    glGenTextures(1, &mLutTexturePermuteI);
-    glBindTexture(GL_TEXTURE_2D, mLutTexturePermuteI);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, MUM_NUM_8BIT_VALUES, MUM_CELLS_YB, 0, GL_RED,
-                 GL_UNSIGNED_BYTE, NULL);
+    mGlw->glGenTextures(1,&mLutTexturePermuteI);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mLutTexturePermuteI );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT ); 
+    mGlw->glTexImage2D( GL_TEXTURE_2D, 0, GL_LUMINANCE, MUM_NUM_8BIT_VALUES, MUM_CELLS_YB, 0, GL_LUMINANCE, 
+        GL_UNSIGNED_BYTE, NULL );
     return true;
 }
 
@@ -417,49 +431,50 @@ void CMumblepadGlb::InitKey()
 void CMumblepadGlb::WriteTextures()
 {
     uint32_t r;
-    uint32_t indicesB[8] = {6, 5, 4, 3, 2, 1, 0, 7};
+    uint32_t indicesB[8] = { 6, 5, 4, 3, 2, 1, 0, 7 };
 
-    for (r = 0; r < MUM_NUM_ROUNDS; r++)
+    for ( r = 0; r < MUM_NUM_ROUNDS; r++ )
     {
-        glBindTexture(GL_TEXTURE_2D, mLutTextureKey);
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, r * MUM_CELLS_MAX_Y, MUM_CELLS_X,
-                        MUM_CELLS_MAX_Y, GL_RGBA, GL_UNSIGNED_BYTE, mMumInfo->subkeys[r]);
+        mGlw->glBindTexture( GL_TEXTURE_2D, mLutTextureKey );
+        mGlw->glTexSubImage2D(GL_TEXTURE_2D, 0, 0, r*MUM_CELLS_MAX_Y, MUM_CELLS_X,
+            MUM_CELLS_MAX_Y, GL_RGBA, GL_UNSIGNED_BYTE, mMumInfo->subkeys[r]);
 
-        glBindTexture(GL_TEXTURE_2D, mLutTextureKeyI);
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, r * MUM_CELLS_MAX_Y, MUM_CELLS_X,
-                        MUM_CELLS_MAX_Y, GL_RGBA, GL_UNSIGNED_BYTE, mMumInfo->subkeys[indicesB[r]]);
+        mGlw->glBindTexture( GL_TEXTURE_2D, mLutTextureKeyI );
+        mGlw->glTexSubImage2D(GL_TEXTURE_2D, 0, 0, r*MUM_CELLS_MAX_Y, MUM_CELLS_X,
+            MUM_CELLS_MAX_Y, GL_RGBA, GL_UNSIGNED_BYTE, mMumInfo->subkeys[indicesB[r]]);
 
-        glBindTexture(GL_TEXTURE_2D, mLutTexturePermute);
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, r * MUM_CELLS_MAX_Y, MUM_NUM_8BIT_VALUES,
-                        MUM_CELLS_MAX_Y, GL_RED, GL_UNSIGNED_BYTE, mMumInfo->permuteTextureData[r]);
+        mGlw->glBindTexture( GL_TEXTURE_2D, mLutTexturePermute );
+        mGlw->glTexSubImage2D(GL_TEXTURE_2D, 0, 0, r*MUM_CELLS_MAX_Y, MUM_NUM_8BIT_VALUES,
+            MUM_CELLS_MAX_Y, GL_LUMINANCE, GL_UNSIGNED_BYTE, mMumInfo->permuteTextureData[r]);
 
-        glBindTexture(GL_TEXTURE_2D, mLutTexturePermuteI);
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, r * MUM_CELLS_MAX_Y, MUM_NUM_8BIT_VALUES,
-                        MUM_CELLS_MAX_Y, GL_RED, GL_UNSIGNED_BYTE, mMumInfo->permuteTextureDataI[indicesB[r]]);
+        mGlw->glBindTexture( GL_TEXTURE_2D, mLutTexturePermuteI );
+        mGlw->glTexSubImage2D(GL_TEXTURE_2D, 0, 0, r*MUM_CELLS_MAX_Y, MUM_NUM_8BIT_VALUES,
+            MUM_CELLS_MAX_Y, GL_LUMINANCE, GL_UNSIGNED_BYTE, mMumInfo->permuteTextureDataI[indicesB[r]]);
 
-        glBindTexture(GL_TEXTURE_2D, mLutTextureBitmask);
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, r * MUM_CELLS_MAX_Y, MUM_NUM_8BIT_VALUES,
-                        MUM_CELLS_MAX_Y, GL_RED, GL_UNSIGNED_BYTE, mMumInfo->bitmaskTextureData[r]);
+        mGlw->glBindTexture( GL_TEXTURE_2D, mLutTextureBitmask );
+        mGlw->glTexSubImage2D(GL_TEXTURE_2D, 0, 0, r*MUM_CELLS_MAX_Y, MUM_NUM_8BIT_VALUES,
+            MUM_CELLS_MAX_Y, GL_LUMINANCE, GL_UNSIGNED_BYTE, mMumInfo->bitmaskTextureData[r]);
 
-        glBindTexture(GL_TEXTURE_2D, mLutTextureBitmaskI);
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, (7 - r) * MUM_CELLS_MAX_Y, MUM_NUM_8BIT_VALUES,
-                        MUM_CELLS_MAX_Y, GL_RED, GL_UNSIGNED_BYTE, mMumInfo->bitmaskTextureData[r]);
+        mGlw->glBindTexture( GL_TEXTURE_2D, mLutTextureBitmaskI );
+        mGlw->glTexSubImage2D(GL_TEXTURE_2D, 0, 0, (7-r)*MUM_CELLS_MAX_Y, MUM_NUM_8BIT_VALUES,
+            MUM_CELLS_MAX_Y, GL_LUMINANCE, GL_UNSIGNED_BYTE, mMumInfo->bitmaskTextureData[r]);
 
-        glBindTexture(GL_TEXTURE_2D, mPositionTexturesX);
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, r * MUM_CELLS_MAX_Y, MUM_CELLS_X,
-                        MUM_CELLS_MAX_Y, GL_RGBA, GL_UNSIGNED_BYTE, mMumInfo->positionTextureDataX[r]);
+        mGlw->glBindTexture( GL_TEXTURE_2D, mPositionTexturesX );
+        mGlw->glTexSubImage2D(GL_TEXTURE_2D, 0, 0, r*MUM_CELLS_MAX_Y, MUM_CELLS_X,
+            MUM_CELLS_MAX_Y, GL_RGBA, GL_UNSIGNED_BYTE, mMumInfo->positionTextureDataX[r]);
 
-        glBindTexture(GL_TEXTURE_2D, mPositionTexturesY);
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, r * MUM_CELLS_MAX_Y, MUM_CELLS_X,
-                        MUM_CELLS_MAX_Y, GL_RGBA, GL_UNSIGNED_BYTE, mMumInfo->positionTextureDataYB[r]);
+        mGlw->glBindTexture( GL_TEXTURE_2D, mPositionTexturesY );
+        mGlw->glTexSubImage2D(GL_TEXTURE_2D, 0, 0, r*MUM_CELLS_MAX_Y, MUM_CELLS_X,
+            MUM_CELLS_MAX_Y, GL_RGBA, GL_UNSIGNED_BYTE, mMumInfo->positionTextureDataYB[r]);
 
-        glBindTexture(GL_TEXTURE_2D, mPositionTexturesXI);
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, (7 - r) * MUM_CELLS_MAX_Y, MUM_CELLS_X,
-                        MUM_CELLS_MAX_Y, GL_RGBA, GL_UNSIGNED_BYTE, mMumInfo->positionTextureDataXI[r]);
+        mGlw->glBindTexture( GL_TEXTURE_2D, mPositionTexturesXI );
+        mGlw->glTexSubImage2D(GL_TEXTURE_2D, 0, 0, (7-r)*MUM_CELLS_MAX_Y, MUM_CELLS_X,
+            MUM_CELLS_MAX_Y, GL_RGBA, GL_UNSIGNED_BYTE, mMumInfo->positionTextureDataXI[r]);
 
-        glBindTexture(GL_TEXTURE_2D, mPositionTexturesYI);
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, (7 - r) * MUM_CELLS_MAX_Y, MUM_CELLS_X,
-                        MUM_CELLS_MAX_Y, GL_RGBA, GL_UNSIGNED_BYTE, mMumInfo->positionTextureDataYIB[r]);
+        mGlw->glBindTexture( GL_TEXTURE_2D, mPositionTexturesYI );
+        mGlw->glTexSubImage2D(GL_TEXTURE_2D, 0, 0, (7-r)*MUM_CELLS_MAX_Y, MUM_CELLS_X,
+            MUM_CELLS_MAX_Y, GL_RGBA, GL_UNSIGNED_BYTE, mMumInfo->positionTextureDataYIB[r]);
+
     }
 }
 
@@ -470,77 +485,77 @@ GLuint CMumblepadGlb::CreateShader(const char *vertShaderSrc, const char *fragSh
     GLuint programObject;
     GLint linked;
 
-    vertexShader = mGlw->LoadShader(GL_VERTEX_SHADER, vertShaderSrc);
-    if (vertexShader == 0)
+    vertexShader = mGlw->LoadShader ( GL_VERTEX_SHADER, vertShaderSrc );
+    if ( vertexShader == 0 )
     {
         assert(0);
         return 0;
     }
 
-    fragmentShader = mGlw->LoadShader(GL_FRAGMENT_SHADER, fragShaderSrc);
-    if (fragmentShader == 0)
+    fragmentShader = mGlw->LoadShader ( GL_FRAGMENT_SHADER, fragShaderSrc );
+    if ( fragmentShader == 0 )
     {
-        glDeleteShader(vertexShader);
+        mGlw->glDeleteShader( vertexShader );
         assert(0);
         return 0;
     }
 
-    programObject = glCreateProgram();
-    if (programObject == 0)
+    programObject = mGlw->glCreateProgram ( );
+    if ( programObject == 0 )
     {
         assert(0);
         return 0;
     }
 
-    glAttachShader(programObject, vertexShader);
-    glAttachShader(programObject, fragmentShader);
+    mGlw->glAttachShader ( programObject, vertexShader );
+    mGlw->glAttachShader ( programObject, fragmentShader );
 
     // Link the program
-    glLinkProgram(programObject);
+    mGlw->glLinkProgram ( programObject );
 
     // Check the link status
-    glGetProgramiv(programObject, GL_LINK_STATUS, &linked);
+    mGlw->glGetProgramiv ( programObject, GL_LINK_STATUS, &linked );
 
-    if (!linked)
+    if ( !linked ) 
     {
         GLint infoLen = 0;
-        glGetProgramiv(programObject, GL_INFO_LOG_LENGTH, &infoLen);
-        if (infoLen > 1)
+        mGlw->glGetProgramiv ( programObject, GL_INFO_LOG_LENGTH, &infoLen );
+        if ( infoLen > 1 )
         {
-            char *infoLog = (char *)malloc(sizeof(char) * infoLen);
-            glGetProgramInfoLog(programObject, infoLen, NULL, infoLog);
-            free(infoLog);
+            char* infoLog = (char* ) malloc (sizeof(char) * infoLen );
+            mGlw->glGetProgramInfoLog ( programObject, infoLen, NULL, infoLog );
+            free ( infoLog );
         }
-        glDeleteProgram(programObject);
+        mGlw->glDeleteProgram ( programObject );
         return 0;
     }
 
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
+    mGlw->glDeleteShader ( vertexShader );
+    mGlw->glDeleteShader ( fragmentShader );
 
     return programObject;
 }
 
 bool CMumblepadGlb::CreateShaders()
 {
-    mEncryptDiffuseProgram = CreateShader(vertexShaderText, encryptDiffuseText);
-    mEncryptConfuseProgram = CreateShader(vertexShaderText, encryptConfuseText);
-    mDecryptDiffuseProgram = CreateShader(vertexShaderText, decryptDiffuseText);
-    mDecryptConfuseProgram = CreateShader(vertexShaderText, decryptConfuseText);
+    mEncryptDiffuseProgram = CreateShader(vertexShaderText,encryptDiffuseText); 
+    mEncryptConfuseProgram = CreateShader(vertexShaderText,encryptConfuseText); 
+    mDecryptDiffuseProgram = CreateShader(vertexShaderText,decryptDiffuseText); 
+    mDecryptConfuseProgram = CreateShader(vertexShaderText,decryptConfuseText); 
     return 1;
 }
 
 bool CMumblepadGlb::InitTextures()
 {
-    glEnable(GL_TEXTURE_2D);
-    glDisable(GL_BLEND);
-    glDisable(GL_DEPTH_TEST);
+    mGlw->glEnable(GL_TEXTURE_2D);
+    mGlw->glDisable(GL_BLEND);
+    mGlw->glDisable(GL_DEPTH_TEST);
 
-    if (!CreateLutTextures())
+    if ( !CreateLutTextures() )
         return false;
-    if (!CreateFrameBuffers())
+    if ( !CreateFrameBuffers() )
         return false;
-    if (!CreateShaders())
+    if ( !CreateShaders() )
         return false;
     return true;
 }
@@ -553,62 +568,62 @@ void CMumblepadGlb::EncryptDiffuse(uint32_t /*round*/)
 
     // first pass for encrypt
     // destination is ping pong 1
-    glBindFramebuffer(GL_FRAMEBUFFER, mPingPongFBuffer[1]);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mPingPongTexture[1], 0);
-    glViewport(0, 0, MUM_CELLS_X, MUM_CELLS_YB);
+    mGlw->glBindFramebuffer(GL_FRAMEBUFFER, mPingPongFBuffer[1]);
+    mGlw->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mPingPongTexture[1], 0);
+    mGlw->glViewport(0,0,MUM_CELLS_X,MUM_CELLS_YB);
 
-    glUseProgram(mEncryptDiffuseProgram);
-    location = glGetUniformLocation(mEncryptDiffuseProgram, "source");
-    glUniform1i(location, 0);
-    location = glGetUniformLocation(mEncryptDiffuseProgram, "bitmasks");
-    glUniform1i(location, 1);
-    location = glGetUniformLocation(mEncryptDiffuseProgram, "positionX");
-    glUniform1i(location, 2);
-    location = glGetUniformLocation(mEncryptDiffuseProgram, "positionY");
-    glUniform1i(location, 3);
+    mGlw->glUseProgram ( mEncryptDiffuseProgram );
+    location = mGlw->glGetUniformLocation ( mEncryptDiffuseProgram, "source" );
+    mGlw->glUniform1i ( location, 0 );
+    location = mGlw->glGetUniformLocation ( mEncryptDiffuseProgram, "bitmasks" );
+    mGlw->glUniform1i ( location, 1 );
+    location = mGlw->glGetUniformLocation ( mEncryptDiffuseProgram, "positionX" );
+    mGlw->glUniform1i ( location, 2 );
+    location = mGlw->glGetUniformLocation ( mEncryptDiffuseProgram, "positionY" );
+    mGlw->glUniform1i ( location, 3 );
 
     // precompute!
-    positionLoc = glGetAttribLocation(mEncryptDiffuseProgram, "a_position");
-    texCoordLoc = glGetAttribLocation(mEncryptDiffuseProgram, "a_texCoord");
+    positionLoc = mGlw->glGetAttribLocation ( mEncryptDiffuseProgram, "a_position" );
+    texCoordLoc = mGlw->glGetAttribLocation ( mEncryptDiffuseProgram, "a_texCoord" );
 
-    glVertexAttribPointer(positionLoc, 3, GL_FLOAT,
-                          GL_FALSE, 3 * sizeof(GLfloat), wholeSquareVertices);
-    glVertexAttribPointer(texCoordLoc, 2, GL_FLOAT,
-                          GL_FALSE, 2 * sizeof(GLfloat), wholeSquareUv);
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
+    mGlw->glVertexAttribPointer ( positionLoc, 3, GL_FLOAT, 
+        GL_FALSE, 3 * sizeof(GLfloat), wholeSquareVertices );
+    mGlw->glVertexAttribPointer ( texCoordLoc, 2, GL_FLOAT,
+        GL_FALSE, 2 * sizeof(GLfloat), wholeSquareUv );
+    mGlw->glEnableVertexAttribArray ( 0 );
+    mGlw->glEnableVertexAttribArray ( 1 );
 
-    glActiveTexture(GL_TEXTURE0);
+    mGlw->glActiveTexture(GL_TEXTURE0);
     // source is ping pong 0
-    glBindTexture(GL_TEXTURE_2D, mPingPongTexture[0]);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mPingPongTexture[0] );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
 
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, mLutTextureBitmask);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    mGlw->glActiveTexture(GL_TEXTURE1);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mLutTextureBitmask );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
 
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, mPositionTexturesX);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    mGlw->glActiveTexture(GL_TEXTURE2);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mPositionTexturesX );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
 
-    glActiveTexture(GL_TEXTURE3);
-    glBindTexture(GL_TEXTURE_2D, mPositionTexturesY);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    mGlw->glActiveTexture(GL_TEXTURE3);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mPositionTexturesY );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
 
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, wholeSquareIndices);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    mGlw->glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, wholeSquareIndices );
+    mGlw->glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void CMumblepadGlb::EncryptConfuse(uint32_t /*round*/)
@@ -618,62 +633,62 @@ void CMumblepadGlb::EncryptConfuse(uint32_t /*round*/)
     uint32_t texCoordLoc;
 
     // destination is ping pong 0
-    glBindFramebuffer(GL_FRAMEBUFFER, mPingPongFBuffer[0]);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mPingPongTexture[0], 0);
-    glViewport(0, 0, MUM_CELLS_X, MUM_CELLS_YB);
+    mGlw->glBindFramebuffer(GL_FRAMEBUFFER, mPingPongFBuffer[0]);
+    mGlw->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mPingPongTexture[0], 0);
+    mGlw->glViewport(0,0,MUM_CELLS_X,MUM_CELLS_YB);
 
-    glUseProgram(mEncryptConfuseProgram);
-    location = glGetUniformLocation(mEncryptConfuseProgram, "source");
-    glUniform1i(location, 0);
-    location = glGetUniformLocation(mEncryptConfuseProgram, "lutKey");
-    glUniform1i(location, 1);
-    location = glGetUniformLocation(mEncryptConfuseProgram, "lutXor");
-    glUniform1i(location, 2);
-    location = glGetUniformLocation(mEncryptConfuseProgram, "lutPermute");
-    glUniform1i(location, 3);
+    mGlw->glUseProgram ( mEncryptConfuseProgram );
+    location = mGlw->glGetUniformLocation ( mEncryptConfuseProgram, "source" );
+    mGlw->glUniform1i ( location, 0 );
+    location = mGlw->glGetUniformLocation ( mEncryptConfuseProgram, "lutKey" );
+    mGlw->glUniform1i ( location, 1 );
+    location = mGlw->glGetUniformLocation ( mEncryptConfuseProgram, "lutXor" );
+    mGlw->glUniform1i ( location, 2 );
+    location = mGlw->glGetUniformLocation ( mEncryptConfuseProgram, "lutPermute" );
+    mGlw->glUniform1i ( location, 3 );
 
     // precompute!
-    positionLoc = glGetAttribLocation(mEncryptConfuseProgram, "a_position");
-    texCoordLoc = glGetAttribLocation(mEncryptConfuseProgram, "a_texCoord");
+    positionLoc = mGlw->glGetAttribLocation ( mEncryptConfuseProgram, "a_position" );
+    texCoordLoc = mGlw->glGetAttribLocation ( mEncryptConfuseProgram, "a_texCoord" );
 
-    glVertexAttribPointer(positionLoc, 3, GL_FLOAT,
-                          GL_FALSE, 3 * sizeof(GLfloat), wholeSquareVertices);
-    glVertexAttribPointer(texCoordLoc, 2, GL_FLOAT,
-                          GL_FALSE, 2 * sizeof(GLfloat), wholeSquareUvOffset);
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
+    mGlw->glVertexAttribPointer ( positionLoc, 3, GL_FLOAT, 
+        GL_FALSE, 3 * sizeof(GLfloat), wholeSquareVertices );
+    mGlw->glVertexAttribPointer ( texCoordLoc, 2, GL_FLOAT,
+        GL_FALSE, 2 * sizeof(GLfloat), wholeSquareUvOffset );
+    mGlw->glEnableVertexAttribArray ( 0 );
+    mGlw->glEnableVertexAttribArray ( 1 );
 
-    glActiveTexture(GL_TEXTURE0);
+    mGlw->glActiveTexture(GL_TEXTURE0);
     // source is ping pong 1
-    glBindTexture(GL_TEXTURE_2D, mPingPongTexture[1]);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mPingPongTexture[1] );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT ); 
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
 
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, mLutTextureKey);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    mGlw->glActiveTexture(GL_TEXTURE1);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mLutTextureKey );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
 
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, mLutTextureXor);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    mGlw->glActiveTexture(GL_TEXTURE2);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mLutTextureXor );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
 
-    glActiveTexture(GL_TEXTURE3);
-    glBindTexture(GL_TEXTURE_2D, mLutTexturePermute);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    mGlw->glActiveTexture(GL_TEXTURE3);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mLutTexturePermute );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
 
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, wholeSquareIndices);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    mGlw->glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, wholeSquareIndices );
+    mGlw->glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void CMumblepadGlb::DecryptDiffuse(uint32_t /*round*/)
@@ -684,63 +699,63 @@ void CMumblepadGlb::DecryptDiffuse(uint32_t /*round*/)
 
     // second pass for decrypt
     // destination ping pong is 0
-    glBindFramebuffer(GL_FRAMEBUFFER, mPingPongFBuffer[0]);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mPingPongTexture[0], 0);
-    glViewport(0, 0, MUM_CELLS_X, MUM_CELLS_YB);
+    mGlw->glBindFramebuffer(GL_FRAMEBUFFER, mPingPongFBuffer[0]);
+    mGlw->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mPingPongTexture[0], 0);
+    mGlw->glViewport(0,0,MUM_CELLS_X,MUM_CELLS_YB);
 
-    glUseProgram(mDecryptDiffuseProgram);
-    location = glGetUniformLocation(mDecryptDiffuseProgram, "source");
-    glUniform1i(location, 0);
-    location = glGetUniformLocation(mDecryptDiffuseProgram, "bitmasks");
-    glUniform1i(location, 1);
-    location = glGetUniformLocation(mDecryptDiffuseProgram, "positionX");
-    glUniform1i(location, 2);
-    location = glGetUniformLocation(mDecryptDiffuseProgram, "positionY");
-    glUniform1i(location, 3);
+    mGlw->glUseProgram ( mDecryptDiffuseProgram );
+    location = mGlw->glGetUniformLocation ( mDecryptDiffuseProgram, "source" );
+    mGlw->glUniform1i ( location, 0 );
+    location = mGlw->glGetUniformLocation ( mDecryptDiffuseProgram, "bitmasks" );
+    mGlw->glUniform1i ( location, 1 );
+    location = mGlw->glGetUniformLocation ( mDecryptDiffuseProgram, "positionX" );
+    mGlw->glUniform1i ( location, 2 );
+    location = mGlw->glGetUniformLocation ( mDecryptDiffuseProgram, "positionY" );
+    mGlw->glUniform1i ( location, 3 );
 
     // precompute!
-    positionLoc = glGetAttribLocation(mDecryptDiffuseProgram, "a_position");
-    texCoordLoc = glGetAttribLocation(mDecryptDiffuseProgram, "a_texCoord");
+    positionLoc = mGlw->glGetAttribLocation ( mDecryptDiffuseProgram, "a_position" );
+    texCoordLoc = mGlw->glGetAttribLocation ( mDecryptDiffuseProgram, "a_texCoord" );
 
-    glVertexAttribPointer(positionLoc, 3, GL_FLOAT,
-                          GL_FALSE, 3 * sizeof(GLfloat), wholeSquareVertices);
-    glVertexAttribPointer(texCoordLoc, 2, GL_FLOAT,
-                          GL_FALSE, 2 * sizeof(GLfloat), wholeSquareUv);
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
+    mGlw->glVertexAttribPointer ( positionLoc, 3, GL_FLOAT, 
+        GL_FALSE, 3 * sizeof(GLfloat), wholeSquareVertices );
+    mGlw->glVertexAttribPointer ( texCoordLoc, 2, GL_FLOAT,
+        GL_FALSE, 2 * sizeof(GLfloat), wholeSquareUv );
+    mGlw->glEnableVertexAttribArray ( 0 );
+    mGlw->glEnableVertexAttribArray ( 1 );
 
     // second pass for decrypt
     // source ping pong is 1
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, mPingPongTexture[1]);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    mGlw->glActiveTexture(GL_TEXTURE0);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mPingPongTexture[1] );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE ); 
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
 
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, mLutTextureBitmaskI);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    mGlw->glActiveTexture(GL_TEXTURE1);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mLutTextureBitmaskI );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE ); 
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE ); 
 
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, mPositionTexturesXI);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    mGlw->glActiveTexture(GL_TEXTURE2);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mPositionTexturesXI );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
 
-    glActiveTexture(GL_TEXTURE3);
-    glBindTexture(GL_TEXTURE_2D, mPositionTexturesYI);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    mGlw->glActiveTexture(GL_TEXTURE3);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mPositionTexturesYI );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
 
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, wholeSquareIndices);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    mGlw->glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, wholeSquareIndices );
+    mGlw->glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void CMumblepadGlb::DecryptConfuse(uint32_t /*round*/)
@@ -751,84 +766,86 @@ void CMumblepadGlb::DecryptConfuse(uint32_t /*round*/)
 
     // first pass for decrypt
     // destination ping pong is 1
-    glBindFramebuffer(GL_FRAMEBUFFER, mPingPongFBuffer[1]);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mPingPongTexture[1], 0);
-    glViewport(0, 0, MUM_CELLS_X, MUM_CELLS_YB);
+    mGlw->glBindFramebuffer(GL_FRAMEBUFFER, mPingPongFBuffer[1]);
+    mGlw->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mPingPongTexture[1], 0);
+    mGlw->glViewport(0,0,MUM_CELLS_X,MUM_CELLS_YB);
 
-    glUseProgram(mDecryptConfuseProgram);
-
-    // precompute!
-    location = glGetUniformLocation(mDecryptConfuseProgram, "source");
-    glUniform1i(location, 0);
-    location = glGetUniformLocation(mDecryptConfuseProgram, "lutKey");
-    glUniform1i(location, 1);
-    location = glGetUniformLocation(mDecryptConfuseProgram, "lutXor");
-    glUniform1i(location, 2);
-    location = glGetUniformLocation(mDecryptConfuseProgram, "lutPermute");
-    glUniform1i(location, 3);
+    mGlw->glUseProgram ( mDecryptConfuseProgram );
 
     // precompute!
-    positionLoc = glGetAttribLocation(mDecryptConfuseProgram, "a_position");
-    texCoordLoc = glGetAttribLocation(mDecryptConfuseProgram, "a_texCoord");
+    location = mGlw->glGetUniformLocation ( mDecryptConfuseProgram, "source" );
+    mGlw->glUniform1i ( location, 0 );
+    location = mGlw->glGetUniformLocation ( mDecryptConfuseProgram, "lutKey" );
+    mGlw->glUniform1i ( location, 1 );
+    location = mGlw->glGetUniformLocation ( mDecryptConfuseProgram, "lutXor" );
+    mGlw->glUniform1i ( location, 2 );
+    location = mGlw->glGetUniformLocation ( mDecryptConfuseProgram, "lutPermute" );
+    mGlw->glUniform1i ( location, 3 );
 
-    glVertexAttribPointer(positionLoc, 3, GL_FLOAT,
-                          GL_FALSE, 3 * sizeof(GLfloat), wholeSquareVertices);
-    glVertexAttribPointer(texCoordLoc, 2, GL_FLOAT,
-                          GL_FALSE, 2 * sizeof(GLfloat), wholeSquareUvOffset);
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
+    // precompute!
+    positionLoc = mGlw->glGetAttribLocation ( mDecryptConfuseProgram, "a_position" );
+    texCoordLoc = mGlw->glGetAttribLocation ( mDecryptConfuseProgram, "a_texCoord" );
+
+    mGlw->glVertexAttribPointer ( positionLoc, 3, GL_FLOAT, 
+        GL_FALSE, 3 * sizeof(GLfloat), wholeSquareVertices );
+    mGlw->glVertexAttribPointer ( texCoordLoc, 2, GL_FLOAT,
+        GL_FALSE, 2 * sizeof(GLfloat), wholeSquareUvOffset );
+    mGlw->glEnableVertexAttribArray ( 0 );
+    mGlw->glEnableVertexAttribArray ( 1 );
 
     // first pass for decrypt
     // source ping pong is 0
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, mPingPongTexture[0]);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    mGlw->glActiveTexture(GL_TEXTURE0);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mPingPongTexture[0] );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
 
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, mLutTextureKeyI);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    mGlw->glActiveTexture(GL_TEXTURE1);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mLutTextureKeyI );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
 
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, mLutTextureXor);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    mGlw->glActiveTexture(GL_TEXTURE2);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mLutTextureXor );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
 
-    glActiveTexture(GL_TEXTURE3);
-    glBindTexture(GL_TEXTURE_2D, mLutTexturePermuteI);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    mGlw->glActiveTexture(GL_TEXTURE3);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mLutTexturePermuteI );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+    mGlw->glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
 
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, wholeSquareIndices);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    // glFinish();
+    mGlw->glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, wholeSquareIndices );
+    mGlw->glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    //mGlw->glFinish();
 }
 
 void CMumblepadGlb::EncryptDownload(uint8_t *data)
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, mPingPongFBuffer[0]);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, mPingPongTexture[0]);
-    glReadPixels(0, 0, MUM_CELLS_X, MUM_CELLS_MAX_Y, GL_RGBA, GL_UNSIGNED_BYTE, data);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    mGlw->glBindFramebuffer(GL_FRAMEBUFFER, mPingPongFBuffer[0]);
+    mGlw->glActiveTexture(GL_TEXTURE0);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mPingPongTexture[0] );
+    mGlw->glReadPixels(0, 0, MUM_CELLS_X, MUM_CELLS_MAX_Y, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    mGlw->glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
+
 
 void CMumblepadGlb::DecryptDownload(uint8_t *data)
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, mPingPongFBuffer[0]);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, mPingPongTexture[0]);
-    glReadPixels(0, 7 * MUM_CELLS_MAX_Y, MUM_CELLS_X, MUM_CELLS_MAX_Y, GL_RGBA, GL_UNSIGNED_BYTE, data);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    mGlw->glBindFramebuffer(GL_FRAMEBUFFER, mPingPongFBuffer[0]);
+    mGlw->glActiveTexture(GL_TEXTURE0);
+    mGlw->glBindTexture( GL_TEXTURE_2D, mPingPongTexture[0] );
+    mGlw->glReadPixels(0, 7*MUM_CELLS_MAX_Y, MUM_CELLS_X, MUM_CELLS_MAX_Y, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    mGlw->glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 #endif
+

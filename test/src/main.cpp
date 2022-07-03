@@ -346,7 +346,7 @@ bool analyzeBitsChange(uint32_t bitsChanged, uint32_t bitsTotal, uint32_t bytesC
     float bitsPercent = (float)bitsChanged *100.0f / (float)bitsTotal;
     float bytesPart = (float)bytesChanged *256.0f / (float)bytesTotal;
     bool success = true;
-    printf("analyzeBitsChange %f", bitsPercent);
+    printf("analyzeBitsChange %f\n", bitsPercent);
     if (bytesTotal > MUM_KEY_SIZE)
     {
         if (bitsPercent < 49)
@@ -360,9 +360,9 @@ bool analyzeBitsChange(uint32_t bitsChanged, uint32_t bitsTotal, uint32_t bytesC
     }
     else
     {
-        if (bitsPercent < 48)
+        if (bitsPercent < 47)
             success = false;
-        if (bitsPercent > 52)
+        if (bitsPercent > 53)
             success = false;
         if (bytesPart < 253.0f)
             success = false;
@@ -383,67 +383,6 @@ void createRandomBlocksWithOneBitDifference(uint8_t *block1, uint8_t *block2, ui
 	memcpy(block2, block1, size);
 	block2[byteOffset] ^= 1 << bitOffset;
 }
-
-/*
-
-bool testEntropyNoPadding(void *engine, char *engineDesc)
-{
-	EMumError error;
-	uint8_t plaintext1[4096];
-	uint8_t plaintext2[4096];
-	uint8_t encrypt1[4096];
-	uint8_t encrypt2[4096];
-	uint8_t decrypt1[4096];
-	uint8_t decrypt2[4096];
-	uint32_t outlength, i, iter;
-	uint32_t bitsChanged, bitsTotal;
-	uint32_t bytesChanged, bytesTotal;
-	uint32_t encryptedBlockSize, plaintextBlockSize;
-
-    error = MumPlaintextBlockSize(engine, &plaintextBlockSize);
-    error = MumEncryptedBlockSize(engine, &encryptedBlockSize);
-
-	bitsChanged = 0;
-	bitsTotal = 0;
-	bytesChanged = 0,
-		bytesTotal = 0;
-	for (iter = 0; iter < NUM_ENTROPY_ITERATIONS*4; iter++)
-	{
-		createRandomBlocksWithOneBitDifference(plaintext1, plaintext2, plaintextBlockSize);
-
-		error = MumEncrypt(engine, plaintext1, encrypt1, plaintextBlockSize, &outlength, 0);
-		error = MumEncrypt(engine, plaintext2, encrypt2, plaintextBlockSize, &outlength, 0);
-		error = MumDecrypt(engine, encrypt1, decrypt1, encryptedBlockSize, &outlength);
-		error = MumDecrypt(engine, encrypt2, decrypt2, encryptedBlockSize, &outlength);
-		// first, reality check; make sure both encryptions return same plaintext
-		for (i = 0; i < plaintextBlockSize; i++)
-		{
-			assert(decrypt1[i] == plaintext1[i]);
-			assert(decrypt2[i] == plaintext2[i]);
-		}
-		// Now, check deltas between bytes and deltas between bits
-		// 255/256 of bytes should be different if blocks are 'random
-		// 50% of bits should be different
-		for (i = 0; i < encryptedBlockSize; i++)
-		{
-			if (encrypt1[i] != encrypt2[i])
-				bytesChanged++;
-			bitsChanged += bitsSet[encrypt1[i] ^ encrypt2[i]];
-			bytesTotal++;
-			bitsTotal += 8;
-		}
-	}
-	bool success = analyzeBitsChange(bitsChanged, bitsTotal, bytesChanged, bytesTotal);
-	if (!success)
-	{
-		printf("FAILED testEntropy, engine %s\n", engineDesc);
-		return true;
-	}
-
-	printf("SUCCESS testEntropy, engine %s\n", engineDesc);
-
-	return true;
-}*/
 
 bool testEntropy(void *engine, char *engineDesc, EMumPaddingType paddingType)
 {
@@ -477,6 +416,7 @@ bool testEntropy(void *engine, char *engineDesc, EMumPaddingType paddingType)
         error = MumEncrypt(engine, plaintext, encrypt2, plaintextBlockSize, &outlength, 0);
         assert(error == MUM_ERROR_OK);
         error = MumDecrypt(engine, encrypt1, decrypt1, encryptedBlockSize, &outlength);
+        printf("error %d\n", error);
         assert(error == MUM_ERROR_OK);
         error = MumDecrypt(engine, encrypt2, decrypt2, encryptedBlockSize, &outlength);
         assert(error == MUM_ERROR_OK);
@@ -494,31 +434,6 @@ bool testEntropy(void *engine, char *engineDesc, EMumPaddingType paddingType)
             return false;
         }
         // Now, check deltas between bytes and deltas between bits
-        // 255/256 of bytes should be different if blocks are 'random
-        // 50% of bits should be different
-        // if (encryptedBlockSize == 128) {
-        //     printf("block A\n");
-        //     for (int b = 0; b < 128; b++) {
-        //         printf("%02x", encrypt1[b] );
-        //         if ((b % 16 == 15)) {
-        //             printf("\n");
-        //         }
-        //     }
-        //     printf("block B\n");
-        //     for (int b = 0; b < 128; b++) {
-        //         printf("%02x", encrypt2[b] );
-        //         if ((b % 16 == 15)) {
-        //             printf("\n");
-        //         }
-        //     }
-        //     printf("block P\n");
-        //     for (int b = 0; b < 112; b++) {
-        //         printf("%02x", plaintext[b] );
-        //         if ((b % 16 == 15)) {
-        //             printf("\n");
-        //         }
-        //     }
-        // }
         for (i = 0; i < encryptedBlockSize; i++)
         {
             if (encrypt1[i] != encrypt2[i])
@@ -847,6 +762,14 @@ bool doTest(void *engine, char *engineDesc, EMumPaddingType paddingType, EMumBlo
         printf("failed testSimpleBlocks\n");
         //return false;
     }
+    if (!testSimpleBlocks(engine, engineDesc)) {
+        printf("failed testSimpleBlocks\n");
+        //return false;
+    }
+    if (!testSimpleBlocks(engine, engineDesc)) {
+        printf("failed testSimpleBlocks\n");
+        //return false;
+    }
     // if (!testRandomlySizedBlocks(engine, engineDesc, paddingType)) {
     //     printf("failed testRandomlySizedBlocks\n");
     //     //return false;
@@ -987,8 +910,7 @@ bool doTests()
         // for (int engineIndex = 0; engineIndex < TEST_NUM_ENGINES; engineIndex++)
         // {
             int engineIndex = 2;
-            // jkl for (int blockType = firstTestBlockTypeList[engineIndex]; blockType <= MUM_BLOCKTYPE_4096; blockType++)
-            for (int blockType = firstTestBlockTypeList[engineIndex]; blockType <= MUM_BLOCKTYPE_128; blockType++)
+            for (int blockType = firstTestBlockTypeList[engineIndex]; blockType <= MUM_BLOCKTYPE_4096; blockType++)
             {
                 printf("pi %d ei %d bt %d\n", paddingIndex, engineIndex, blockType);
                 void * engine = MumCreateEngine(engineList[engineIndex], (EMumBlockType)blockType, paddingList[paddingIndex], TEST_MUM_NUM_THREADS);

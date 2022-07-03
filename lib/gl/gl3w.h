@@ -33,6 +33,9 @@
 #define __gl3w_h_
 
 #include <GL/glcorearb.h>
+#include "GLES2/gl2.h"
+#include "GLES2/gl2ext.h"
+#include "GLES2/gl2platform.h"
 
 #ifndef __gl_h_
 #define __gl_h_
@@ -48,1411 +51,1412 @@ typedef void (*GL3WglProc)(void);
 int gl3wInit(void);
 int gl3wIsSupported(int major, int minor);
 GL3WglProc gl3wGetProcAddress(const char *proc);
+extern GL3WglProc get_proc(const char *proc);
 
 
 
 /* OpenGL functions */
-extern PFNGLACTIVESHADERPROGRAMPROC                         glActiveShaderProgram;
-extern PFNGLACTIVETEXTUREPROC                               glActiveTexture;
-extern PFNGLATTACHSHADERPROC                                glAttachShader;
-extern PFNGLBEGINCONDITIONALRENDERPROC                      glBeginConditionalRender;
-extern PFNGLBEGINQUERYPROC                                  glBeginQuery;
-extern PFNGLBEGINQUERYINDEXEDPROC                           glBeginQueryIndexed;
-extern PFNGLBEGINTRANSFORMFEEDBACKPROC                      glBeginTransformFeedback;
-extern PFNGLBINDATTRIBLOCATIONPROC                          glBindAttribLocation;
-extern PFNGLBINDBUFFERPROC                                  glBindBuffer;
-extern PFNGLBINDBUFFERBASEPROC                              glBindBufferBase;
-extern PFNGLBINDBUFFERRANGEPROC                             glBindBufferRange;
-extern PFNGLBINDBUFFERSBASEPROC                             glBindBuffersBase;
-extern PFNGLBINDBUFFERSRANGEPROC                            glBindBuffersRange;
-extern PFNGLBINDFRAGDATALOCATIONPROC                        glBindFragDataLocation;
-extern PFNGLBINDFRAGDATALOCATIONINDEXEDPROC                 glBindFragDataLocationIndexed;
-extern PFNGLBINDFRAMEBUFFERPROC                             glBindFramebuffer;
-extern PFNGLBINDIMAGETEXTUREPROC                            glBindImageTexture;
-extern PFNGLBINDIMAGETEXTURESPROC                           glBindImageTextures;
-extern PFNGLBINDPROGRAMPIPELINEPROC                         glBindProgramPipeline;
-extern PFNGLBINDRENDERBUFFERPROC                            glBindRenderbuffer;
-extern PFNGLBINDSAMPLERPROC                                 glBindSampler;
-extern PFNGLBINDSAMPLERSPROC                                glBindSamplers;
-extern PFNGLBINDTEXTUREPROC                                 glBindTexture;
-extern PFNGLBINDTEXTUREUNITPROC                             glBindTextureUnit;
-extern PFNGLBINDTEXTURESPROC                                glBindTextures;
-extern PFNGLBINDTRANSFORMFEEDBACKPROC                       glBindTransformFeedback;
-extern PFNGLBINDVERTEXARRAYPROC                             glBindVertexArray;
-extern PFNGLBINDVERTEXBUFFERPROC                            glBindVertexBuffer;
-extern PFNGLBINDVERTEXBUFFERSPROC                           glBindVertexBuffers;
-extern PFNGLBLENDCOLORPROC                                  glBlendColor;
-extern PFNGLBLENDEQUATIONPROC                               glBlendEquation;
-extern PFNGLBLENDEQUATIONSEPARATEPROC                       glBlendEquationSeparate;
-extern PFNGLBLENDEQUATIONSEPARATEIPROC                      glBlendEquationSeparatei;
-extern PFNGLBLENDEQUATIONSEPARATEIARBPROC                   glBlendEquationSeparateiARB;
-extern PFNGLBLENDEQUATIONIPROC                              glBlendEquationi;
-extern PFNGLBLENDEQUATIONIARBPROC                           glBlendEquationiARB;
-extern PFNGLBLENDFUNCPROC                                   glBlendFunc;
-extern PFNGLBLENDFUNCSEPARATEPROC                           glBlendFuncSeparate;
-extern PFNGLBLENDFUNCSEPARATEIPROC                          glBlendFuncSeparatei;
-extern PFNGLBLENDFUNCSEPARATEIARBPROC                       glBlendFuncSeparateiARB;
-extern PFNGLBLENDFUNCIPROC                                  glBlendFunci;
-extern PFNGLBLENDFUNCIARBPROC                               glBlendFunciARB;
-extern PFNGLBLITFRAMEBUFFERPROC                             glBlitFramebuffer;
-extern PFNGLBLITNAMEDFRAMEBUFFERPROC                        glBlitNamedFramebuffer;
-extern PFNGLBUFFERDATAPROC                                  glBufferData;
-extern PFNGLBUFFERPAGECOMMITMENTARBPROC                     glBufferPageCommitmentARB;
-extern PFNGLBUFFERSTORAGEPROC                               glBufferStorage;
-extern PFNGLBUFFERSUBDATAPROC                               glBufferSubData;
-extern PFNGLCHECKFRAMEBUFFERSTATUSPROC                      glCheckFramebufferStatus;
-extern PFNGLCHECKNAMEDFRAMEBUFFERSTATUSPROC                 glCheckNamedFramebufferStatus;
-extern PFNGLCLAMPCOLORPROC                                  glClampColor;
-extern PFNGLCLEARPROC                                       glClear;
-extern PFNGLCLEARBUFFERDATAPROC                             glClearBufferData;
-extern PFNGLCLEARBUFFERSUBDATAPROC                          glClearBufferSubData;
-extern PFNGLCLEARBUFFERFIPROC                               glClearBufferfi;
-extern PFNGLCLEARBUFFERFVPROC                               glClearBufferfv;
-extern PFNGLCLEARBUFFERIVPROC                               glClearBufferiv;
-extern PFNGLCLEARBUFFERUIVPROC                              glClearBufferuiv;
-extern PFNGLCLEARCOLORPROC                                  glClearColor;
-extern PFNGLCLEARDEPTHPROC                                  glClearDepth;
-extern PFNGLCLEARDEPTHFPROC                                 glClearDepthf;
-extern PFNGLCLEARNAMEDBUFFERDATAPROC                        glClearNamedBufferData;
-extern PFNGLCLEARNAMEDBUFFERSUBDATAPROC                     glClearNamedBufferSubData;
-extern PFNGLCLEARNAMEDFRAMEBUFFERFIPROC                     glClearNamedFramebufferfi;
-extern PFNGLCLEARNAMEDFRAMEBUFFERFVPROC                     glClearNamedFramebufferfv;
-extern PFNGLCLEARNAMEDFRAMEBUFFERIVPROC                     glClearNamedFramebufferiv;
-extern PFNGLCLEARNAMEDFRAMEBUFFERUIVPROC                    glClearNamedFramebufferuiv;
-extern PFNGLCLEARSTENCILPROC                                glClearStencil;
-extern PFNGLCLEARTEXIMAGEPROC                               glClearTexImage;
-extern PFNGLCLEARTEXSUBIMAGEPROC                            glClearTexSubImage;
-extern PFNGLCLIENTWAITSYNCPROC                              glClientWaitSync;
-extern PFNGLCLIPCONTROLPROC                                 glClipControl;
-extern PFNGLCOLORMASKPROC                                   glColorMask;
-extern PFNGLCOLORMASKIPROC                                  glColorMaski;
-extern PFNGLCOMPILESHADERPROC                               glCompileShader;
-extern PFNGLCOMPILESHADERINCLUDEARBPROC                     glCompileShaderIncludeARB;
-extern PFNGLCOMPRESSEDTEXIMAGE1DPROC                        glCompressedTexImage1D;
-extern PFNGLCOMPRESSEDTEXIMAGE2DPROC                        glCompressedTexImage2D;
-extern PFNGLCOMPRESSEDTEXIMAGE3DPROC                        glCompressedTexImage3D;
-extern PFNGLCOMPRESSEDTEXSUBIMAGE1DPROC                     glCompressedTexSubImage1D;
-extern PFNGLCOMPRESSEDTEXSUBIMAGE2DPROC                     glCompressedTexSubImage2D;
-extern PFNGLCOMPRESSEDTEXSUBIMAGE3DPROC                     glCompressedTexSubImage3D;
-extern PFNGLCOMPRESSEDTEXTURESUBIMAGE1DPROC                 glCompressedTextureSubImage1D;
-extern PFNGLCOMPRESSEDTEXTURESUBIMAGE2DPROC                 glCompressedTextureSubImage2D;
-extern PFNGLCOMPRESSEDTEXTURESUBIMAGE3DPROC                 glCompressedTextureSubImage3D;
-extern PFNGLCOPYBUFFERSUBDATAPROC                           glCopyBufferSubData;
-extern PFNGLCOPYIMAGESUBDATAPROC                            glCopyImageSubData;
-extern PFNGLCOPYNAMEDBUFFERSUBDATAPROC                      glCopyNamedBufferSubData;
-extern PFNGLCOPYTEXIMAGE1DPROC                              glCopyTexImage1D;
-extern PFNGLCOPYTEXIMAGE2DPROC                              glCopyTexImage2D;
-extern PFNGLCOPYTEXSUBIMAGE1DPROC                           glCopyTexSubImage1D;
-extern PFNGLCOPYTEXSUBIMAGE2DPROC                           glCopyTexSubImage2D;
-extern PFNGLCOPYTEXSUBIMAGE3DPROC                           glCopyTexSubImage3D;
-extern PFNGLCOPYTEXTURESUBIMAGE1DPROC                       glCopyTextureSubImage1D;
-extern PFNGLCOPYTEXTURESUBIMAGE2DPROC                       glCopyTextureSubImage2D;
-extern PFNGLCOPYTEXTURESUBIMAGE3DPROC                       glCopyTextureSubImage3D;
-extern PFNGLCREATEBUFFERSPROC                               glCreateBuffers;
-extern PFNGLCREATEFRAMEBUFFERSPROC                          glCreateFramebuffers;
-extern PFNGLCREATEPROGRAMPROC                               glCreateProgram;
-extern PFNGLCREATEPROGRAMPIPELINESPROC                      glCreateProgramPipelines;
-extern PFNGLCREATEQUERIESPROC                               glCreateQueries;
-extern PFNGLCREATERENDERBUFFERSPROC                         glCreateRenderbuffers;
-extern PFNGLCREATESAMPLERSPROC                              glCreateSamplers;
-extern PFNGLCREATESHADERPROC                                glCreateShader;
-extern PFNGLCREATESHADERPROGRAMVPROC                        glCreateShaderProgramv;
-extern PFNGLCREATESYNCFROMCLEVENTARBPROC                    glCreateSyncFromCLeventARB;
-extern PFNGLCREATETEXTURESPROC                              glCreateTextures;
-extern PFNGLCREATETRANSFORMFEEDBACKSPROC                    glCreateTransformFeedbacks;
-extern PFNGLCREATEVERTEXARRAYSPROC                          glCreateVertexArrays;
-extern PFNGLCULLFACEPROC                                    glCullFace;
-extern PFNGLDEBUGMESSAGECALLBACKPROC                        glDebugMessageCallback;
-extern PFNGLDEBUGMESSAGECALLBACKARBPROC                     glDebugMessageCallbackARB;
-extern PFNGLDEBUGMESSAGECONTROLPROC                         glDebugMessageControl;
-extern PFNGLDEBUGMESSAGECONTROLARBPROC                      glDebugMessageControlARB;
-extern PFNGLDEBUGMESSAGEINSERTPROC                          glDebugMessageInsert;
-extern PFNGLDEBUGMESSAGEINSERTARBPROC                       glDebugMessageInsertARB;
-extern PFNGLDELETEBUFFERSPROC                               glDeleteBuffers;
-extern PFNGLDELETEFRAMEBUFFERSPROC                          glDeleteFramebuffers;
-extern PFNGLDELETENAMEDSTRINGARBPROC                        glDeleteNamedStringARB;
-extern PFNGLDELETEPROGRAMPROC                               glDeleteProgram;
-extern PFNGLDELETEPROGRAMPIPELINESPROC                      glDeleteProgramPipelines;
-extern PFNGLDELETEQUERIESPROC                               glDeleteQueries;
-extern PFNGLDELETERENDERBUFFERSPROC                         glDeleteRenderbuffers;
-extern PFNGLDELETESAMPLERSPROC                              glDeleteSamplers;
-extern PFNGLDELETESHADERPROC                                glDeleteShader;
-extern PFNGLDELETESYNCPROC                                  glDeleteSync;
-extern PFNGLDELETETEXTURESPROC                              glDeleteTextures;
-extern PFNGLDELETETRANSFORMFEEDBACKSPROC                    glDeleteTransformFeedbacks;
-extern PFNGLDELETEVERTEXARRAYSPROC                          glDeleteVertexArrays;
-extern PFNGLDEPTHFUNCPROC                                   glDepthFunc;
-extern PFNGLDEPTHMASKPROC                                   glDepthMask;
-extern PFNGLDEPTHRANGEPROC                                  glDepthRange;
-extern PFNGLDEPTHRANGEARRAYVPROC                            glDepthRangeArrayv;
-extern PFNGLDEPTHRANGEINDEXEDPROC                           glDepthRangeIndexed;
-extern PFNGLDEPTHRANGEFPROC                                 glDepthRangef;
-extern PFNGLDETACHSHADERPROC                                glDetachShader;
-extern PFNGLDISABLEPROC                                     glDisable;
-extern PFNGLDISABLEVERTEXARRAYATTRIBPROC                    glDisableVertexArrayAttrib;
-extern PFNGLDISABLEVERTEXATTRIBARRAYPROC                    glDisableVertexAttribArray;
-extern PFNGLDISABLEIPROC                                    glDisablei;
-extern PFNGLDISPATCHCOMPUTEPROC                             glDispatchCompute;
-extern PFNGLDISPATCHCOMPUTEGROUPSIZEARBPROC                 glDispatchComputeGroupSizeARB;
-extern PFNGLDISPATCHCOMPUTEINDIRECTPROC                     glDispatchComputeIndirect;
-extern PFNGLDRAWARRAYSPROC                                  glDrawArrays;
-extern PFNGLDRAWARRAYSINDIRECTPROC                          glDrawArraysIndirect;
-extern PFNGLDRAWARRAYSINSTANCEDPROC                         glDrawArraysInstanced;
-extern PFNGLDRAWARRAYSINSTANCEDBASEINSTANCEPROC             glDrawArraysInstancedBaseInstance;
-extern PFNGLDRAWBUFFERPROC                                  glDrawBuffer;
-extern PFNGLDRAWBUFFERSPROC                                 glDrawBuffers;
-extern PFNGLDRAWELEMENTSPROC                                glDrawElements;
-extern PFNGLDRAWELEMENTSBASEVERTEXPROC                      glDrawElementsBaseVertex;
-extern PFNGLDRAWELEMENTSINDIRECTPROC                        glDrawElementsIndirect;
-extern PFNGLDRAWELEMENTSINSTANCEDPROC                       glDrawElementsInstanced;
-extern PFNGLDRAWELEMENTSINSTANCEDBASEINSTANCEPROC           glDrawElementsInstancedBaseInstance;
-extern PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXPROC             glDrawElementsInstancedBaseVertex;
-extern PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXBASEINSTANCEPROC glDrawElementsInstancedBaseVertexBaseInstance;
-extern PFNGLDRAWRANGEELEMENTSPROC                           glDrawRangeElements;
-extern PFNGLDRAWRANGEELEMENTSBASEVERTEXPROC                 glDrawRangeElementsBaseVertex;
-extern PFNGLDRAWTRANSFORMFEEDBACKPROC                       glDrawTransformFeedback;
-extern PFNGLDRAWTRANSFORMFEEDBACKINSTANCEDPROC              glDrawTransformFeedbackInstanced;
-extern PFNGLDRAWTRANSFORMFEEDBACKSTREAMPROC                 glDrawTransformFeedbackStream;
-extern PFNGLDRAWTRANSFORMFEEDBACKSTREAMINSTANCEDPROC        glDrawTransformFeedbackStreamInstanced;
-extern PFNGLENABLEPROC                                      glEnable;
-extern PFNGLENABLEVERTEXARRAYATTRIBPROC                     glEnableVertexArrayAttrib;
-extern PFNGLENABLEVERTEXATTRIBARRAYPROC                     glEnableVertexAttribArray;
-extern PFNGLENABLEIPROC                                     glEnablei;
-extern PFNGLENDCONDITIONALRENDERPROC                        glEndConditionalRender;
-extern PFNGLENDQUERYPROC                                    glEndQuery;
-extern PFNGLENDQUERYINDEXEDPROC                             glEndQueryIndexed;
-extern PFNGLENDTRANSFORMFEEDBACKPROC                        glEndTransformFeedback;
-extern PFNGLFENCESYNCPROC                                   glFenceSync;
-extern PFNGLFINISHPROC                                      glFinish;
-extern PFNGLFLUSHPROC                                       glFlush;
-extern PFNGLFLUSHMAPPEDBUFFERRANGEPROC                      glFlushMappedBufferRange;
-extern PFNGLFLUSHMAPPEDNAMEDBUFFERRANGEPROC                 glFlushMappedNamedBufferRange;
-extern PFNGLFRAMEBUFFERPARAMETERIPROC                       glFramebufferParameteri;
-extern PFNGLFRAMEBUFFERRENDERBUFFERPROC                     glFramebufferRenderbuffer;
-extern PFNGLFRAMEBUFFERTEXTUREPROC                          glFramebufferTexture;
-extern PFNGLFRAMEBUFFERTEXTURE1DPROC                        glFramebufferTexture1D;
-extern PFNGLFRAMEBUFFERTEXTURE2DPROC                        glFramebufferTexture2D;
-extern PFNGLFRAMEBUFFERTEXTURE3DPROC                        glFramebufferTexture3D;
-extern PFNGLFRAMEBUFFERTEXTURELAYERPROC                     glFramebufferTextureLayer;
-extern PFNGLFRONTFACEPROC                                   glFrontFace;
-extern PFNGLGENBUFFERSPROC                                  glGenBuffers;
-extern PFNGLGENFRAMEBUFFERSPROC                             glGenFramebuffers;
-extern PFNGLGENPROGRAMPIPELINESPROC                         glGenProgramPipelines;
-extern PFNGLGENQUERIESPROC                                  glGenQueries;
-extern PFNGLGENRENDERBUFFERSPROC                            glGenRenderbuffers;
-extern PFNGLGENSAMPLERSPROC                                 glGenSamplers;
-extern PFNGLGENTEXTURESPROC                                 glGenTextures;
-extern PFNGLGENTRANSFORMFEEDBACKSPROC                       glGenTransformFeedbacks;
-extern PFNGLGENVERTEXARRAYSPROC                             glGenVertexArrays;
-extern PFNGLGENERATEMIPMAPPROC                              glGenerateMipmap;
-extern PFNGLGENERATETEXTUREMIPMAPPROC                       glGenerateTextureMipmap;
-extern PFNGLGETACTIVEATOMICCOUNTERBUFFERIVPROC              glGetActiveAtomicCounterBufferiv;
-extern PFNGLGETACTIVEATTRIBPROC                             glGetActiveAttrib;
-extern PFNGLGETACTIVESUBROUTINENAMEPROC                     glGetActiveSubroutineName;
-extern PFNGLGETACTIVESUBROUTINEUNIFORMNAMEPROC              glGetActiveSubroutineUniformName;
-extern PFNGLGETACTIVESUBROUTINEUNIFORMIVPROC                glGetActiveSubroutineUniformiv;
-extern PFNGLGETACTIVEUNIFORMPROC                            glGetActiveUniform;
-extern PFNGLGETACTIVEUNIFORMBLOCKNAMEPROC                   glGetActiveUniformBlockName;
-extern PFNGLGETACTIVEUNIFORMBLOCKIVPROC                     glGetActiveUniformBlockiv;
-extern PFNGLGETACTIVEUNIFORMNAMEPROC                        glGetActiveUniformName;
-extern PFNGLGETACTIVEUNIFORMSIVPROC                         glGetActiveUniformsiv;
-extern PFNGLGETATTACHEDSHADERSPROC                          glGetAttachedShaders;
-extern PFNGLGETATTRIBLOCATIONPROC                           glGetAttribLocation;
-extern PFNGLGETBOOLEANI_VPROC                               glGetBooleani_v;
-extern PFNGLGETBOOLEANVPROC                                 glGetBooleanv;
-extern PFNGLGETBUFFERPARAMETERI64VPROC                      glGetBufferParameteri64v;
-extern PFNGLGETBUFFERPARAMETERIVPROC                        glGetBufferParameteriv;
-extern PFNGLGETBUFFERPOINTERVPROC                           glGetBufferPointerv;
-extern PFNGLGETBUFFERSUBDATAPROC                            glGetBufferSubData;
-extern PFNGLGETCOMPRESSEDTEXIMAGEPROC                       glGetCompressedTexImage;
-extern PFNGLGETCOMPRESSEDTEXTUREIMAGEPROC                   glGetCompressedTextureImage;
-extern PFNGLGETCOMPRESSEDTEXTURESUBIMAGEPROC                glGetCompressedTextureSubImage;
-extern PFNGLGETDEBUGMESSAGELOGPROC                          glGetDebugMessageLog;
-extern PFNGLGETDEBUGMESSAGELOGARBPROC                       glGetDebugMessageLogARB;
-extern PFNGLGETDOUBLEI_VPROC                                glGetDoublei_v;
-extern PFNGLGETDOUBLEVPROC                                  glGetDoublev;
-extern PFNGLGETERRORPROC                                    glGetError;
-extern PFNGLGETFLOATI_VPROC                                 glGetFloati_v;
-extern PFNGLGETFLOATVPROC                                   glGetFloatv;
-extern PFNGLGETFRAGDATAINDEXPROC                            glGetFragDataIndex;
-extern PFNGLGETFRAGDATALOCATIONPROC                         glGetFragDataLocation;
-extern PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVPROC         glGetFramebufferAttachmentParameteriv;
-extern PFNGLGETFRAMEBUFFERPARAMETERIVPROC                   glGetFramebufferParameteriv;
-extern PFNGLGETGRAPHICSRESETSTATUSPROC                      glGetGraphicsResetStatus;
-extern PFNGLGETGRAPHICSRESETSTATUSARBPROC                   glGetGraphicsResetStatusARB;
-extern PFNGLGETIMAGEHANDLEARBPROC                           glGetImageHandleARB;
-extern PFNGLGETINTEGER64I_VPROC                             glGetInteger64i_v;
-extern PFNGLGETINTEGER64VPROC                               glGetInteger64v;
-extern PFNGLGETINTEGERI_VPROC                               glGetIntegeri_v;
-extern PFNGLGETINTEGERVPROC                                 glGetIntegerv;
-extern PFNGLGETINTERNALFORMATI64VPROC                       glGetInternalformati64v;
-extern PFNGLGETINTERNALFORMATIVPROC                         glGetInternalformativ;
-extern PFNGLGETMULTISAMPLEFVPROC                            glGetMultisamplefv;
-extern PFNGLGETNAMEDBUFFERPARAMETERI64VPROC                 glGetNamedBufferParameteri64v;
-extern PFNGLGETNAMEDBUFFERPARAMETERIVPROC                   glGetNamedBufferParameteriv;
-extern PFNGLGETNAMEDBUFFERPOINTERVPROC                      glGetNamedBufferPointerv;
-extern PFNGLGETNAMEDBUFFERSUBDATAPROC                       glGetNamedBufferSubData;
-extern PFNGLGETNAMEDFRAMEBUFFERATTACHMENTPARAMETERIVPROC    glGetNamedFramebufferAttachmentParameteriv;
-extern PFNGLGETNAMEDFRAMEBUFFERPARAMETERIVPROC              glGetNamedFramebufferParameteriv;
-extern PFNGLGETNAMEDRENDERBUFFERPARAMETERIVPROC             glGetNamedRenderbufferParameteriv;
-extern PFNGLGETNAMEDSTRINGARBPROC                           glGetNamedStringARB;
-extern PFNGLGETNAMEDSTRINGIVARBPROC                         glGetNamedStringivARB;
-extern PFNGLGETOBJECTLABELPROC                              glGetObjectLabel;
-extern PFNGLGETOBJECTPTRLABELPROC                           glGetObjectPtrLabel;
-extern PFNGLGETPOINTERVPROC                                 glGetPointerv;
-extern PFNGLGETPROGRAMBINARYPROC                            glGetProgramBinary;
-extern PFNGLGETPROGRAMINFOLOGPROC                           glGetProgramInfoLog;
-extern PFNGLGETPROGRAMINTERFACEIVPROC                       glGetProgramInterfaceiv;
-extern PFNGLGETPROGRAMPIPELINEINFOLOGPROC                   glGetProgramPipelineInfoLog;
-extern PFNGLGETPROGRAMPIPELINEIVPROC                        glGetProgramPipelineiv;
-extern PFNGLGETPROGRAMRESOURCEINDEXPROC                     glGetProgramResourceIndex;
-extern PFNGLGETPROGRAMRESOURCELOCATIONPROC                  glGetProgramResourceLocation;
-extern PFNGLGETPROGRAMRESOURCELOCATIONINDEXPROC             glGetProgramResourceLocationIndex;
-extern PFNGLGETPROGRAMRESOURCENAMEPROC                      glGetProgramResourceName;
-extern PFNGLGETPROGRAMRESOURCEIVPROC                        glGetProgramResourceiv;
-extern PFNGLGETPROGRAMSTAGEIVPROC                           glGetProgramStageiv;
-extern PFNGLGETPROGRAMIVPROC                                glGetProgramiv;
-extern PFNGLGETQUERYBUFFEROBJECTI64VPROC                    glGetQueryBufferObjecti64v;
-extern PFNGLGETQUERYBUFFEROBJECTIVPROC                      glGetQueryBufferObjectiv;
-extern PFNGLGETQUERYBUFFEROBJECTUI64VPROC                   glGetQueryBufferObjectui64v;
-extern PFNGLGETQUERYBUFFEROBJECTUIVPROC                     glGetQueryBufferObjectuiv;
-extern PFNGLGETQUERYINDEXEDIVPROC                           glGetQueryIndexediv;
-extern PFNGLGETQUERYOBJECTI64VPROC                          glGetQueryObjecti64v;
-extern PFNGLGETQUERYOBJECTIVPROC                            glGetQueryObjectiv;
-extern PFNGLGETQUERYOBJECTUI64VPROC                         glGetQueryObjectui64v;
-extern PFNGLGETQUERYOBJECTUIVPROC                           glGetQueryObjectuiv;
-extern PFNGLGETQUERYIVPROC                                  glGetQueryiv;
-extern PFNGLGETRENDERBUFFERPARAMETERIVPROC                  glGetRenderbufferParameteriv;
-extern PFNGLGETSAMPLERPARAMETERIIVPROC                      glGetSamplerParameterIiv;
-extern PFNGLGETSAMPLERPARAMETERIUIVPROC                     glGetSamplerParameterIuiv;
-extern PFNGLGETSAMPLERPARAMETERFVPROC                       glGetSamplerParameterfv;
-extern PFNGLGETSAMPLERPARAMETERIVPROC                       glGetSamplerParameteriv;
-extern PFNGLGETSHADERINFOLOGPROC                            glGetShaderInfoLog;
-extern PFNGLGETSHADERPRECISIONFORMATPROC                    glGetShaderPrecisionFormat;
-extern PFNGLGETSHADERSOURCEPROC                             glGetShaderSource;
-extern PFNGLGETSHADERIVPROC                                 glGetShaderiv;
-extern PFNGLGETSTRINGPROC                                   glGetString;
-extern PFNGLGETSTRINGIPROC                                  glGetStringi;
-extern PFNGLGETSUBROUTINEINDEXPROC                          glGetSubroutineIndex;
-extern PFNGLGETSUBROUTINEUNIFORMLOCATIONPROC                glGetSubroutineUniformLocation;
-extern PFNGLGETSYNCIVPROC                                   glGetSynciv;
-extern PFNGLGETTEXIMAGEPROC                                 glGetTexImage;
-extern PFNGLGETTEXLEVELPARAMETERFVPROC                      glGetTexLevelParameterfv;
-extern PFNGLGETTEXLEVELPARAMETERIVPROC                      glGetTexLevelParameteriv;
-extern PFNGLGETTEXPARAMETERIIVPROC                          glGetTexParameterIiv;
-extern PFNGLGETTEXPARAMETERIUIVPROC                         glGetTexParameterIuiv;
-extern PFNGLGETTEXPARAMETERFVPROC                           glGetTexParameterfv;
-extern PFNGLGETTEXPARAMETERIVPROC                           glGetTexParameteriv;
-extern PFNGLGETTEXTUREHANDLEARBPROC                         glGetTextureHandleARB;
-extern PFNGLGETTEXTUREIMAGEPROC                             glGetTextureImage;
-extern PFNGLGETTEXTURELEVELPARAMETERFVPROC                  glGetTextureLevelParameterfv;
-extern PFNGLGETTEXTURELEVELPARAMETERIVPROC                  glGetTextureLevelParameteriv;
-extern PFNGLGETTEXTUREPARAMETERIIVPROC                      glGetTextureParameterIiv;
-extern PFNGLGETTEXTUREPARAMETERIUIVPROC                     glGetTextureParameterIuiv;
-extern PFNGLGETTEXTUREPARAMETERFVPROC                       glGetTextureParameterfv;
-extern PFNGLGETTEXTUREPARAMETERIVPROC                       glGetTextureParameteriv;
-extern PFNGLGETTEXTURESAMPLERHANDLEARBPROC                  glGetTextureSamplerHandleARB;
-extern PFNGLGETTEXTURESUBIMAGEPROC                          glGetTextureSubImage;
-extern PFNGLGETTRANSFORMFEEDBACKVARYINGPROC                 glGetTransformFeedbackVarying;
-extern PFNGLGETTRANSFORMFEEDBACKI64_VPROC                   glGetTransformFeedbacki64_v;
-extern PFNGLGETTRANSFORMFEEDBACKI_VPROC                     glGetTransformFeedbacki_v;
-extern PFNGLGETTRANSFORMFEEDBACKIVPROC                      glGetTransformFeedbackiv;
-extern PFNGLGETUNIFORMBLOCKINDEXPROC                        glGetUniformBlockIndex;
-extern PFNGLGETUNIFORMINDICESPROC                           glGetUniformIndices;
-extern PFNGLGETUNIFORMLOCATIONPROC                          glGetUniformLocation;
-extern PFNGLGETUNIFORMSUBROUTINEUIVPROC                     glGetUniformSubroutineuiv;
-extern PFNGLGETUNIFORMDVPROC                                glGetUniformdv;
-extern PFNGLGETUNIFORMFVPROC                                glGetUniformfv;
-extern PFNGLGETUNIFORMIVPROC                                glGetUniformiv;
-extern PFNGLGETUNIFORMUIVPROC                               glGetUniformuiv;
-extern PFNGLGETVERTEXARRAYINDEXED64IVPROC                   glGetVertexArrayIndexed64iv;
-extern PFNGLGETVERTEXARRAYINDEXEDIVPROC                     glGetVertexArrayIndexediv;
-extern PFNGLGETVERTEXARRAYIVPROC                            glGetVertexArrayiv;
-extern PFNGLGETVERTEXATTRIBIIVPROC                          glGetVertexAttribIiv;
-extern PFNGLGETVERTEXATTRIBIUIVPROC                         glGetVertexAttribIuiv;
-extern PFNGLGETVERTEXATTRIBLDVPROC                          glGetVertexAttribLdv;
-extern PFNGLGETVERTEXATTRIBLUI64VARBPROC                    glGetVertexAttribLui64vARB;
-extern PFNGLGETVERTEXATTRIBPOINTERVPROC                     glGetVertexAttribPointerv;
-extern PFNGLGETVERTEXATTRIBDVPROC                           glGetVertexAttribdv;
-extern PFNGLGETVERTEXATTRIBFVPROC                           glGetVertexAttribfv;
-extern PFNGLGETVERTEXATTRIBIVPROC                           glGetVertexAttribiv;
-extern PFNGLGETNCOMPRESSEDTEXIMAGEPROC                      glGetnCompressedTexImage;
-extern PFNGLGETNCOMPRESSEDTEXIMAGEARBPROC                   glGetnCompressedTexImageARB;
-extern PFNGLGETNTEXIMAGEPROC                                glGetnTexImage;
-extern PFNGLGETNTEXIMAGEARBPROC                             glGetnTexImageARB;
-extern PFNGLGETNUNIFORMDVPROC                               glGetnUniformdv;
-extern PFNGLGETNUNIFORMDVARBPROC                            glGetnUniformdvARB;
-extern PFNGLGETNUNIFORMFVPROC                               glGetnUniformfv;
-extern PFNGLGETNUNIFORMFVARBPROC                            glGetnUniformfvARB;
-extern PFNGLGETNUNIFORMIVPROC                               glGetnUniformiv;
-extern PFNGLGETNUNIFORMIVARBPROC                            glGetnUniformivARB;
-extern PFNGLGETNUNIFORMUIVPROC                              glGetnUniformuiv;
-extern PFNGLGETNUNIFORMUIVARBPROC                           glGetnUniformuivARB;
-extern PFNGLHINTPROC                                        glHint;
-extern PFNGLINVALIDATEBUFFERDATAPROC                        glInvalidateBufferData;
-extern PFNGLINVALIDATEBUFFERSUBDATAPROC                     glInvalidateBufferSubData;
-extern PFNGLINVALIDATEFRAMEBUFFERPROC                       glInvalidateFramebuffer;
-extern PFNGLINVALIDATENAMEDFRAMEBUFFERDATAPROC              glInvalidateNamedFramebufferData;
-extern PFNGLINVALIDATENAMEDFRAMEBUFFERSUBDATAPROC           glInvalidateNamedFramebufferSubData;
-extern PFNGLINVALIDATESUBFRAMEBUFFERPROC                    glInvalidateSubFramebuffer;
-extern PFNGLINVALIDATETEXIMAGEPROC                          glInvalidateTexImage;
-extern PFNGLINVALIDATETEXSUBIMAGEPROC                       glInvalidateTexSubImage;
-extern PFNGLISBUFFERPROC                                    glIsBuffer;
-extern PFNGLISENABLEDPROC                                   glIsEnabled;
-extern PFNGLISENABLEDIPROC                                  glIsEnabledi;
-extern PFNGLISFRAMEBUFFERPROC                               glIsFramebuffer;
-extern PFNGLISIMAGEHANDLERESIDENTARBPROC                    glIsImageHandleResidentARB;
-extern PFNGLISNAMEDSTRINGARBPROC                            glIsNamedStringARB;
-extern PFNGLISPROGRAMPROC                                   glIsProgram;
-extern PFNGLISPROGRAMPIPELINEPROC                           glIsProgramPipeline;
-extern PFNGLISQUERYPROC                                     glIsQuery;
-extern PFNGLISRENDERBUFFERPROC                              glIsRenderbuffer;
-extern PFNGLISSAMPLERPROC                                   glIsSampler;
-extern PFNGLISSHADERPROC                                    glIsShader;
-extern PFNGLISSYNCPROC                                      glIsSync;
-extern PFNGLISTEXTUREPROC                                   glIsTexture;
-extern PFNGLISTEXTUREHANDLERESIDENTARBPROC                  glIsTextureHandleResidentARB;
-extern PFNGLISTRANSFORMFEEDBACKPROC                         glIsTransformFeedback;
-extern PFNGLISVERTEXARRAYPROC                               glIsVertexArray;
-extern PFNGLLINEWIDTHPROC                                   glLineWidth;
-extern PFNGLLINKPROGRAMPROC                                 glLinkProgram;
-extern PFNGLLOGICOPPROC                                     glLogicOp;
-extern PFNGLMAKEIMAGEHANDLENONRESIDENTARBPROC               glMakeImageHandleNonResidentARB;
-extern PFNGLMAKEIMAGEHANDLERESIDENTARBPROC                  glMakeImageHandleResidentARB;
-extern PFNGLMAKETEXTUREHANDLENONRESIDENTARBPROC             glMakeTextureHandleNonResidentARB;
-extern PFNGLMAKETEXTUREHANDLERESIDENTARBPROC                glMakeTextureHandleResidentARB;
-extern PFNGLMAPBUFFERPROC                                   glMapBuffer;
-extern PFNGLMAPBUFFERRANGEPROC                              glMapBufferRange;
-extern PFNGLMAPNAMEDBUFFERPROC                              glMapNamedBuffer;
-extern PFNGLMAPNAMEDBUFFERRANGEPROC                         glMapNamedBufferRange;
-extern PFNGLMEMORYBARRIERPROC                               glMemoryBarrier;
-extern PFNGLMEMORYBARRIERBYREGIONPROC                       glMemoryBarrierByRegion;
-extern PFNGLMINSAMPLESHADINGPROC                            glMinSampleShading;
-extern PFNGLMINSAMPLESHADINGARBPROC                         glMinSampleShadingARB;
-extern PFNGLMULTIDRAWARRAYSPROC                             glMultiDrawArrays;
-extern PFNGLMULTIDRAWARRAYSINDIRECTPROC                     glMultiDrawArraysIndirect;
-extern PFNGLMULTIDRAWARRAYSINDIRECTCOUNTARBPROC             glMultiDrawArraysIndirectCountARB;
-extern PFNGLMULTIDRAWELEMENTSPROC                           glMultiDrawElements;
-extern PFNGLMULTIDRAWELEMENTSBASEVERTEXPROC                 glMultiDrawElementsBaseVertex;
-extern PFNGLMULTIDRAWELEMENTSINDIRECTPROC                   glMultiDrawElementsIndirect;
-extern PFNGLMULTIDRAWELEMENTSINDIRECTCOUNTARBPROC           glMultiDrawElementsIndirectCountARB;
-extern PFNGLNAMEDBUFFERDATAPROC                             glNamedBufferData;
-extern PFNGLNAMEDBUFFERPAGECOMMITMENTARBPROC                glNamedBufferPageCommitmentARB;
-extern PFNGLNAMEDBUFFERPAGECOMMITMENTEXTPROC                glNamedBufferPageCommitmentEXT;
-extern PFNGLNAMEDBUFFERSTORAGEPROC                          glNamedBufferStorage;
-extern PFNGLNAMEDBUFFERSUBDATAPROC                          glNamedBufferSubData;
-extern PFNGLNAMEDFRAMEBUFFERDRAWBUFFERPROC                  glNamedFramebufferDrawBuffer;
-extern PFNGLNAMEDFRAMEBUFFERDRAWBUFFERSPROC                 glNamedFramebufferDrawBuffers;
-extern PFNGLNAMEDFRAMEBUFFERPARAMETERIPROC                  glNamedFramebufferParameteri;
-extern PFNGLNAMEDFRAMEBUFFERREADBUFFERPROC                  glNamedFramebufferReadBuffer;
-extern PFNGLNAMEDFRAMEBUFFERRENDERBUFFERPROC                glNamedFramebufferRenderbuffer;
-extern PFNGLNAMEDFRAMEBUFFERTEXTUREPROC                     glNamedFramebufferTexture;
-extern PFNGLNAMEDFRAMEBUFFERTEXTURELAYERPROC                glNamedFramebufferTextureLayer;
-extern PFNGLNAMEDRENDERBUFFERSTORAGEPROC                    glNamedRenderbufferStorage;
-extern PFNGLNAMEDRENDERBUFFERSTORAGEMULTISAMPLEPROC         glNamedRenderbufferStorageMultisample;
-extern PFNGLNAMEDSTRINGARBPROC                              glNamedStringARB;
-extern PFNGLOBJECTLABELPROC                                 glObjectLabel;
-extern PFNGLOBJECTPTRLABELPROC                              glObjectPtrLabel;
-extern PFNGLPATCHPARAMETERFVPROC                            glPatchParameterfv;
-extern PFNGLPATCHPARAMETERIPROC                             glPatchParameteri;
-extern PFNGLPAUSETRANSFORMFEEDBACKPROC                      glPauseTransformFeedback;
-extern PFNGLPIXELSTOREFPROC                                 glPixelStoref;
-extern PFNGLPIXELSTOREIPROC                                 glPixelStorei;
-extern PFNGLPOINTPARAMETERFPROC                             glPointParameterf;
-extern PFNGLPOINTPARAMETERFVPROC                            glPointParameterfv;
-extern PFNGLPOINTPARAMETERIPROC                             glPointParameteri;
-extern PFNGLPOINTPARAMETERIVPROC                            glPointParameteriv;
-extern PFNGLPOINTSIZEPROC                                   glPointSize;
-extern PFNGLPOLYGONMODEPROC                                 glPolygonMode;
-extern PFNGLPOLYGONOFFSETPROC                               glPolygonOffset;
-extern PFNGLPOPDEBUGGROUPPROC                               glPopDebugGroup;
-extern PFNGLPRIMITIVERESTARTINDEXPROC                       glPrimitiveRestartIndex;
-extern PFNGLPROGRAMBINARYPROC                               glProgramBinary;
-extern PFNGLPROGRAMPARAMETERIPROC                           glProgramParameteri;
-extern PFNGLPROGRAMUNIFORM1DPROC                            glProgramUniform1d;
-extern PFNGLPROGRAMUNIFORM1DVPROC                           glProgramUniform1dv;
-extern PFNGLPROGRAMUNIFORM1FPROC                            glProgramUniform1f;
-extern PFNGLPROGRAMUNIFORM1FVPROC                           glProgramUniform1fv;
-extern PFNGLPROGRAMUNIFORM1IPROC                            glProgramUniform1i;
-extern PFNGLPROGRAMUNIFORM1IVPROC                           glProgramUniform1iv;
-extern PFNGLPROGRAMUNIFORM1UIPROC                           glProgramUniform1ui;
-extern PFNGLPROGRAMUNIFORM1UIVPROC                          glProgramUniform1uiv;
-extern PFNGLPROGRAMUNIFORM2DPROC                            glProgramUniform2d;
-extern PFNGLPROGRAMUNIFORM2DVPROC                           glProgramUniform2dv;
-extern PFNGLPROGRAMUNIFORM2FPROC                            glProgramUniform2f;
-extern PFNGLPROGRAMUNIFORM2FVPROC                           glProgramUniform2fv;
-extern PFNGLPROGRAMUNIFORM2IPROC                            glProgramUniform2i;
-extern PFNGLPROGRAMUNIFORM2IVPROC                           glProgramUniform2iv;
-extern PFNGLPROGRAMUNIFORM2UIPROC                           glProgramUniform2ui;
-extern PFNGLPROGRAMUNIFORM2UIVPROC                          glProgramUniform2uiv;
-extern PFNGLPROGRAMUNIFORM3DPROC                            glProgramUniform3d;
-extern PFNGLPROGRAMUNIFORM3DVPROC                           glProgramUniform3dv;
-extern PFNGLPROGRAMUNIFORM3FPROC                            glProgramUniform3f;
-extern PFNGLPROGRAMUNIFORM3FVPROC                           glProgramUniform3fv;
-extern PFNGLPROGRAMUNIFORM3IPROC                            glProgramUniform3i;
-extern PFNGLPROGRAMUNIFORM3IVPROC                           glProgramUniform3iv;
-extern PFNGLPROGRAMUNIFORM3UIPROC                           glProgramUniform3ui;
-extern PFNGLPROGRAMUNIFORM3UIVPROC                          glProgramUniform3uiv;
-extern PFNGLPROGRAMUNIFORM4DPROC                            glProgramUniform4d;
-extern PFNGLPROGRAMUNIFORM4DVPROC                           glProgramUniform4dv;
-extern PFNGLPROGRAMUNIFORM4FPROC                            glProgramUniform4f;
-extern PFNGLPROGRAMUNIFORM4FVPROC                           glProgramUniform4fv;
-extern PFNGLPROGRAMUNIFORM4IPROC                            glProgramUniform4i;
-extern PFNGLPROGRAMUNIFORM4IVPROC                           glProgramUniform4iv;
-extern PFNGLPROGRAMUNIFORM4UIPROC                           glProgramUniform4ui;
-extern PFNGLPROGRAMUNIFORM4UIVPROC                          glProgramUniform4uiv;
-extern PFNGLPROGRAMUNIFORMHANDLEUI64ARBPROC                 glProgramUniformHandleui64ARB;
-extern PFNGLPROGRAMUNIFORMHANDLEUI64VARBPROC                glProgramUniformHandleui64vARB;
-extern PFNGLPROGRAMUNIFORMMATRIX2DVPROC                     glProgramUniformMatrix2dv;
-extern PFNGLPROGRAMUNIFORMMATRIX2FVPROC                     glProgramUniformMatrix2fv;
-extern PFNGLPROGRAMUNIFORMMATRIX2X3DVPROC                   glProgramUniformMatrix2x3dv;
-extern PFNGLPROGRAMUNIFORMMATRIX2X3FVPROC                   glProgramUniformMatrix2x3fv;
-extern PFNGLPROGRAMUNIFORMMATRIX2X4DVPROC                   glProgramUniformMatrix2x4dv;
-extern PFNGLPROGRAMUNIFORMMATRIX2X4FVPROC                   glProgramUniformMatrix2x4fv;
-extern PFNGLPROGRAMUNIFORMMATRIX3DVPROC                     glProgramUniformMatrix3dv;
-extern PFNGLPROGRAMUNIFORMMATRIX3FVPROC                     glProgramUniformMatrix3fv;
-extern PFNGLPROGRAMUNIFORMMATRIX3X2DVPROC                   glProgramUniformMatrix3x2dv;
-extern PFNGLPROGRAMUNIFORMMATRIX3X2FVPROC                   glProgramUniformMatrix3x2fv;
-extern PFNGLPROGRAMUNIFORMMATRIX3X4DVPROC                   glProgramUniformMatrix3x4dv;
-extern PFNGLPROGRAMUNIFORMMATRIX3X4FVPROC                   glProgramUniformMatrix3x4fv;
-extern PFNGLPROGRAMUNIFORMMATRIX4DVPROC                     glProgramUniformMatrix4dv;
-extern PFNGLPROGRAMUNIFORMMATRIX4FVPROC                     glProgramUniformMatrix4fv;
-extern PFNGLPROGRAMUNIFORMMATRIX4X2DVPROC                   glProgramUniformMatrix4x2dv;
-extern PFNGLPROGRAMUNIFORMMATRIX4X2FVPROC                   glProgramUniformMatrix4x2fv;
-extern PFNGLPROGRAMUNIFORMMATRIX4X3DVPROC                   glProgramUniformMatrix4x3dv;
-extern PFNGLPROGRAMUNIFORMMATRIX4X3FVPROC                   glProgramUniformMatrix4x3fv;
-extern PFNGLPROVOKINGVERTEXPROC                             glProvokingVertex;
-extern PFNGLPUSHDEBUGGROUPPROC                              glPushDebugGroup;
-extern PFNGLQUERYCOUNTERPROC                                glQueryCounter;
-extern PFNGLREADBUFFERPROC                                  glReadBuffer;
-extern PFNGLREADPIXELSPROC                                  glReadPixels;
-extern PFNGLREADNPIXELSPROC                                 glReadnPixels;
-extern PFNGLREADNPIXELSARBPROC                              glReadnPixelsARB;
-extern PFNGLRELEASESHADERCOMPILERPROC                       glReleaseShaderCompiler;
-extern PFNGLRENDERBUFFERSTORAGEPROC                         glRenderbufferStorage;
-extern PFNGLRENDERBUFFERSTORAGEMULTISAMPLEPROC              glRenderbufferStorageMultisample;
-extern PFNGLRESUMETRANSFORMFEEDBACKPROC                     glResumeTransformFeedback;
-extern PFNGLSAMPLECOVERAGEPROC                              glSampleCoverage;
-extern PFNGLSAMPLEMASKIPROC                                 glSampleMaski;
-extern PFNGLSAMPLERPARAMETERIIVPROC                         glSamplerParameterIiv;
-extern PFNGLSAMPLERPARAMETERIUIVPROC                        glSamplerParameterIuiv;
-extern PFNGLSAMPLERPARAMETERFPROC                           glSamplerParameterf;
-extern PFNGLSAMPLERPARAMETERFVPROC                          glSamplerParameterfv;
-extern PFNGLSAMPLERPARAMETERIPROC                           glSamplerParameteri;
-extern PFNGLSAMPLERPARAMETERIVPROC                          glSamplerParameteriv;
-extern PFNGLSCISSORPROC                                     glScissor;
-extern PFNGLSCISSORARRAYVPROC                               glScissorArrayv;
-extern PFNGLSCISSORINDEXEDPROC                              glScissorIndexed;
-extern PFNGLSCISSORINDEXEDVPROC                             glScissorIndexedv;
-extern PFNGLSHADERBINARYPROC                                glShaderBinary;
-extern PFNGLSHADERSOURCEPROC                                glShaderSource;
-extern PFNGLSHADERSTORAGEBLOCKBINDINGPROC                   glShaderStorageBlockBinding;
-extern PFNGLSTENCILFUNCPROC                                 glStencilFunc;
-extern PFNGLSTENCILFUNCSEPARATEPROC                         glStencilFuncSeparate;
-extern PFNGLSTENCILMASKPROC                                 glStencilMask;
-extern PFNGLSTENCILMASKSEPARATEPROC                         glStencilMaskSeparate;
-extern PFNGLSTENCILOPPROC                                   glStencilOp;
-extern PFNGLSTENCILOPSEPARATEPROC                           glStencilOpSeparate;
-extern PFNGLTEXBUFFERPROC                                   glTexBuffer;
-extern PFNGLTEXBUFFERRANGEPROC                              glTexBufferRange;
-extern PFNGLTEXIMAGE1DPROC                                  glTexImage1D;
-extern PFNGLTEXIMAGE2DPROC                                  glTexImage2D;
-extern PFNGLTEXIMAGE2DMULTISAMPLEPROC                       glTexImage2DMultisample;
-extern PFNGLTEXIMAGE3DPROC                                  glTexImage3D;
-extern PFNGLTEXIMAGE3DMULTISAMPLEPROC                       glTexImage3DMultisample;
-extern PFNGLTEXPAGECOMMITMENTARBPROC                        glTexPageCommitmentARB;
-extern PFNGLTEXPARAMETERIIVPROC                             glTexParameterIiv;
-extern PFNGLTEXPARAMETERIUIVPROC                            glTexParameterIuiv;
-extern PFNGLTEXPARAMETERFPROC                               glTexParameterf;
-extern PFNGLTEXPARAMETERFVPROC                              glTexParameterfv;
-extern PFNGLTEXPARAMETERIPROC                               glTexParameteri;
-extern PFNGLTEXPARAMETERIVPROC                              glTexParameteriv;
-extern PFNGLTEXSTORAGE1DPROC                                glTexStorage1D;
-extern PFNGLTEXSTORAGE2DPROC                                glTexStorage2D;
-extern PFNGLTEXSTORAGE2DMULTISAMPLEPROC                     glTexStorage2DMultisample;
-extern PFNGLTEXSTORAGE3DPROC                                glTexStorage3D;
-extern PFNGLTEXSTORAGE3DMULTISAMPLEPROC                     glTexStorage3DMultisample;
-extern PFNGLTEXSUBIMAGE1DPROC                               glTexSubImage1D;
-extern PFNGLTEXSUBIMAGE2DPROC                               glTexSubImage2D;
-extern PFNGLTEXSUBIMAGE3DPROC                               glTexSubImage3D;
-extern PFNGLTEXTUREBARRIERPROC                              glTextureBarrier;
-extern PFNGLTEXTUREBUFFERPROC                               glTextureBuffer;
-extern PFNGLTEXTUREBUFFERRANGEPROC                          glTextureBufferRange;
-extern PFNGLTEXTUREPARAMETERIIVPROC                         glTextureParameterIiv;
-extern PFNGLTEXTUREPARAMETERIUIVPROC                        glTextureParameterIuiv;
-extern PFNGLTEXTUREPARAMETERFPROC                           glTextureParameterf;
-extern PFNGLTEXTUREPARAMETERFVPROC                          glTextureParameterfv;
-extern PFNGLTEXTUREPARAMETERIPROC                           glTextureParameteri;
-extern PFNGLTEXTUREPARAMETERIVPROC                          glTextureParameteriv;
-extern PFNGLTEXTURESTORAGE1DPROC                            glTextureStorage1D;
-extern PFNGLTEXTURESTORAGE2DPROC                            glTextureStorage2D;
-extern PFNGLTEXTURESTORAGE2DMULTISAMPLEPROC                 glTextureStorage2DMultisample;
-extern PFNGLTEXTURESTORAGE3DPROC                            glTextureStorage3D;
-extern PFNGLTEXTURESTORAGE3DMULTISAMPLEPROC                 glTextureStorage3DMultisample;
-extern PFNGLTEXTURESUBIMAGE1DPROC                           glTextureSubImage1D;
-extern PFNGLTEXTURESUBIMAGE2DPROC                           glTextureSubImage2D;
-extern PFNGLTEXTURESUBIMAGE3DPROC                           glTextureSubImage3D;
-extern PFNGLTEXTUREVIEWPROC                                 glTextureView;
-extern PFNGLTRANSFORMFEEDBACKBUFFERBASEPROC                 glTransformFeedbackBufferBase;
-extern PFNGLTRANSFORMFEEDBACKBUFFERRANGEPROC                glTransformFeedbackBufferRange;
-extern PFNGLTRANSFORMFEEDBACKVARYINGSPROC                   glTransformFeedbackVaryings;
-extern PFNGLUNIFORM1DPROC                                   glUniform1d;
-extern PFNGLUNIFORM1DVPROC                                  glUniform1dv;
-extern PFNGLUNIFORM1FPROC                                   glUniform1f;
-extern PFNGLUNIFORM1FVPROC                                  glUniform1fv;
-extern PFNGLUNIFORM1IPROC                                   glUniform1i;
-extern PFNGLUNIFORM1IVPROC                                  glUniform1iv;
-extern PFNGLUNIFORM1UIPROC                                  glUniform1ui;
-extern PFNGLUNIFORM1UIVPROC                                 glUniform1uiv;
-extern PFNGLUNIFORM2DPROC                                   glUniform2d;
-extern PFNGLUNIFORM2DVPROC                                  glUniform2dv;
-extern PFNGLUNIFORM2FPROC                                   glUniform2f;
-extern PFNGLUNIFORM2FVPROC                                  glUniform2fv;
-extern PFNGLUNIFORM2IPROC                                   glUniform2i;
-extern PFNGLUNIFORM2IVPROC                                  glUniform2iv;
-extern PFNGLUNIFORM2UIPROC                                  glUniform2ui;
-extern PFNGLUNIFORM2UIVPROC                                 glUniform2uiv;
-extern PFNGLUNIFORM3DPROC                                   glUniform3d;
-extern PFNGLUNIFORM3DVPROC                                  glUniform3dv;
-extern PFNGLUNIFORM3FPROC                                   glUniform3f;
-extern PFNGLUNIFORM3FVPROC                                  glUniform3fv;
-extern PFNGLUNIFORM3IPROC                                   glUniform3i;
-extern PFNGLUNIFORM3IVPROC                                  glUniform3iv;
-extern PFNGLUNIFORM3UIPROC                                  glUniform3ui;
-extern PFNGLUNIFORM3UIVPROC                                 glUniform3uiv;
-extern PFNGLUNIFORM4DPROC                                   glUniform4d;
-extern PFNGLUNIFORM4DVPROC                                  glUniform4dv;
-extern PFNGLUNIFORM4FPROC                                   glUniform4f;
-extern PFNGLUNIFORM4FVPROC                                  glUniform4fv;
-extern PFNGLUNIFORM4IPROC                                   glUniform4i;
-extern PFNGLUNIFORM4IVPROC                                  glUniform4iv;
-extern PFNGLUNIFORM4UIPROC                                  glUniform4ui;
-extern PFNGLUNIFORM4UIVPROC                                 glUniform4uiv;
-extern PFNGLUNIFORMBLOCKBINDINGPROC                         glUniformBlockBinding;
-extern PFNGLUNIFORMHANDLEUI64ARBPROC                        glUniformHandleui64ARB;
-extern PFNGLUNIFORMHANDLEUI64VARBPROC                       glUniformHandleui64vARB;
-extern PFNGLUNIFORMMATRIX2DVPROC                            glUniformMatrix2dv;
-extern PFNGLUNIFORMMATRIX2FVPROC                            glUniformMatrix2fv;
-extern PFNGLUNIFORMMATRIX2X3DVPROC                          glUniformMatrix2x3dv;
-extern PFNGLUNIFORMMATRIX2X3FVPROC                          glUniformMatrix2x3fv;
-extern PFNGLUNIFORMMATRIX2X4DVPROC                          glUniformMatrix2x4dv;
-extern PFNGLUNIFORMMATRIX2X4FVPROC                          glUniformMatrix2x4fv;
-extern PFNGLUNIFORMMATRIX3DVPROC                            glUniformMatrix3dv;
-extern PFNGLUNIFORMMATRIX3FVPROC                            glUniformMatrix3fv;
-extern PFNGLUNIFORMMATRIX3X2DVPROC                          glUniformMatrix3x2dv;
-extern PFNGLUNIFORMMATRIX3X2FVPROC                          glUniformMatrix3x2fv;
-extern PFNGLUNIFORMMATRIX3X4DVPROC                          glUniformMatrix3x4dv;
-extern PFNGLUNIFORMMATRIX3X4FVPROC                          glUniformMatrix3x4fv;
-extern PFNGLUNIFORMMATRIX4DVPROC                            glUniformMatrix4dv;
-extern PFNGLUNIFORMMATRIX4FVPROC                            glUniformMatrix4fv;
-extern PFNGLUNIFORMMATRIX4X2DVPROC                          glUniformMatrix4x2dv;
-extern PFNGLUNIFORMMATRIX4X2FVPROC                          glUniformMatrix4x2fv;
-extern PFNGLUNIFORMMATRIX4X3DVPROC                          glUniformMatrix4x3dv;
-extern PFNGLUNIFORMMATRIX4X3FVPROC                          glUniformMatrix4x3fv;
-extern PFNGLUNIFORMSUBROUTINESUIVPROC                       glUniformSubroutinesuiv;
-extern PFNGLUNMAPBUFFERPROC                                 glUnmapBuffer;
-extern PFNGLUNMAPNAMEDBUFFERPROC                            glUnmapNamedBuffer;
-extern PFNGLUSEPROGRAMPROC                                  glUseProgram;
-extern PFNGLUSEPROGRAMSTAGESPROC                            glUseProgramStages;
-extern PFNGLVALIDATEPROGRAMPROC                             glValidateProgram;
-extern PFNGLVALIDATEPROGRAMPIPELINEPROC                     glValidateProgramPipeline;
-extern PFNGLVERTEXARRAYATTRIBBINDINGPROC                    glVertexArrayAttribBinding;
-extern PFNGLVERTEXARRAYATTRIBFORMATPROC                     glVertexArrayAttribFormat;
-extern PFNGLVERTEXARRAYATTRIBIFORMATPROC                    glVertexArrayAttribIFormat;
-extern PFNGLVERTEXARRAYATTRIBLFORMATPROC                    glVertexArrayAttribLFormat;
-extern PFNGLVERTEXARRAYBINDINGDIVISORPROC                   glVertexArrayBindingDivisor;
-extern PFNGLVERTEXARRAYELEMENTBUFFERPROC                    glVertexArrayElementBuffer;
-extern PFNGLVERTEXARRAYVERTEXBUFFERPROC                     glVertexArrayVertexBuffer;
-extern PFNGLVERTEXARRAYVERTEXBUFFERSPROC                    glVertexArrayVertexBuffers;
-extern PFNGLVERTEXATTRIB1DPROC                              glVertexAttrib1d;
-extern PFNGLVERTEXATTRIB1DVPROC                             glVertexAttrib1dv;
-extern PFNGLVERTEXATTRIB1FPROC                              glVertexAttrib1f;
-extern PFNGLVERTEXATTRIB1FVPROC                             glVertexAttrib1fv;
-extern PFNGLVERTEXATTRIB1SPROC                              glVertexAttrib1s;
-extern PFNGLVERTEXATTRIB1SVPROC                             glVertexAttrib1sv;
-extern PFNGLVERTEXATTRIB2DPROC                              glVertexAttrib2d;
-extern PFNGLVERTEXATTRIB2DVPROC                             glVertexAttrib2dv;
-extern PFNGLVERTEXATTRIB2FPROC                              glVertexAttrib2f;
-extern PFNGLVERTEXATTRIB2FVPROC                             glVertexAttrib2fv;
-extern PFNGLVERTEXATTRIB2SPROC                              glVertexAttrib2s;
-extern PFNGLVERTEXATTRIB2SVPROC                             glVertexAttrib2sv;
-extern PFNGLVERTEXATTRIB3DPROC                              glVertexAttrib3d;
-extern PFNGLVERTEXATTRIB3DVPROC                             glVertexAttrib3dv;
-extern PFNGLVERTEXATTRIB3FPROC                              glVertexAttrib3f;
-extern PFNGLVERTEXATTRIB3FVPROC                             glVertexAttrib3fv;
-extern PFNGLVERTEXATTRIB3SPROC                              glVertexAttrib3s;
-extern PFNGLVERTEXATTRIB3SVPROC                             glVertexAttrib3sv;
-extern PFNGLVERTEXATTRIB4NBVPROC                            glVertexAttrib4Nbv;
-extern PFNGLVERTEXATTRIB4NIVPROC                            glVertexAttrib4Niv;
-extern PFNGLVERTEXATTRIB4NSVPROC                            glVertexAttrib4Nsv;
-extern PFNGLVERTEXATTRIB4NUBPROC                            glVertexAttrib4Nub;
-extern PFNGLVERTEXATTRIB4NUBVPROC                           glVertexAttrib4Nubv;
-extern PFNGLVERTEXATTRIB4NUIVPROC                           glVertexAttrib4Nuiv;
-extern PFNGLVERTEXATTRIB4NUSVPROC                           glVertexAttrib4Nusv;
-extern PFNGLVERTEXATTRIB4BVPROC                             glVertexAttrib4bv;
-extern PFNGLVERTEXATTRIB4DPROC                              glVertexAttrib4d;
-extern PFNGLVERTEXATTRIB4DVPROC                             glVertexAttrib4dv;
-extern PFNGLVERTEXATTRIB4FPROC                              glVertexAttrib4f;
-extern PFNGLVERTEXATTRIB4FVPROC                             glVertexAttrib4fv;
-extern PFNGLVERTEXATTRIB4IVPROC                             glVertexAttrib4iv;
-extern PFNGLVERTEXATTRIB4SPROC                              glVertexAttrib4s;
-extern PFNGLVERTEXATTRIB4SVPROC                             glVertexAttrib4sv;
-extern PFNGLVERTEXATTRIB4UBVPROC                            glVertexAttrib4ubv;
-extern PFNGLVERTEXATTRIB4UIVPROC                            glVertexAttrib4uiv;
-extern PFNGLVERTEXATTRIB4USVPROC                            glVertexAttrib4usv;
-extern PFNGLVERTEXATTRIBBINDINGPROC                         glVertexAttribBinding;
-extern PFNGLVERTEXATTRIBDIVISORPROC                         glVertexAttribDivisor;
-extern PFNGLVERTEXATTRIBFORMATPROC                          glVertexAttribFormat;
-extern PFNGLVERTEXATTRIBI1IPROC                             glVertexAttribI1i;
-extern PFNGLVERTEXATTRIBI1IVPROC                            glVertexAttribI1iv;
-extern PFNGLVERTEXATTRIBI1UIPROC                            glVertexAttribI1ui;
-extern PFNGLVERTEXATTRIBI1UIVPROC                           glVertexAttribI1uiv;
-extern PFNGLVERTEXATTRIBI2IPROC                             glVertexAttribI2i;
-extern PFNGLVERTEXATTRIBI2IVPROC                            glVertexAttribI2iv;
-extern PFNGLVERTEXATTRIBI2UIPROC                            glVertexAttribI2ui;
-extern PFNGLVERTEXATTRIBI2UIVPROC                           glVertexAttribI2uiv;
-extern PFNGLVERTEXATTRIBI3IPROC                             glVertexAttribI3i;
-extern PFNGLVERTEXATTRIBI3IVPROC                            glVertexAttribI3iv;
-extern PFNGLVERTEXATTRIBI3UIPROC                            glVertexAttribI3ui;
-extern PFNGLVERTEXATTRIBI3UIVPROC                           glVertexAttribI3uiv;
-extern PFNGLVERTEXATTRIBI4BVPROC                            glVertexAttribI4bv;
-extern PFNGLVERTEXATTRIBI4IPROC                             glVertexAttribI4i;
-extern PFNGLVERTEXATTRIBI4IVPROC                            glVertexAttribI4iv;
-extern PFNGLVERTEXATTRIBI4SVPROC                            glVertexAttribI4sv;
-extern PFNGLVERTEXATTRIBI4UBVPROC                           glVertexAttribI4ubv;
-extern PFNGLVERTEXATTRIBI4UIPROC                            glVertexAttribI4ui;
-extern PFNGLVERTEXATTRIBI4UIVPROC                           glVertexAttribI4uiv;
-extern PFNGLVERTEXATTRIBI4USVPROC                           glVertexAttribI4usv;
-extern PFNGLVERTEXATTRIBIFORMATPROC                         glVertexAttribIFormat;
-extern PFNGLVERTEXATTRIBIPOINTERPROC                        glVertexAttribIPointer;
-extern PFNGLVERTEXATTRIBL1DPROC                             glVertexAttribL1d;
-extern PFNGLVERTEXATTRIBL1DVPROC                            glVertexAttribL1dv;
-extern PFNGLVERTEXATTRIBL1UI64ARBPROC                       glVertexAttribL1ui64ARB;
-extern PFNGLVERTEXATTRIBL1UI64VARBPROC                      glVertexAttribL1ui64vARB;
-extern PFNGLVERTEXATTRIBL2DPROC                             glVertexAttribL2d;
-extern PFNGLVERTEXATTRIBL2DVPROC                            glVertexAttribL2dv;
-extern PFNGLVERTEXATTRIBL3DPROC                             glVertexAttribL3d;
-extern PFNGLVERTEXATTRIBL3DVPROC                            glVertexAttribL3dv;
-extern PFNGLVERTEXATTRIBL4DPROC                             glVertexAttribL4d;
-extern PFNGLVERTEXATTRIBL4DVPROC                            glVertexAttribL4dv;
-extern PFNGLVERTEXATTRIBLFORMATPROC                         glVertexAttribLFormat;
-extern PFNGLVERTEXATTRIBLPOINTERPROC                        glVertexAttribLPointer;
-extern PFNGLVERTEXATTRIBP1UIPROC                            glVertexAttribP1ui;
-extern PFNGLVERTEXATTRIBP1UIVPROC                           glVertexAttribP1uiv;
-extern PFNGLVERTEXATTRIBP2UIPROC                            glVertexAttribP2ui;
-extern PFNGLVERTEXATTRIBP2UIVPROC                           glVertexAttribP2uiv;
-extern PFNGLVERTEXATTRIBP3UIPROC                            glVertexAttribP3ui;
-extern PFNGLVERTEXATTRIBP3UIVPROC                           glVertexAttribP3uiv;
-extern PFNGLVERTEXATTRIBP4UIPROC                            glVertexAttribP4ui;
-extern PFNGLVERTEXATTRIBP4UIVPROC                           glVertexAttribP4uiv;
-extern PFNGLVERTEXATTRIBPOINTERPROC                         glVertexAttribPointer;
-extern PFNGLVERTEXBINDINGDIVISORPROC                        glVertexBindingDivisor;
-extern PFNGLVIEWPORTPROC                                    glViewport;
-extern PFNGLVIEWPORTARRAYVPROC                              glViewportArrayv;
-extern PFNGLVIEWPORTINDEXEDFPROC                            glViewportIndexedf;
-extern PFNGLVIEWPORTINDEXEDFVPROC                           glViewportIndexedfv;
-extern PFNGLWAITSYNCPROC                                    glWaitSync;
+// extern PFNGLACTIVESHADERPROGRAMPROC                         glActiveShaderProgram;
+// extern PFNGLACTIVETEXTUREPROC                               glActiveTexture;
+// extern PFNGLATTACHSHADERPROC                                glAttachShader;
+// extern PFNGLBEGINCONDITIONALRENDERPROC                      glBeginConditionalRender;
+// extern PFNGLBEGINQUERYPROC                                  glBeginQuery;
+// extern PFNGLBEGINQUERYINDEXEDPROC                           glBeginQueryIndexed;
+// extern PFNGLBEGINTRANSFORMFEEDBACKPROC                      glBeginTransformFeedback;
+// extern PFNGLBINDATTRIBLOCATIONPROC                          glBindAttribLocation;
+// extern PFNGLBINDBUFFERPROC                                  glBindBuffer;
+// extern PFNGLBINDBUFFERBASEPROC                              glBindBufferBase;
+// extern PFNGLBINDBUFFERRANGEPROC                             glBindBufferRange;
+// extern PFNGLBINDBUFFERSBASEPROC                             glBindBuffersBase;
+// extern PFNGLBINDBUFFERSRANGEPROC                            glBindBuffersRange;
+// extern PFNGLBINDFRAGDATALOCATIONPROC                        glBindFragDataLocation;
+// extern PFNGLBINDFRAGDATALOCATIONINDEXEDPROC                 glBindFragDataLocationIndexed;
+// extern PFNGLBINDFRAMEBUFFERPROC                             glBindFramebuffer;
+// extern PFNGLBINDIMAGETEXTUREPROC                            glBindImageTexture;
+// extern PFNGLBINDIMAGETEXTURESPROC                           glBindImageTextures;
+// extern PFNGLBINDPROGRAMPIPELINEPROC                         glBindProgramPipeline;
+// extern PFNGLBINDRENDERBUFFERPROC                            glBindRenderbuffer;
+// extern PFNGLBINDSAMPLERPROC                                 glBindSampler;
+// extern PFNGLBINDSAMPLERSPROC                                glBindSamplers;
+// extern PFNGLBINDTEXTUREPROC                                 glBindTexture;
+// extern PFNGLBINDTEXTUREUNITPROC                             glBindTextureUnit;
+// extern PFNGLBINDTEXTURESPROC                                glBindTextures;
+// extern PFNGLBINDTRANSFORMFEEDBACKPROC                       glBindTransformFeedback;
+// extern PFNGLBINDVERTEXARRAYPROC                             glBindVertexArray;
+// extern PFNGLBINDVERTEXBUFFERPROC                            glBindVertexBuffer;
+// extern PFNGLBINDVERTEXBUFFERSPROC                           glBindVertexBuffers;
+// extern PFNGLBLENDCOLORPROC                                  glBlendColor;
+// extern PFNGLBLENDEQUATIONPROC                               glBlendEquation;
+// extern PFNGLBLENDEQUATIONSEPARATEPROC                       glBlendEquationSeparate;
+// extern PFNGLBLENDEQUATIONSEPARATEIPROC                      glBlendEquationSeparatei;
+// extern PFNGLBLENDEQUATIONSEPARATEIARBPROC                   glBlendEquationSeparateiARB;
+// extern PFNGLBLENDEQUATIONIPROC                              glBlendEquationi;
+// extern PFNGLBLENDEQUATIONIARBPROC                           glBlendEquationiARB;
+// extern PFNGLBLENDFUNCPROC                                   glBlendFunc;
+// extern PFNGLBLENDFUNCSEPARATEPROC                           glBlendFuncSeparate;
+// extern PFNGLBLENDFUNCSEPARATEIPROC                          glBlendFuncSeparatei;
+// extern PFNGLBLENDFUNCSEPARATEIARBPROC                       glBlendFuncSeparateiARB;
+// extern PFNGLBLENDFUNCIPROC                                  glBlendFunci;
+// extern PFNGLBLENDFUNCIARBPROC                               glBlendFunciARB;
+// extern PFNGLBLITFRAMEBUFFERPROC                             glBlitFramebuffer;
+// extern PFNGLBLITNAMEDFRAMEBUFFERPROC                        glBlitNamedFramebuffer;
+// extern PFNGLBUFFERDATAPROC                                  glBufferData;
+// extern PFNGLBUFFERPAGECOMMITMENTARBPROC                     glBufferPageCommitmentARB;
+// extern PFNGLBUFFERSTORAGEPROC                               glBufferStorage;
+// extern PFNGLBUFFERSUBDATAPROC                               glBufferSubData;
+// extern PFNGLCHECKFRAMEBUFFERSTATUSPROC                      glCheckFramebufferStatus;
+// extern PFNGLCHECKNAMEDFRAMEBUFFERSTATUSPROC                 glCheckNamedFramebufferStatus;
+// extern PFNGLCLAMPCOLORPROC                                  glClampColor;
+// extern PFNGLCLEARPROC                                       glClear;
+// extern PFNGLCLEARBUFFERDATAPROC                             glClearBufferData;
+// extern PFNGLCLEARBUFFERSUBDATAPROC                          glClearBufferSubData;
+// extern PFNGLCLEARBUFFERFIPROC                               glClearBufferfi;
+// extern PFNGLCLEARBUFFERFVPROC                               glClearBufferfv;
+// extern PFNGLCLEARBUFFERIVPROC                               glClearBufferiv;
+// extern PFNGLCLEARBUFFERUIVPROC                              glClearBufferuiv;
+// extern PFNGLCLEARCOLORPROC                                  glClearColor;
+// extern PFNGLCLEARDEPTHPROC                                  glClearDepth;
+// extern PFNGLCLEARDEPTHFPROC                                 glClearDepthf;
+// extern PFNGLCLEARNAMEDBUFFERDATAPROC                        glClearNamedBufferData;
+// extern PFNGLCLEARNAMEDBUFFERSUBDATAPROC                     glClearNamedBufferSubData;
+// extern PFNGLCLEARNAMEDFRAMEBUFFERFIPROC                     glClearNamedFramebufferfi;
+// extern PFNGLCLEARNAMEDFRAMEBUFFERFVPROC                     glClearNamedFramebufferfv;
+// extern PFNGLCLEARNAMEDFRAMEBUFFERIVPROC                     glClearNamedFramebufferiv;
+// extern PFNGLCLEARNAMEDFRAMEBUFFERUIVPROC                    glClearNamedFramebufferuiv;
+// extern PFNGLCLEARSTENCILPROC                                glClearStencil;
+// extern PFNGLCLEARTEXIMAGEPROC                               glClearTexImage;
+// extern PFNGLCLEARTEXSUBIMAGEPROC                            glClearTexSubImage;
+// extern PFNGLCLIENTWAITSYNCPROC                              glClientWaitSync;
+// extern PFNGLCLIPCONTROLPROC                                 glClipControl;
+// extern PFNGLCOLORMASKPROC                                   glColorMask;
+// extern PFNGLCOLORMASKIPROC                                  glColorMaski;
+// extern PFNGLCOMPILESHADERPROC                               glCompileShader;
+// extern PFNGLCOMPILESHADERINCLUDEARBPROC                     glCompileShaderIncludeARB;
+// extern PFNGLCOMPRESSEDTEXIMAGE1DPROC                        glCompressedTexImage1D;
+// extern PFNGLCOMPRESSEDTEXIMAGE2DPROC                        glCompressedTexImage2D;
+// extern PFNGLCOMPRESSEDTEXIMAGE3DPROC                        glCompressedTexImage3D;
+// extern PFNGLCOMPRESSEDTEXSUBIMAGE1DPROC                     glCompressedTexSubImage1D;
+// extern PFNGLCOMPRESSEDTEXSUBIMAGE2DPROC                     glCompressedTexSubImage2D;
+// extern PFNGLCOMPRESSEDTEXSUBIMAGE3DPROC                     glCompressedTexSubImage3D;
+// extern PFNGLCOMPRESSEDTEXTURESUBIMAGE1DPROC                 glCompressedTextureSubImage1D;
+// extern PFNGLCOMPRESSEDTEXTURESUBIMAGE2DPROC                 glCompressedTextureSubImage2D;
+// extern PFNGLCOMPRESSEDTEXTURESUBIMAGE3DPROC                 glCompressedTextureSubImage3D;
+// extern PFNGLCOPYBUFFERSUBDATAPROC                           glCopyBufferSubData;
+// extern PFNGLCOPYIMAGESUBDATAPROC                            glCopyImageSubData;
+// extern PFNGLCOPYNAMEDBUFFERSUBDATAPROC                      glCopyNamedBufferSubData;
+// extern PFNGLCOPYTEXIMAGE1DPROC                              glCopyTexImage1D;
+// extern PFNGLCOPYTEXIMAGE2DPROC                              glCopyTexImage2D;
+// extern PFNGLCOPYTEXSUBIMAGE1DPROC                           glCopyTexSubImage1D;
+// extern PFNGLCOPYTEXSUBIMAGE2DPROC                           glCopyTexSubImage2D;
+// extern PFNGLCOPYTEXSUBIMAGE3DPROC                           glCopyTexSubImage3D;
+// extern PFNGLCOPYTEXTURESUBIMAGE1DPROC                       glCopyTextureSubImage1D;
+// extern PFNGLCOPYTEXTURESUBIMAGE2DPROC                       glCopyTextureSubImage2D;
+// extern PFNGLCOPYTEXTURESUBIMAGE3DPROC                       glCopyTextureSubImage3D;
+// extern PFNGLCREATEBUFFERSPROC                               glCreateBuffers;
+// extern PFNGLCREATEFRAMEBUFFERSPROC                          glCreateFramebuffers;
+// extern PFNGLCREATEPROGRAMPROC                               glCreateProgram;
+// extern PFNGLCREATEPROGRAMPIPELINESPROC                      glCreateProgramPipelines;
+// extern PFNGLCREATEQUERIESPROC                               glCreateQueries;
+// extern PFNGLCREATERENDERBUFFERSPROC                         glCreateRenderbuffers;
+// extern PFNGLCREATESAMPLERSPROC                              glCreateSamplers;
+// extern PFNGLCREATESHADERPROC                                glCreateShader;
+// extern PFNGLCREATESHADERPROGRAMVPROC                        glCreateShaderProgramv;
+// extern PFNGLCREATESYNCFROMCLEVENTARBPROC                    glCreateSyncFromCLeventARB;
+// extern PFNGLCREATETEXTURESPROC                              glCreateTextures;
+// extern PFNGLCREATETRANSFORMFEEDBACKSPROC                    glCreateTransformFeedbacks;
+// extern PFNGLCREATEVERTEXARRAYSPROC                          glCreateVertexArrays;
+// extern PFNGLCULLFACEPROC                                    glCullFace;
+// extern PFNGLDEBUGMESSAGECALLBACKPROC                        glDebugMessageCallback;
+// extern PFNGLDEBUGMESSAGECALLBACKARBPROC                     glDebugMessageCallbackARB;
+// extern PFNGLDEBUGMESSAGECONTROLPROC                         glDebugMessageControl;
+// extern PFNGLDEBUGMESSAGECONTROLARBPROC                      glDebugMessageControlARB;
+// extern PFNGLDEBUGMESSAGEINSERTPROC                          glDebugMessageInsert;
+// extern PFNGLDEBUGMESSAGEINSERTARBPROC                       glDebugMessageInsertARB;
+// extern PFNGLDELETEBUFFERSPROC                               glDeleteBuffers;
+// extern PFNGLDELETEFRAMEBUFFERSPROC                          glDeleteFramebuffers;
+// extern PFNGLDELETENAMEDSTRINGARBPROC                        glDeleteNamedStringARB;
+// extern PFNGLDELETEPROGRAMPROC                               glDeleteProgram;
+// extern PFNGLDELETEPROGRAMPIPELINESPROC                      glDeleteProgramPipelines;
+// extern PFNGLDELETEQUERIESPROC                               glDeleteQueries;
+// extern PFNGLDELETERENDERBUFFERSPROC                         glDeleteRenderbuffers;
+// extern PFNGLDELETESAMPLERSPROC                              glDeleteSamplers;
+// extern PFNGLDELETESHADERPROC                                glDeleteShader;
+// extern PFNGLDELETESYNCPROC                                  glDeleteSync;
+// extern PFNGLDELETETEXTURESPROC                              glDeleteTextures;
+// extern PFNGLDELETETRANSFORMFEEDBACKSPROC                    glDeleteTransformFeedbacks;
+// extern PFNGLDELETEVERTEXARRAYSPROC                          glDeleteVertexArrays;
+// extern PFNGLDEPTHFUNCPROC                                   glDepthFunc;
+// extern PFNGLDEPTHMASKPROC                                   glDepthMask;
+// extern PFNGLDEPTHRANGEPROC                                  glDepthRange;
+// extern PFNGLDEPTHRANGEARRAYVPROC                            glDepthRangeArrayv;
+// extern PFNGLDEPTHRANGEINDEXEDPROC                           glDepthRangeIndexed;
+// extern PFNGLDEPTHRANGEFPROC                                 glDepthRangef;
+// extern PFNGLDETACHSHADERPROC                                glDetachShader;
+// extern PFNGLDISABLEPROC                                     glDisable;
+// extern PFNGLDISABLEVERTEXARRAYATTRIBPROC                    glDisableVertexArrayAttrib;
+// extern PFNGLDISABLEVERTEXATTRIBARRAYPROC                    glDisableVertexAttribArray;
+// extern PFNGLDISABLEIPROC                                    glDisablei;
+// extern PFNGLDISPATCHCOMPUTEPROC                             glDispatchCompute;
+// extern PFNGLDISPATCHCOMPUTEGROUPSIZEARBPROC                 glDispatchComputeGroupSizeARB;
+// extern PFNGLDISPATCHCOMPUTEINDIRECTPROC                     glDispatchComputeIndirect;
+// extern PFNGLDRAWARRAYSPROC                                  glDrawArrays;
+// extern PFNGLDRAWARRAYSINDIRECTPROC                          glDrawArraysIndirect;
+// extern PFNGLDRAWARRAYSINSTANCEDPROC                         glDrawArraysInstanced;
+// extern PFNGLDRAWARRAYSINSTANCEDBASEINSTANCEPROC             glDrawArraysInstancedBaseInstance;
+// extern PFNGLDRAWBUFFERPROC                                  glDrawBuffer;
+// extern PFNGLDRAWBUFFERSPROC                                 glDrawBuffers;
+// extern PFNGLDRAWELEMENTSPROC                                glDrawElements;
+// extern PFNGLDRAWELEMENTSBASEVERTEXPROC                      glDrawElementsBaseVertex;
+// extern PFNGLDRAWELEMENTSINDIRECTPROC                        glDrawElementsIndirect;
+// extern PFNGLDRAWELEMENTSINSTANCEDPROC                       glDrawElementsInstanced;
+// extern PFNGLDRAWELEMENTSINSTANCEDBASEINSTANCEPROC           glDrawElementsInstancedBaseInstance;
+// extern PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXPROC             glDrawElementsInstancedBaseVertex;
+// extern PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXBASEINSTANCEPROC glDrawElementsInstancedBaseVertexBaseInstance;
+// extern PFNGLDRAWRANGEELEMENTSPROC                           glDrawRangeElements;
+// extern PFNGLDRAWRANGEELEMENTSBASEVERTEXPROC                 glDrawRangeElementsBaseVertex;
+// extern PFNGLDRAWTRANSFORMFEEDBACKPROC                       glDrawTransformFeedback;
+// extern PFNGLDRAWTRANSFORMFEEDBACKINSTANCEDPROC              glDrawTransformFeedbackInstanced;
+// extern PFNGLDRAWTRANSFORMFEEDBACKSTREAMPROC                 glDrawTransformFeedbackStream;
+// extern PFNGLDRAWTRANSFORMFEEDBACKSTREAMINSTANCEDPROC        glDrawTransformFeedbackStreamInstanced;
+// extern PFNGLENABLEPROC                                      glEnable;
+// extern PFNGLENABLEVERTEXARRAYATTRIBPROC                     glEnableVertexArrayAttrib;
+// extern PFNGLENABLEVERTEXATTRIBARRAYPROC                     glEnableVertexAttribArray;
+// extern PFNGLENABLEIPROC                                     glEnablei;
+// extern PFNGLENDCONDITIONALRENDERPROC                        glEndConditionalRender;
+// extern PFNGLENDQUERYPROC                                    glEndQuery;
+// extern PFNGLENDQUERYINDEXEDPROC                             glEndQueryIndexed;
+// extern PFNGLENDTRANSFORMFEEDBACKPROC                        glEndTransformFeedback;
+// extern PFNGLFENCESYNCPROC                                   glFenceSync;
+// extern PFNGLFINISHPROC                                      glFinish;
+// extern PFNGLFLUSHPROC                                       glFlush;
+// extern PFNGLFLUSHMAPPEDBUFFERRANGEPROC                      glFlushMappedBufferRange;
+// extern PFNGLFLUSHMAPPEDNAMEDBUFFERRANGEPROC                 glFlushMappedNamedBufferRange;
+// extern PFNGLFRAMEBUFFERPARAMETERIPROC                       glFramebufferParameteri;
+// extern PFNGLFRAMEBUFFERRENDERBUFFERPROC                     glFramebufferRenderbuffer;
+// extern PFNGLFRAMEBUFFERTEXTUREPROC                          glFramebufferTexture;
+// extern PFNGLFRAMEBUFFERTEXTURE1DPROC                        glFramebufferTexture1D;
+// extern PFNGLFRAMEBUFFERTEXTURE2DPROC                        glFramebufferTexture2D;
+// extern PFNGLFRAMEBUFFERTEXTURE3DPROC                        glFramebufferTexture3D;
+// extern PFNGLFRAMEBUFFERTEXTURELAYERPROC                     glFramebufferTextureLayer;
+// extern PFNGLFRONTFACEPROC                                   glFrontFace;
+// extern PFNGLGENBUFFERSPROC                                  glGenBuffers;
+// extern PFNGLGENFRAMEBUFFERSPROC                             glGenFramebuffers;
+// extern PFNGLGENPROGRAMPIPELINESPROC                         glGenProgramPipelines;
+// extern PFNGLGENQUERIESPROC                                  glGenQueries;
+// extern PFNGLGENRENDERBUFFERSPROC                            glGenRenderbuffers;
+// extern PFNGLGENSAMPLERSPROC                                 glGenSamplers;
+// extern PFNGLGENTEXTURESPROC                                 glGenTextures;
+// extern PFNGLGENTRANSFORMFEEDBACKSPROC                       glGenTransformFeedbacks;
+// extern PFNGLGENVERTEXARRAYSPROC                             glGenVertexArrays;
+// extern PFNGLGENERATEMIPMAPPROC                              glGenerateMipmap;
+// extern PFNGLGENERATETEXTUREMIPMAPPROC                       glGenerateTextureMipmap;
+// extern PFNGLGETACTIVEATOMICCOUNTERBUFFERIVPROC              glGetActiveAtomicCounterBufferiv;
+// extern PFNGLGETACTIVEATTRIBPROC                             glGetActiveAttrib;
+// extern PFNGLGETACTIVESUBROUTINENAMEPROC                     glGetActiveSubroutineName;
+// extern PFNGLGETACTIVESUBROUTINEUNIFORMNAMEPROC              glGetActiveSubroutineUniformName;
+// extern PFNGLGETACTIVESUBROUTINEUNIFORMIVPROC                glGetActiveSubroutineUniformiv;
+// extern PFNGLGETACTIVEUNIFORMPROC                            glGetActiveUniform;
+// extern PFNGLGETACTIVEUNIFORMBLOCKNAMEPROC                   glGetActiveUniformBlockName;
+// extern PFNGLGETACTIVEUNIFORMBLOCKIVPROC                     glGetActiveUniformBlockiv;
+// extern PFNGLGETACTIVEUNIFORMNAMEPROC                        glGetActiveUniformName;
+// extern PFNGLGETACTIVEUNIFORMSIVPROC                         glGetActiveUniformsiv;
+// extern PFNGLGETATTACHEDSHADERSPROC                          glGetAttachedShaders;
+// extern PFNGLGETATTRIBLOCATIONPROC                           glGetAttribLocation;
+// extern PFNGLGETBOOLEANI_VPROC                               glGetBooleani_v;
+// extern PFNGLGETBOOLEANVPROC                                 glGetBooleanv;
+// extern PFNGLGETBUFFERPARAMETERI64VPROC                      glGetBufferParameteri64v;
+// extern PFNGLGETBUFFERPARAMETERIVPROC                        glGetBufferParameteriv;
+// extern PFNGLGETBUFFERPOINTERVPROC                           glGetBufferPointerv;
+// extern PFNGLGETBUFFERSUBDATAPROC                            glGetBufferSubData;
+// extern PFNGLGETCOMPRESSEDTEXIMAGEPROC                       glGetCompressedTexImage;
+// extern PFNGLGETCOMPRESSEDTEXTUREIMAGEPROC                   glGetCompressedTextureImage;
+// extern PFNGLGETCOMPRESSEDTEXTURESUBIMAGEPROC                glGetCompressedTextureSubImage;
+// extern PFNGLGETDEBUGMESSAGELOGPROC                          glGetDebugMessageLog;
+// extern PFNGLGETDEBUGMESSAGELOGARBPROC                       glGetDebugMessageLogARB;
+// extern PFNGLGETDOUBLEI_VPROC                                glGetDoublei_v;
+// extern PFNGLGETDOUBLEVPROC                                  glGetDoublev;
+// extern PFNGLGETERRORPROC                                    glGetError;
+// extern PFNGLGETFLOATI_VPROC                                 glGetFloati_v;
+// extern PFNGLGETFLOATVPROC                                   glGetFloatv;
+// extern PFNGLGETFRAGDATAINDEXPROC                            glGetFragDataIndex;
+// extern PFNGLGETFRAGDATALOCATIONPROC                         glGetFragDataLocation;
+// extern PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVPROC         glGetFramebufferAttachmentParameteriv;
+// extern PFNGLGETFRAMEBUFFERPARAMETERIVPROC                   glGetFramebufferParameteriv;
+// extern PFNGLGETGRAPHICSRESETSTATUSPROC                      glGetGraphicsResetStatus;
+// extern PFNGLGETGRAPHICSRESETSTATUSARBPROC                   glGetGraphicsResetStatusARB;
+// extern PFNGLGETIMAGEHANDLEARBPROC                           glGetImageHandleARB;
+// extern PFNGLGETINTEGER64I_VPROC                             glGetInteger64i_v;
+// extern PFNGLGETINTEGER64VPROC                               glGetInteger64v;
+// extern PFNGLGETINTEGERI_VPROC                               glGetIntegeri_v;
+// extern PFNGLGETINTEGERVPROC                                    glGetIntegerv;
+// extern PFNGLGETINTERNALFORMATI64VPROC                       glGetInternalformati64v;
+// extern PFNGLGETINTERNALFORMATIVPROC                         glGetInternalformativ;
+// extern PFNGLGETMULTISAMPLEFVPROC                            glGetMultisamplefv;
+// extern PFNGLGETNAMEDBUFFERPARAMETERI64VPROC                 glGetNamedBufferParameteri64v;
+// extern PFNGLGETNAMEDBUFFERPARAMETERIVPROC                   glGetNamedBufferParameteriv;
+// extern PFNGLGETNAMEDBUFFERPOINTERVPROC                      glGetNamedBufferPointerv;
+// extern PFNGLGETNAMEDBUFFERSUBDATAPROC                       glGetNamedBufferSubData;
+// extern PFNGLGETNAMEDFRAMEBUFFERATTACHMENTPARAMETERIVPROC    glGetNamedFramebufferAttachmentParameteriv;
+// extern PFNGLGETNAMEDFRAMEBUFFERPARAMETERIVPROC              glGetNamedFramebufferParameteriv;
+// extern PFNGLGETNAMEDRENDERBUFFERPARAMETERIVPROC             glGetNamedRenderbufferParameteriv;
+// extern PFNGLGETNAMEDSTRINGARBPROC                           glGetNamedStringARB;
+// extern PFNGLGETNAMEDSTRINGIVARBPROC                         glGetNamedStringivARB;
+// extern PFNGLGETOBJECTLABELPROC                              glGetObjectLabel;
+// extern PFNGLGETOBJECTPTRLABELPROC                           glGetObjectPtrLabel;
+// extern PFNGLGETPOINTERVPROC                                 glGetPointerv;
+// extern PFNGLGETPROGRAMBINARYPROC                            glGetProgramBinary;
+// extern PFNGLGETPROGRAMINFOLOGPROC                           glGetProgramInfoLog;
+// extern PFNGLGETPROGRAMINTERFACEIVPROC                       glGetProgramInterfaceiv;
+// extern PFNGLGETPROGRAMPIPELINEINFOLOGPROC                   glGetProgramPipelineInfoLog;
+// extern PFNGLGETPROGRAMPIPELINEIVPROC                        glGetProgramPipelineiv;
+// extern PFNGLGETPROGRAMRESOURCEINDEXPROC                     glGetProgramResourceIndex;
+// extern PFNGLGETPROGRAMRESOURCELOCATIONPROC                  glGetProgramResourceLocation;
+// extern PFNGLGETPROGRAMRESOURCELOCATIONINDEXPROC             glGetProgramResourceLocationIndex;
+// extern PFNGLGETPROGRAMRESOURCENAMEPROC                      glGetProgramResourceName;
+// extern PFNGLGETPROGRAMRESOURCEIVPROC                        glGetProgramResourceiv;
+// extern PFNGLGETPROGRAMSTAGEIVPROC                           glGetProgramStageiv;
+// extern PFNGLGETPROGRAMIVPROC                                glGetProgramiv;
+// extern PFNGLGETQUERYBUFFEROBJECTI64VPROC                    glGetQueryBufferObjecti64v;
+// extern PFNGLGETQUERYBUFFEROBJECTIVPROC                      glGetQueryBufferObjectiv;
+// extern PFNGLGETQUERYBUFFEROBJECTUI64VPROC                   glGetQueryBufferObjectui64v;
+// extern PFNGLGETQUERYBUFFEROBJECTUIVPROC                     glGetQueryBufferObjectuiv;
+// extern PFNGLGETQUERYINDEXEDIVPROC                           glGetQueryIndexediv;
+// extern PFNGLGETQUERYOBJECTI64VPROC                          glGetQueryObjecti64v;
+// extern PFNGLGETQUERYOBJECTIVPROC                            glGetQueryObjectiv;
+// extern PFNGLGETQUERYOBJECTUI64VPROC                         glGetQueryObjectui64v;
+// extern PFNGLGETQUERYOBJECTUIVPROC                           glGetQueryObjectuiv;
+// extern PFNGLGETQUERYIVPROC                                  glGetQueryiv;
+// extern PFNGLGETRENDERBUFFERPARAMETERIVPROC                  glGetRenderbufferParameteriv;
+// extern PFNGLGETSAMPLERPARAMETERIIVPROC                      glGetSamplerParameterIiv;
+// extern PFNGLGETSAMPLERPARAMETERIUIVPROC                     glGetSamplerParameterIuiv;
+// extern PFNGLGETSAMPLERPARAMETERFVPROC                       glGetSamplerParameterfv;
+// extern PFNGLGETSAMPLERPARAMETERIVPROC                       glGetSamplerParameteriv;
+// extern PFNGLGETSHADERINFOLOGPROC                            glGetShaderInfoLog;
+// extern PFNGLGETSHADERPRECISIONFORMATPROC                    glGetShaderPrecisionFormat;
+// extern PFNGLGETSHADERSOURCEPROC                             glGetShaderSource;
+// extern PFNGLGETSHADERIVPROC                                 glGetShaderiv;
+// extern PFNGLGETSTRINGPROC                                   glGetString;
+// extern PFNGLGETSTRINGIPROC                                  glGetStringi;
+// extern PFNGLGETSUBROUTINEINDEXPROC                          glGetSubroutineIndex;
+// extern PFNGLGETSUBROUTINEUNIFORMLOCATIONPROC                glGetSubroutineUniformLocation;
+// extern PFNGLGETSYNCIVPROC                                   glGetSynciv;
+// extern PFNGLGETTEXIMAGEPROC                                 glGetTexImage;
+// extern PFNGLGETTEXLEVELPARAMETERFVPROC                      glGetTexLevelParameterfv;
+// extern PFNGLGETTEXLEVELPARAMETERIVPROC                      glGetTexLevelParameteriv;
+// extern PFNGLGETTEXPARAMETERIIVPROC                          glGetTexParameterIiv;
+// extern PFNGLGETTEXPARAMETERIUIVPROC                         glGetTexParameterIuiv;
+// extern PFNGLGETTEXPARAMETERFVPROC                           glGetTexParameterfv;
+// extern PFNGLGETTEXPARAMETERIVPROC                           glGetTexParameteriv;
+// extern PFNGLGETTEXTUREHANDLEARBPROC                         glGetTextureHandleARB;
+// extern PFNGLGETTEXTUREIMAGEPROC                             glGetTextureImage;
+// extern PFNGLGETTEXTURELEVELPARAMETERFVPROC                  glGetTextureLevelParameterfv;
+// extern PFNGLGETTEXTURELEVELPARAMETERIVPROC                  glGetTextureLevelParameteriv;
+// extern PFNGLGETTEXTUREPARAMETERIIVPROC                      glGetTextureParameterIiv;
+// extern PFNGLGETTEXTUREPARAMETERIUIVPROC                     glGetTextureParameterIuiv;
+// extern PFNGLGETTEXTUREPARAMETERFVPROC                       glGetTextureParameterfv;
+// extern PFNGLGETTEXTUREPARAMETERIVPROC                       glGetTextureParameteriv;
+// extern PFNGLGETTEXTURESAMPLERHANDLEARBPROC                  glGetTextureSamplerHandleARB;
+// extern PFNGLGETTEXTURESUBIMAGEPROC                          glGetTextureSubImage;
+// extern PFNGLGETTRANSFORMFEEDBACKVARYINGPROC                 glGetTransformFeedbackVarying;
+// extern PFNGLGETTRANSFORMFEEDBACKI64_VPROC                   glGetTransformFeedbacki64_v;
+// extern PFNGLGETTRANSFORMFEEDBACKI_VPROC                     glGetTransformFeedbacki_v;
+// extern PFNGLGETTRANSFORMFEEDBACKIVPROC                      glGetTransformFeedbackiv;
+// extern PFNGLGETUNIFORMBLOCKINDEXPROC                        glGetUniformBlockIndex;
+// extern PFNGLGETUNIFORMINDICESPROC                           glGetUniformIndices;
+// extern PFNGLGETUNIFORMLOCATIONPROC                          glGetUniformLocation;
+// extern PFNGLGETUNIFORMSUBROUTINEUIVPROC                     glGetUniformSubroutineuiv;
+// extern PFNGLGETUNIFORMDVPROC                                glGetUniformdv;
+// extern PFNGLGETUNIFORMFVPROC                                glGetUniformfv;
+// extern PFNGLGETUNIFORMIVPROC                                glGetUniformiv;
+// extern PFNGLGETUNIFORMUIVPROC                               glGetUniformuiv;
+// extern PFNGLGETVERTEXARRAYINDEXED64IVPROC                   glGetVertexArrayIndexed64iv;
+// extern PFNGLGETVERTEXARRAYINDEXEDIVPROC                     glGetVertexArrayIndexediv;
+// extern PFNGLGETVERTEXARRAYIVPROC                            glGetVertexArrayiv;
+// extern PFNGLGETVERTEXATTRIBIIVPROC                          glGetVertexAttribIiv;
+// extern PFNGLGETVERTEXATTRIBIUIVPROC                         glGetVertexAttribIuiv;
+// extern PFNGLGETVERTEXATTRIBLDVPROC                          glGetVertexAttribLdv;
+// extern PFNGLGETVERTEXATTRIBLUI64VARBPROC                    glGetVertexAttribLui64vARB;
+// extern PFNGLGETVERTEXATTRIBPOINTERVPROC                     glGetVertexAttribPointerv;
+// extern PFNGLGETVERTEXATTRIBDVPROC                           glGetVertexAttribdv;
+// extern PFNGLGETVERTEXATTRIBFVPROC                           glGetVertexAttribfv;
+// extern PFNGLGETVERTEXATTRIBIVPROC                           glGetVertexAttribiv;
+// extern PFNGLGETNCOMPRESSEDTEXIMAGEPROC                      glGetnCompressedTexImage;
+// extern PFNGLGETNCOMPRESSEDTEXIMAGEARBPROC                   glGetnCompressedTexImageARB;
+// extern PFNGLGETNTEXIMAGEPROC                                glGetnTexImage;
+// extern PFNGLGETNTEXIMAGEARBPROC                             glGetnTexImageARB;
+// extern PFNGLGETNUNIFORMDVPROC                               glGetnUniformdv;
+// extern PFNGLGETNUNIFORMDVARBPROC                            glGetnUniformdvARB;
+// extern PFNGLGETNUNIFORMFVPROC                               glGetnUniformfv;
+// extern PFNGLGETNUNIFORMFVARBPROC                            glGetnUniformfvARB;
+// extern PFNGLGETNUNIFORMIVPROC                               glGetnUniformiv;
+// extern PFNGLGETNUNIFORMIVARBPROC                            glGetnUniformivARB;
+// extern PFNGLGETNUNIFORMUIVPROC                              glGetnUniformuiv;
+// extern PFNGLGETNUNIFORMUIVARBPROC                           glGetnUniformuivARB;
+// extern PFNGLHINTPROC                                        glHint;
+// extern PFNGLINVALIDATEBUFFERDATAPROC                        glInvalidateBufferData;
+// extern PFNGLINVALIDATEBUFFERSUBDATAPROC                     glInvalidateBufferSubData;
+// extern PFNGLINVALIDATEFRAMEBUFFERPROC                       glInvalidateFramebuffer;
+// extern PFNGLINVALIDATENAMEDFRAMEBUFFERDATAPROC              glInvalidateNamedFramebufferData;
+// extern PFNGLINVALIDATENAMEDFRAMEBUFFERSUBDATAPROC           glInvalidateNamedFramebufferSubData;
+// extern PFNGLINVALIDATESUBFRAMEBUFFERPROC                    glInvalidateSubFramebuffer;
+// extern PFNGLINVALIDATETEXIMAGEPROC                          glInvalidateTexImage;
+// extern PFNGLINVALIDATETEXSUBIMAGEPROC                       glInvalidateTexSubImage;
+// extern PFNGLISBUFFERPROC                                    glIsBuffer;
+// extern PFNGLISENABLEDPROC                                   glIsEnabled;
+// extern PFNGLISENABLEDIPROC                                  glIsEnabledi;
+// extern PFNGLISFRAMEBUFFERPROC                               glIsFramebuffer;
+// extern PFNGLISIMAGEHANDLERESIDENTARBPROC                    glIsImageHandleResidentARB;
+// extern PFNGLISNAMEDSTRINGARBPROC                            glIsNamedStringARB;
+// extern PFNGLISPROGRAMPROC                                   glIsProgram;
+// extern PFNGLISPROGRAMPIPELINEPROC                           glIsProgramPipeline;
+// extern PFNGLISQUERYPROC                                     glIsQuery;
+// extern PFNGLISRENDERBUFFERPROC                              glIsRenderbuffer;
+// extern PFNGLISSAMPLERPROC                                   glIsSampler;
+// extern PFNGLISSHADERPROC                                    glIsShader;
+// extern PFNGLISSYNCPROC                                      glIsSync;
+// extern PFNGLISTEXTUREPROC                                   glIsTexture;
+// extern PFNGLISTEXTUREHANDLERESIDENTARBPROC                  glIsTextureHandleResidentARB;
+// extern PFNGLISTRANSFORMFEEDBACKPROC                         glIsTransformFeedback;
+// extern PFNGLISVERTEXARRAYPROC                               glIsVertexArray;
+// extern PFNGLLINEWIDTHPROC                                   glLineWidth;
+// extern PFNGLLINKPROGRAMPROC                                 glLinkProgram;
+// extern PFNGLLOGICOPPROC                                     glLogicOp;
+// extern PFNGLMAKEIMAGEHANDLENONRESIDENTARBPROC               glMakeImageHandleNonResidentARB;
+// extern PFNGLMAKEIMAGEHANDLERESIDENTARBPROC                  glMakeImageHandleResidentARB;
+// extern PFNGLMAKETEXTUREHANDLENONRESIDENTARBPROC             glMakeTextureHandleNonResidentARB;
+// extern PFNGLMAKETEXTUREHANDLERESIDENTARBPROC                glMakeTextureHandleResidentARB;
+// extern PFNGLMAPBUFFERPROC                                   glMapBuffer;
+// extern PFNGLMAPBUFFERRANGEPROC                              glMapBufferRange;
+// extern PFNGLMAPNAMEDBUFFERPROC                              glMapNamedBuffer;
+// extern PFNGLMAPNAMEDBUFFERRANGEPROC                         glMapNamedBufferRange;
+// extern PFNGLMEMORYBARRIERPROC                               glMemoryBarrier;
+// extern PFNGLMEMORYBARRIERBYREGIONPROC                       glMemoryBarrierByRegion;
+// extern PFNGLMINSAMPLESHADINGPROC                            glMinSampleShading;
+// extern PFNGLMINSAMPLESHADINGARBPROC                         glMinSampleShadingARB;
+// extern PFNGLMULTIDRAWARRAYSPROC                             glMultiDrawArrays;
+// extern PFNGLMULTIDRAWARRAYSINDIRECTPROC                     glMultiDrawArraysIndirect;
+// extern PFNGLMULTIDRAWARRAYSINDIRECTCOUNTARBPROC             glMultiDrawArraysIndirectCountARB;
+// extern PFNGLMULTIDRAWELEMENTSPROC                           glMultiDrawElements;
+// extern PFNGLMULTIDRAWELEMENTSBASEVERTEXPROC                 glMultiDrawElementsBaseVertex;
+// extern PFNGLMULTIDRAWELEMENTSINDIRECTPROC                   glMultiDrawElementsIndirect;
+// extern PFNGLMULTIDRAWELEMENTSINDIRECTCOUNTARBPROC           glMultiDrawElementsIndirectCountARB;
+// extern PFNGLNAMEDBUFFERDATAPROC                             glNamedBufferData;
+// extern PFNGLNAMEDBUFFERPAGECOMMITMENTARBPROC                glNamedBufferPageCommitmentARB;
+// extern PFNGLNAMEDBUFFERPAGECOMMITMENTEXTPROC                glNamedBufferPageCommitmentEXT;
+// extern PFNGLNAMEDBUFFERSTORAGEPROC                          glNamedBufferStorage;
+// extern PFNGLNAMEDBUFFERSUBDATAPROC                          glNamedBufferSubData;
+// extern PFNGLNAMEDFRAMEBUFFERDRAWBUFFERPROC                  glNamedFramebufferDrawBuffer;
+// extern PFNGLNAMEDFRAMEBUFFERDRAWBUFFERSPROC                 glNamedFramebufferDrawBuffers;
+// extern PFNGLNAMEDFRAMEBUFFERPARAMETERIPROC                  glNamedFramebufferParameteri;
+// extern PFNGLNAMEDFRAMEBUFFERREADBUFFERPROC                  glNamedFramebufferReadBuffer;
+// extern PFNGLNAMEDFRAMEBUFFERRENDERBUFFERPROC                glNamedFramebufferRenderbuffer;
+// extern PFNGLNAMEDFRAMEBUFFERTEXTUREPROC                     glNamedFramebufferTexture;
+// extern PFNGLNAMEDFRAMEBUFFERTEXTURELAYERPROC                glNamedFramebufferTextureLayer;
+// extern PFNGLNAMEDRENDERBUFFERSTORAGEPROC                    glNamedRenderbufferStorage;
+// extern PFNGLNAMEDRENDERBUFFERSTORAGEMULTISAMPLEPROC         glNamedRenderbufferStorageMultisample;
+// extern PFNGLNAMEDSTRINGARBPROC                              glNamedStringARB;
+// extern PFNGLOBJECTLABELPROC                                 glObjectLabel;
+// extern PFNGLOBJECTPTRLABELPROC                              glObjectPtrLabel;
+// extern PFNGLPATCHPARAMETERFVPROC                            glPatchParameterfv;
+// extern PFNGLPATCHPARAMETERIPROC                             glPatchParameteri;
+// extern PFNGLPAUSETRANSFORMFEEDBACKPROC                      glPauseTransformFeedback;
+// extern PFNGLPIXELSTOREFPROC                                 glPixelStoref;
+// extern PFNGLPIXELSTOREIPROC                                 glPixelStorei;
+// extern PFNGLPOINTPARAMETERFPROC                             glPointParameterf;
+// extern PFNGLPOINTPARAMETERFVPROC                            glPointParameterfv;
+// extern PFNGLPOINTPARAMETERIPROC                             glPointParameteri;
+// extern PFNGLPOINTPARAMETERIVPROC                            glPointParameteriv;
+// extern PFNGLPOINTSIZEPROC                                   glPointSize;
+// extern PFNGLPOLYGONMODEPROC                                 glPolygonMode;
+// extern PFNGLPOLYGONOFFSETPROC                               glPolygonOffset;
+// extern PFNGLPOPDEBUGGROUPPROC                               glPopDebugGroup;
+// extern PFNGLPRIMITIVERESTARTINDEXPROC                       glPrimitiveRestartIndex;
+// extern PFNGLPROGRAMBINARYPROC                               glProgramBinary;
+// extern PFNGLPROGRAMPARAMETERIPROC                           glProgramParameteri;
+// extern PFNGLPROGRAMUNIFORM1DPROC                            glProgramUniform1d;
+// extern PFNGLPROGRAMUNIFORM1DVPROC                           glProgramUniform1dv;
+// extern PFNGLPROGRAMUNIFORM1FPROC                            glProgramUniform1f;
+// extern PFNGLPROGRAMUNIFORM1FVPROC                           glProgramUniform1fv;
+// extern PFNGLPROGRAMUNIFORM1IPROC                            glProgramUniform1i;
+// extern PFNGLPROGRAMUNIFORM1IVPROC                           glProgramUniform1iv;
+// extern PFNGLPROGRAMUNIFORM1UIPROC                           glProgramUniform1ui;
+// extern PFNGLPROGRAMUNIFORM1UIVPROC                          glProgramUniform1uiv;
+// extern PFNGLPROGRAMUNIFORM2DPROC                            glProgramUniform2d;
+// extern PFNGLPROGRAMUNIFORM2DVPROC                           glProgramUniform2dv;
+// extern PFNGLPROGRAMUNIFORM2FPROC                            glProgramUniform2f;
+// extern PFNGLPROGRAMUNIFORM2FVPROC                           glProgramUniform2fv;
+// extern PFNGLPROGRAMUNIFORM2IPROC                            glProgramUniform2i;
+// extern PFNGLPROGRAMUNIFORM2IVPROC                           glProgramUniform2iv;
+// extern PFNGLPROGRAMUNIFORM2UIPROC                           glProgramUniform2ui;
+// extern PFNGLPROGRAMUNIFORM2UIVPROC                          glProgramUniform2uiv;
+// extern PFNGLPROGRAMUNIFORM3DPROC                            glProgramUniform3d;
+// extern PFNGLPROGRAMUNIFORM3DVPROC                           glProgramUniform3dv;
+// extern PFNGLPROGRAMUNIFORM3FPROC                            glProgramUniform3f;
+// extern PFNGLPROGRAMUNIFORM3FVPROC                           glProgramUniform3fv;
+// extern PFNGLPROGRAMUNIFORM3IPROC                            glProgramUniform3i;
+// extern PFNGLPROGRAMUNIFORM3IVPROC                           glProgramUniform3iv;
+// extern PFNGLPROGRAMUNIFORM3UIPROC                           glProgramUniform3ui;
+// extern PFNGLPROGRAMUNIFORM3UIVPROC                          glProgramUniform3uiv;
+// extern PFNGLPROGRAMUNIFORM4DPROC                            glProgramUniform4d;
+// extern PFNGLPROGRAMUNIFORM4DVPROC                           glProgramUniform4dv;
+// extern PFNGLPROGRAMUNIFORM4FPROC                            glProgramUniform4f;
+// extern PFNGLPROGRAMUNIFORM4FVPROC                           glProgramUniform4fv;
+// extern PFNGLPROGRAMUNIFORM4IPROC                            glProgramUniform4i;
+// extern PFNGLPROGRAMUNIFORM4IVPROC                           glProgramUniform4iv;
+// extern PFNGLPROGRAMUNIFORM4UIPROC                           glProgramUniform4ui;
+// extern PFNGLPROGRAMUNIFORM4UIVPROC                          glProgramUniform4uiv;
+// extern PFNGLPROGRAMUNIFORMHANDLEUI64ARBPROC                 glProgramUniformHandleui64ARB;
+// extern PFNGLPROGRAMUNIFORMHANDLEUI64VARBPROC                glProgramUniformHandleui64vARB;
+// extern PFNGLPROGRAMUNIFORMMATRIX2DVPROC                     glProgramUniformMatrix2dv;
+// extern PFNGLPROGRAMUNIFORMMATRIX2FVPROC                     glProgramUniformMatrix2fv;
+// extern PFNGLPROGRAMUNIFORMMATRIX2X3DVPROC                   glProgramUniformMatrix2x3dv;
+// extern PFNGLPROGRAMUNIFORMMATRIX2X3FVPROC                   glProgramUniformMatrix2x3fv;
+// extern PFNGLPROGRAMUNIFORMMATRIX2X4DVPROC                   glProgramUniformMatrix2x4dv;
+// extern PFNGLPROGRAMUNIFORMMATRIX2X4FVPROC                   glProgramUniformMatrix2x4fv;
+// extern PFNGLPROGRAMUNIFORMMATRIX3DVPROC                     glProgramUniformMatrix3dv;
+// extern PFNGLPROGRAMUNIFORMMATRIX3FVPROC                     glProgramUniformMatrix3fv;
+// extern PFNGLPROGRAMUNIFORMMATRIX3X2DVPROC                   glProgramUniformMatrix3x2dv;
+// extern PFNGLPROGRAMUNIFORMMATRIX3X2FVPROC                   glProgramUniformMatrix3x2fv;
+// extern PFNGLPROGRAMUNIFORMMATRIX3X4DVPROC                   glProgramUniformMatrix3x4dv;
+// extern PFNGLPROGRAMUNIFORMMATRIX3X4FVPROC                   glProgramUniformMatrix3x4fv;
+// extern PFNGLPROGRAMUNIFORMMATRIX4DVPROC                     glProgramUniformMatrix4dv;
+// extern PFNGLPROGRAMUNIFORMMATRIX4FVPROC                     glProgramUniformMatrix4fv;
+// extern PFNGLPROGRAMUNIFORMMATRIX4X2DVPROC                   glProgramUniformMatrix4x2dv;
+// extern PFNGLPROGRAMUNIFORMMATRIX4X2FVPROC                   glProgramUniformMatrix4x2fv;
+// extern PFNGLPROGRAMUNIFORMMATRIX4X3DVPROC                   glProgramUniformMatrix4x3dv;
+// extern PFNGLPROGRAMUNIFORMMATRIX4X3FVPROC                   glProgramUniformMatrix4x3fv;
+// extern PFNGLPROVOKINGVERTEXPROC                             glProvokingVertex;
+// extern PFNGLPUSHDEBUGGROUPPROC                              glPushDebugGroup;
+// extern PFNGLQUERYCOUNTERPROC                                glQueryCounter;
+// extern PFNGLREADBUFFERPROC                                  glReadBuffer;
+// extern PFNGLREADPIXELSPROC                                  glReadPixels;
+// extern PFNGLREADNPIXELSPROC                                 glReadnPixels;
+// extern PFNGLREADNPIXELSARBPROC                              glReadnPixelsARB;
+// extern PFNGLRELEASESHADERCOMPILERPROC                       glReleaseShaderCompiler;
+// extern PFNGLRENDERBUFFERSTORAGEPROC                         glRenderbufferStorage;
+// extern PFNGLRENDERBUFFERSTORAGEMULTISAMPLEPROC              glRenderbufferStorageMultisample;
+// extern PFNGLRESUMETRANSFORMFEEDBACKPROC                     glResumeTransformFeedback;
+// extern PFNGLSAMPLECOVERAGEPROC                              glSampleCoverage;
+// extern PFNGLSAMPLEMASKIPROC                                 glSampleMaski;
+// extern PFNGLSAMPLERPARAMETERIIVPROC                         glSamplerParameterIiv;
+// extern PFNGLSAMPLERPARAMETERIUIVPROC                        glSamplerParameterIuiv;
+// extern PFNGLSAMPLERPARAMETERFPROC                           glSamplerParameterf;
+// extern PFNGLSAMPLERPARAMETERFVPROC                          glSamplerParameterfv;
+// extern PFNGLSAMPLERPARAMETERIPROC                           glSamplerParameteri;
+// extern PFNGLSAMPLERPARAMETERIVPROC                          glSamplerParameteriv;
+// extern PFNGLSCISSORPROC                                     glScissor;
+// extern PFNGLSCISSORARRAYVPROC                               glScissorArrayv;
+// extern PFNGLSCISSORINDEXEDPROC                              glScissorIndexed;
+// extern PFNGLSCISSORINDEXEDVPROC                             glScissorIndexedv;
+// extern PFNGLSHADERBINARYPROC                                glShaderBinary;
+// extern PFNGLSHADERSOURCEPROC                                glShaderSource;
+// extern PFNGLSHADERSTORAGEBLOCKBINDINGPROC                   glShaderStorageBlockBinding;
+// extern PFNGLSTENCILFUNCPROC                                 glStencilFunc;
+// extern PFNGLSTENCILFUNCSEPARATEPROC                         glStencilFuncSeparate;
+// extern PFNGLSTENCILMASKPROC                                 glStencilMask;
+// extern PFNGLSTENCILMASKSEPARATEPROC                         glStencilMaskSeparate;
+// extern PFNGLSTENCILOPPROC                                   glStencilOp;
+// extern PFNGLSTENCILOPSEPARATEPROC                           glStencilOpSeparate;
+// extern PFNGLTEXBUFFERPROC                                   glTexBuffer;
+// extern PFNGLTEXBUFFERRANGEPROC                              glTexBufferRange;
+// extern PFNGLTEXIMAGE1DPROC                                  glTexImage1D;
+// extern PFNGLTEXIMAGE2DPROC                                  glTexImage2D;
+// extern PFNGLTEXIMAGE2DMULTISAMPLEPROC                       glTexImage2DMultisample;
+// extern PFNGLTEXIMAGE3DPROC                                  glTexImage3D;
+// extern PFNGLTEXIMAGE3DMULTISAMPLEPROC                       glTexImage3DMultisample;
+// extern PFNGLTEXPAGECOMMITMENTARBPROC                        glTexPageCommitmentARB;
+// extern PFNGLTEXPARAMETERIIVPROC                             glTexParameterIiv;
+// extern PFNGLTEXPARAMETERIUIVPROC                            glTexParameterIuiv;
+// extern PFNGLTEXPARAMETERFPROC                               glTexParameterf;
+// extern PFNGLTEXPARAMETERFVPROC                              glTexParameterfv;
+// extern PFNGLTEXPARAMETERIPROC                               glTexParameteri;
+// extern PFNGLTEXPARAMETERIVPROC                              glTexParameteriv;
+// extern PFNGLTEXSTORAGE1DPROC                                glTexStorage1D;
+// extern PFNGLTEXSTORAGE2DPROC                                glTexStorage2D;
+// extern PFNGLTEXSTORAGE2DMULTISAMPLEPROC                     glTexStorage2DMultisample;
+// extern PFNGLTEXSTORAGE3DPROC                                glTexStorage3D;
+// extern PFNGLTEXSTORAGE3DMULTISAMPLEPROC                     glTexStorage3DMultisample;
+// extern PFNGLTEXSUBIMAGE1DPROC                               glTexSubImage1D;
+// extern PFNGLTEXSUBIMAGE2DPROC                               glTexSubImage2D;
+// extern PFNGLTEXSUBIMAGE3DPROC                               glTexSubImage3D;
+// extern PFNGLTEXTUREBARRIERPROC                              glTextureBarrier;
+// extern PFNGLTEXTUREBUFFERPROC                               glTextureBuffer;
+// extern PFNGLTEXTUREBUFFERRANGEPROC                          glTextureBufferRange;
+// extern PFNGLTEXTUREPARAMETERIIVPROC                         glTextureParameterIiv;
+// extern PFNGLTEXTUREPARAMETERIUIVPROC                        glTextureParameterIuiv;
+// extern PFNGLTEXTUREPARAMETERFPROC                           glTextureParameterf;
+// extern PFNGLTEXTUREPARAMETERFVPROC                          glTextureParameterfv;
+// extern PFNGLTEXTUREPARAMETERIPROC                           glTextureParameteri;
+// extern PFNGLTEXTUREPARAMETERIVPROC                          glTextureParameteriv;
+// extern PFNGLTEXTURESTORAGE1DPROC                            glTextureStorage1D;
+// extern PFNGLTEXTURESTORAGE2DPROC                            glTextureStorage2D;
+// extern PFNGLTEXTURESTORAGE2DMULTISAMPLEPROC                 glTextureStorage2DMultisample;
+// extern PFNGLTEXTURESTORAGE3DPROC                            glTextureStorage3D;
+// extern PFNGLTEXTURESTORAGE3DMULTISAMPLEPROC                 glTextureStorage3DMultisample;
+// extern PFNGLTEXTURESUBIMAGE1DPROC                           glTextureSubImage1D;
+// extern PFNGLTEXTURESUBIMAGE2DPROC                           glTextureSubImage2D;
+// extern PFNGLTEXTURESUBIMAGE3DPROC                           glTextureSubImage3D;
+// extern PFNGLTEXTUREVIEWPROC                                 glTextureView;
+// extern PFNGLTRANSFORMFEEDBACKBUFFERBASEPROC                 glTransformFeedbackBufferBase;
+// extern PFNGLTRANSFORMFEEDBACKBUFFERRANGEPROC                glTransformFeedbackBufferRange;
+// extern PFNGLTRANSFORMFEEDBACKVARYINGSPROC                   glTransformFeedbackVaryings;
+// extern PFNGLUNIFORM1DPROC                                   glUniform1d;
+// extern PFNGLUNIFORM1DVPROC                                  glUniform1dv;
+// extern PFNGLUNIFORM1FPROC                                   glUniform1f;
+// extern PFNGLUNIFORM1FVPROC                                  glUniform1fv;
+// extern PFNGLUNIFORM1IPROC                                   glUniform1i;
+// extern PFNGLUNIFORM1IVPROC                                  glUniform1iv;
+// extern PFNGLUNIFORM1UIPROC                                  glUniform1ui;
+// extern PFNGLUNIFORM1UIVPROC                                 glUniform1uiv;
+// extern PFNGLUNIFORM2DPROC                                   glUniform2d;
+// extern PFNGLUNIFORM2DVPROC                                  glUniform2dv;
+// extern PFNGLUNIFORM2FPROC                                   glUniform2f;
+// extern PFNGLUNIFORM2FVPROC                                  glUniform2fv;
+// extern PFNGLUNIFORM2IPROC                                   glUniform2i;
+// extern PFNGLUNIFORM2IVPROC                                  glUniform2iv;
+// extern PFNGLUNIFORM2UIPROC                                  glUniform2ui;
+// extern PFNGLUNIFORM2UIVPROC                                 glUniform2uiv;
+// extern PFNGLUNIFORM3DPROC                                   glUniform3d;
+// extern PFNGLUNIFORM3DVPROC                                  glUniform3dv;
+// extern PFNGLUNIFORM3FPROC                                   glUniform3f;
+// extern PFNGLUNIFORM3FVPROC                                  glUniform3fv;
+// extern PFNGLUNIFORM3IPROC                                   glUniform3i;
+// extern PFNGLUNIFORM3IVPROC                                  glUniform3iv;
+// extern PFNGLUNIFORM3UIPROC                                  glUniform3ui;
+// extern PFNGLUNIFORM3UIVPROC                                 glUniform3uiv;
+// extern PFNGLUNIFORM4DPROC                                   glUniform4d;
+// extern PFNGLUNIFORM4DVPROC                                  glUniform4dv;
+// extern PFNGLUNIFORM4FPROC                                   glUniform4f;
+// extern PFNGLUNIFORM4FVPROC                                  glUniform4fv;
+// extern PFNGLUNIFORM4IPROC                                   glUniform4i;
+// extern PFNGLUNIFORM4IVPROC                                  glUniform4iv;
+// extern PFNGLUNIFORM4UIPROC                                  glUniform4ui;
+// extern PFNGLUNIFORM4UIVPROC                                 glUniform4uiv;
+// extern PFNGLUNIFORMBLOCKBINDINGPROC                         glUniformBlockBinding;
+// extern PFNGLUNIFORMHANDLEUI64ARBPROC                        glUniformHandleui64ARB;
+// extern PFNGLUNIFORMHANDLEUI64VARBPROC                       glUniformHandleui64vARB;
+// extern PFNGLUNIFORMMATRIX2DVPROC                            glUniformMatrix2dv;
+// extern PFNGLUNIFORMMATRIX2FVPROC                            glUniformMatrix2fv;
+// extern PFNGLUNIFORMMATRIX2X3DVPROC                          glUniformMatrix2x3dv;
+// extern PFNGLUNIFORMMATRIX2X3FVPROC                          glUniformMatrix2x3fv;
+// extern PFNGLUNIFORMMATRIX2X4DVPROC                          glUniformMatrix2x4dv;
+// extern PFNGLUNIFORMMATRIX2X4FVPROC                          glUniformMatrix2x4fv;
+// extern PFNGLUNIFORMMATRIX3DVPROC                            glUniformMatrix3dv;
+// extern PFNGLUNIFORMMATRIX3FVPROC                            glUniformMatrix3fv;
+// extern PFNGLUNIFORMMATRIX3X2DVPROC                          glUniformMatrix3x2dv;
+// extern PFNGLUNIFORMMATRIX3X2FVPROC                          glUniformMatrix3x2fv;
+// extern PFNGLUNIFORMMATRIX3X4DVPROC                          glUniformMatrix3x4dv;
+// extern PFNGLUNIFORMMATRIX3X4FVPROC                          glUniformMatrix3x4fv;
+// extern PFNGLUNIFORMMATRIX4DVPROC                            glUniformMatrix4dv;
+// extern PFNGLUNIFORMMATRIX4FVPROC                            glUniformMatrix4fv;
+// extern PFNGLUNIFORMMATRIX4X2DVPROC                          glUniformMatrix4x2dv;
+// extern PFNGLUNIFORMMATRIX4X2FVPROC                          glUniformMatrix4x2fv;
+// extern PFNGLUNIFORMMATRIX4X3DVPROC                          glUniformMatrix4x3dv;
+// extern PFNGLUNIFORMMATRIX4X3FVPROC                          glUniformMatrix4x3fv;
+// extern PFNGLUNIFORMSUBROUTINESUIVPROC                       glUniformSubroutinesuiv;
+// extern PFNGLUNMAPBUFFERPROC                                 glUnmapBuffer;
+// extern PFNGLUNMAPNAMEDBUFFERPROC                            glUnmapNamedBuffer;
+// extern PFNGLUSEPROGRAMPROC                                  glUseProgram;
+// extern PFNGLUSEPROGRAMSTAGESPROC                            glUseProgramStages;
+// extern PFNGLVALIDATEPROGRAMPROC                             glValidateProgram;
+// extern PFNGLVALIDATEPROGRAMPIPELINEPROC                     glValidateProgramPipeline;
+// extern PFNGLVERTEXARRAYATTRIBBINDINGPROC                    glVertexArrayAttribBinding;
+// extern PFNGLVERTEXARRAYATTRIBFORMATPROC                     glVertexArrayAttribFormat;
+// extern PFNGLVERTEXARRAYATTRIBIFORMATPROC                    glVertexArrayAttribIFormat;
+// extern PFNGLVERTEXARRAYATTRIBLFORMATPROC                    glVertexArrayAttribLFormat;
+// extern PFNGLVERTEXARRAYBINDINGDIVISORPROC                   glVertexArrayBindingDivisor;
+// extern PFNGLVERTEXARRAYELEMENTBUFFERPROC                    glVertexArrayElementBuffer;
+// extern PFNGLVERTEXARRAYVERTEXBUFFERPROC                     glVertexArrayVertexBuffer;
+// extern PFNGLVERTEXARRAYVERTEXBUFFERSPROC                    glVertexArrayVertexBuffers;
+// extern PFNGLVERTEXATTRIB1DPROC                              glVertexAttrib1d;
+// extern PFNGLVERTEXATTRIB1DVPROC                             glVertexAttrib1dv;
+// extern PFNGLVERTEXATTRIB1FPROC                              glVertexAttrib1f;
+// extern PFNGLVERTEXATTRIB1FVPROC                             glVertexAttrib1fv;
+// extern PFNGLVERTEXATTRIB1SPROC                              glVertexAttrib1s;
+// extern PFNGLVERTEXATTRIB1SVPROC                             glVertexAttrib1sv;
+// extern PFNGLVERTEXATTRIB2DPROC                              glVertexAttrib2d;
+// extern PFNGLVERTEXATTRIB2DVPROC                             glVertexAttrib2dv;
+// extern PFNGLVERTEXATTRIB2FPROC                              glVertexAttrib2f;
+// extern PFNGLVERTEXATTRIB2FVPROC                             glVertexAttrib2fv;
+// extern PFNGLVERTEXATTRIB2SPROC                              glVertexAttrib2s;
+// extern PFNGLVERTEXATTRIB2SVPROC                             glVertexAttrib2sv;
+// extern PFNGLVERTEXATTRIB3DPROC                              glVertexAttrib3d;
+// extern PFNGLVERTEXATTRIB3DVPROC                             glVertexAttrib3dv;
+// extern PFNGLVERTEXATTRIB3FPROC                              glVertexAttrib3f;
+// extern PFNGLVERTEXATTRIB3FVPROC                             glVertexAttrib3fv;
+// extern PFNGLVERTEXATTRIB3SPROC                              glVertexAttrib3s;
+// extern PFNGLVERTEXATTRIB3SVPROC                             glVertexAttrib3sv;
+// extern PFNGLVERTEXATTRIB4NBVPROC                            glVertexAttrib4Nbv;
+// extern PFNGLVERTEXATTRIB4NIVPROC                            glVertexAttrib4Niv;
+// extern PFNGLVERTEXATTRIB4NSVPROC                            glVertexAttrib4Nsv;
+// extern PFNGLVERTEXATTRIB4NUBPROC                            glVertexAttrib4Nub;
+// extern PFNGLVERTEXATTRIB4NUBVPROC                           glVertexAttrib4Nubv;
+// extern PFNGLVERTEXATTRIB4NUIVPROC                           glVertexAttrib4Nuiv;
+// extern PFNGLVERTEXATTRIB4NUSVPROC                           glVertexAttrib4Nusv;
+// extern PFNGLVERTEXATTRIB4BVPROC                             glVertexAttrib4bv;
+// extern PFNGLVERTEXATTRIB4DPROC                              glVertexAttrib4d;
+// extern PFNGLVERTEXATTRIB4DVPROC                             glVertexAttrib4dv;
+// extern PFNGLVERTEXATTRIB4FPROC                              glVertexAttrib4f;
+// extern PFNGLVERTEXATTRIB4FVPROC                             glVertexAttrib4fv;
+// extern PFNGLVERTEXATTRIB4IVPROC                             glVertexAttrib4iv;
+// extern PFNGLVERTEXATTRIB4SPROC                              glVertexAttrib4s;
+// extern PFNGLVERTEXATTRIB4SVPROC                             glVertexAttrib4sv;
+// extern PFNGLVERTEXATTRIB4UBVPROC                            glVertexAttrib4ubv;
+// extern PFNGLVERTEXATTRIB4UIVPROC                            glVertexAttrib4uiv;
+// extern PFNGLVERTEXATTRIB4USVPROC                            glVertexAttrib4usv;
+// extern PFNGLVERTEXATTRIBBINDINGPROC                         glVertexAttribBinding;
+// extern PFNGLVERTEXATTRIBDIVISORPROC                         glVertexAttribDivisor;
+// extern PFNGLVERTEXATTRIBFORMATPROC                          glVertexAttribFormat;
+// extern PFNGLVERTEXATTRIBI1IPROC                             glVertexAttribI1i;
+// extern PFNGLVERTEXATTRIBI1IVPROC                            glVertexAttribI1iv;
+// extern PFNGLVERTEXATTRIBI1UIPROC                            glVertexAttribI1ui;
+// extern PFNGLVERTEXATTRIBI1UIVPROC                           glVertexAttribI1uiv;
+// extern PFNGLVERTEXATTRIBI2IPROC                             glVertexAttribI2i;
+// extern PFNGLVERTEXATTRIBI2IVPROC                            glVertexAttribI2iv;
+// extern PFNGLVERTEXATTRIBI2UIPROC                            glVertexAttribI2ui;
+// extern PFNGLVERTEXATTRIBI2UIVPROC                           glVertexAttribI2uiv;
+// extern PFNGLVERTEXATTRIBI3IPROC                             glVertexAttribI3i;
+// extern PFNGLVERTEXATTRIBI3IVPROC                            glVertexAttribI3iv;
+// extern PFNGLVERTEXATTRIBI3UIPROC                            glVertexAttribI3ui;
+// extern PFNGLVERTEXATTRIBI3UIVPROC                           glVertexAttribI3uiv;
+// extern PFNGLVERTEXATTRIBI4BVPROC                            glVertexAttribI4bv;
+// extern PFNGLVERTEXATTRIBI4IPROC                             glVertexAttribI4i;
+// extern PFNGLVERTEXATTRIBI4IVPROC                            glVertexAttribI4iv;
+// extern PFNGLVERTEXATTRIBI4SVPROC                            glVertexAttribI4sv;
+// extern PFNGLVERTEXATTRIBI4UBVPROC                           glVertexAttribI4ubv;
+// extern PFNGLVERTEXATTRIBI4UIPROC                            glVertexAttribI4ui;
+// extern PFNGLVERTEXATTRIBI4UIVPROC                           glVertexAttribI4uiv;
+// extern PFNGLVERTEXATTRIBI4USVPROC                           glVertexAttribI4usv;
+// extern PFNGLVERTEXATTRIBIFORMATPROC                         glVertexAttribIFormat;
+// extern PFNGLVERTEXATTRIBIPOINTERPROC                        glVertexAttribIPointer;
+// extern PFNGLVERTEXATTRIBL1DPROC                             glVertexAttribL1d;
+// extern PFNGLVERTEXATTRIBL1DVPROC                            glVertexAttribL1dv;
+// extern PFNGLVERTEXATTRIBL1UI64ARBPROC                       glVertexAttribL1ui64ARB;
+// extern PFNGLVERTEXATTRIBL1UI64VARBPROC                      glVertexAttribL1ui64vARB;
+// extern PFNGLVERTEXATTRIBL2DPROC                             glVertexAttribL2d;
+// extern PFNGLVERTEXATTRIBL2DVPROC                            glVertexAttribL2dv;
+// extern PFNGLVERTEXATTRIBL3DPROC                             glVertexAttribL3d;
+// extern PFNGLVERTEXATTRIBL3DVPROC                            glVertexAttribL3dv;
+// extern PFNGLVERTEXATTRIBL4DPROC                             glVertexAttribL4d;
+// extern PFNGLVERTEXATTRIBL4DVPROC                            glVertexAttribL4dv;
+// extern PFNGLVERTEXATTRIBLFORMATPROC                         glVertexAttribLFormat;
+// extern PFNGLVERTEXATTRIBLPOINTERPROC                        glVertexAttribLPointer;
+// extern PFNGLVERTEXATTRIBP1UIPROC                            glVertexAttribP1ui;
+// extern PFNGLVERTEXATTRIBP1UIVPROC                           glVertexAttribP1uiv;
+// extern PFNGLVERTEXATTRIBP2UIPROC                            glVertexAttribP2ui;
+// extern PFNGLVERTEXATTRIBP2UIVPROC                           glVertexAttribP2uiv;
+// extern PFNGLVERTEXATTRIBP3UIPROC                            glVertexAttribP3ui;
+// extern PFNGLVERTEXATTRIBP3UIVPROC                           glVertexAttribP3uiv;
+// extern PFNGLVERTEXATTRIBP4UIPROC                            glVertexAttribP4ui;
+// extern PFNGLVERTEXATTRIBP4UIVPROC                           glVertexAttribP4uiv;
+// extern PFNGLVERTEXATTRIBPOINTERPROC                         glVertexAttribPointer;
+// extern PFNGLVERTEXBINDINGDIVISORPROC                        glVertexBindingDivisor;
+// extern PFNGLVIEWPORTPROC                                    glViewport;
+// extern PFNGLVIEWPORTARRAYVPROC                              glViewportArrayv;
+// extern PFNGLVIEWPORTINDEXEDFPROC                            glViewportIndexedf;
+// extern PFNGLVIEWPORTINDEXEDFVPROC                           glViewportIndexedfv;
+// extern PFNGLWAITSYNCPROC                                    glWaitSync;
 
-#define glActiveShaderProgram                         glActiveShaderProgram
-#define glActiveTexture                               glActiveTexture
-#define glAttachShader                                glAttachShader
-#define glBeginConditionalRender                      glBeginConditionalRender
-#define glBeginQuery                                  glBeginQuery
-#define glBeginQueryIndexed                           glBeginQueryIndexed
-#define glBeginTransformFeedback                      glBeginTransformFeedback
-#define glBindAttribLocation                          glBindAttribLocation
-#define glBindBuffer                                  glBindBuffer
-#define glBindBufferBase                              glBindBufferBase
-#define glBindBufferRange                             glBindBufferRange
-#define glBindBuffersBase                             glBindBuffersBase
-#define glBindBuffersRange                            glBindBuffersRange
-#define glBindFragDataLocation                        glBindFragDataLocation
-#define glBindFragDataLocationIndexed                 glBindFragDataLocationIndexed
-#define glBindFramebuffer                             glBindFramebuffer
-#define glBindImageTexture                            glBindImageTexture
-#define glBindImageTextures                           glBindImageTextures
-#define glBindProgramPipeline                         glBindProgramPipeline
-#define glBindRenderbuffer                            glBindRenderbuffer
-#define glBindSampler                                 glBindSampler
-#define glBindSamplers                                glBindSamplers
-#define glBindTexture                                 glBindTexture
-#define glBindTextureUnit                             glBindTextureUnit
-#define glBindTextures                                glBindTextures
-#define glBindTransformFeedback                       glBindTransformFeedback
-#define glBindVertexArray                             glBindVertexArray
-#define glBindVertexBuffer                            glBindVertexBuffer
-#define glBindVertexBuffers                           glBindVertexBuffers
-#define glBlendColor                                  glBlendColor
-#define glBlendEquation                               glBlendEquation
-#define glBlendEquationSeparate                       glBlendEquationSeparate
-#define glBlendEquationSeparatei                      glBlendEquationSeparatei
-#define glBlendEquationSeparateiARB                   glBlendEquationSeparateiARB
-#define glBlendEquationi                              glBlendEquationi
-#define glBlendEquationiARB                           glBlendEquationiARB
-#define glBlendFunc                                   glBlendFunc
-#define glBlendFuncSeparate                           glBlendFuncSeparate
-#define glBlendFuncSeparatei                          glBlendFuncSeparatei
-#define glBlendFuncSeparateiARB                       glBlendFuncSeparateiARB
-#define glBlendFunci                                  glBlendFunci
-#define glBlendFunciARB                               glBlendFunciARB
-#define glBlitFramebuffer                             glBlitFramebuffer
-#define glBlitNamedFramebuffer                        glBlitNamedFramebuffer
-#define glBufferData                                  glBufferData
-#define glBufferPageCommitmentARB                     glBufferPageCommitmentARB
-#define glBufferStorage                               glBufferStorage
-#define glBufferSubData                               glBufferSubData
-#define glCheckFramebufferStatus                      glCheckFramebufferStatus
-#define glCheckNamedFramebufferStatus                 glCheckNamedFramebufferStatus
-#define glClampColor                                  glClampColor
-#define glClear                                       glClear
-#define glClearBufferData                             glClearBufferData
-#define glClearBufferSubData                          glClearBufferSubData
-#define glClearBufferfi                               glClearBufferfi
-#define glClearBufferfv                               glClearBufferfv
-#define glClearBufferiv                               glClearBufferiv
-#define glClearBufferuiv                              glClearBufferuiv
-#define glClearColor                                  glClearColor
-#define glClearDepth                                  glClearDepth
-#define glClearDepthf                                 glClearDepthf
-#define glClearNamedBufferData                        glClearNamedBufferData
-#define glClearNamedBufferSubData                     glClearNamedBufferSubData
-#define glClearNamedFramebufferfi                     glClearNamedFramebufferfi
-#define glClearNamedFramebufferfv                     glClearNamedFramebufferfv
-#define glClearNamedFramebufferiv                     glClearNamedFramebufferiv
-#define glClearNamedFramebufferuiv                    glClearNamedFramebufferuiv
-#define glClearStencil                                glClearStencil
-#define glClearTexImage                               glClearTexImage
-#define glClearTexSubImage                            glClearTexSubImage
-#define glClientWaitSync                              glClientWaitSync
-#define glClipControl                                 glClipControl
-#define glColorMask                                   glColorMask
-#define glColorMaski                                  glColorMaski
-#define glCompileShader                               glCompileShader
-#define glCompileShaderIncludeARB                     glCompileShaderIncludeARB
-#define glCompressedTexImage1D                        glCompressedTexImage1D
-#define glCompressedTexImage2D                        glCompressedTexImage2D
-#define glCompressedTexImage3D                        glCompressedTexImage3D
-#define glCompressedTexSubImage1D                     glCompressedTexSubImage1D
-#define glCompressedTexSubImage2D                     glCompressedTexSubImage2D
-#define glCompressedTexSubImage3D                     glCompressedTexSubImage3D
-#define glCompressedTextureSubImage1D                 glCompressedTextureSubImage1D
-#define glCompressedTextureSubImage2D                 glCompressedTextureSubImage2D
-#define glCompressedTextureSubImage3D                 glCompressedTextureSubImage3D
-#define glCopyBufferSubData                           glCopyBufferSubData
-#define glCopyImageSubData                            glCopyImageSubData
-#define glCopyNamedBufferSubData                      glCopyNamedBufferSubData
-#define glCopyTexImage1D                              glCopyTexImage1D
-#define glCopyTexImage2D                              glCopyTexImage2D
-#define glCopyTexSubImage1D                           glCopyTexSubImage1D
-#define glCopyTexSubImage2D                           glCopyTexSubImage2D
-#define glCopyTexSubImage3D                           glCopyTexSubImage3D
-#define glCopyTextureSubImage1D                       glCopyTextureSubImage1D
-#define glCopyTextureSubImage2D                       glCopyTextureSubImage2D
-#define glCopyTextureSubImage3D                       glCopyTextureSubImage3D
-#define glCreateBuffers                               glCreateBuffers
-#define glCreateFramebuffers                          glCreateFramebuffers
-#define glCreateProgram                               glCreateProgram
-#define glCreateProgramPipelines                      glCreateProgramPipelines
-#define glCreateQueries                               glCreateQueries
-#define glCreateRenderbuffers                         glCreateRenderbuffers
-#define glCreateSamplers                              glCreateSamplers
-#define glCreateShader                                glCreateShader
-#define glCreateShaderProgramv                        glCreateShaderProgramv
-#define glCreateSyncFromCLeventARB                    glCreateSyncFromCLeventARB
-#define glCreateTextures                              glCreateTextures
-#define glCreateTransformFeedbacks                    glCreateTransformFeedbacks
-#define glCreateVertexArrays                          glCreateVertexArrays
-#define glCullFace                                    glCullFace
-#define glDebugMessageCallback                        glDebugMessageCallback
-#define glDebugMessageCallbackARB                     glDebugMessageCallbackARB
-#define glDebugMessageControl                         glDebugMessageControl
-#define glDebugMessageControlARB                      glDebugMessageControlARB
-#define glDebugMessageInsert                          glDebugMessageInsert
-#define glDebugMessageInsertARB                       glDebugMessageInsertARB
-#define glDeleteBuffers                               glDeleteBuffers
-#define glDeleteFramebuffers                          glDeleteFramebuffers
-#define glDeleteNamedStringARB                        glDeleteNamedStringARB
-#define glDeleteProgram                               glDeleteProgram
-#define glDeleteProgramPipelines                      glDeleteProgramPipelines
-#define glDeleteQueries                               glDeleteQueries
-#define glDeleteRenderbuffers                         glDeleteRenderbuffers
-#define glDeleteSamplers                              glDeleteSamplers
-#define glDeleteShader                                glDeleteShader
-#define glDeleteSync                                  glDeleteSync
-#define glDeleteTextures                              glDeleteTextures
-#define glDeleteTransformFeedbacks                    glDeleteTransformFeedbacks
-#define glDeleteVertexArrays                          glDeleteVertexArrays
-#define glDepthFunc                                   glDepthFunc
-#define glDepthMask                                   glDepthMask
-#define glDepthRange                                  glDepthRange
-#define glDepthRangeArrayv                            glDepthRangeArrayv
-#define glDepthRangeIndexed                           glDepthRangeIndexed
-#define glDepthRangef                                 glDepthRangef
-#define glDetachShader                                glDetachShader
-#define glDisable                                     glDisable
-#define glDisableVertexArrayAttrib                    glDisableVertexArrayAttrib
-#define glDisableVertexAttribArray                    glDisableVertexAttribArray
-#define glDisablei                                    glDisablei
-#define glDispatchCompute                             glDispatchCompute
-#define glDispatchComputeGroupSizeARB                 glDispatchComputeGroupSizeARB
-#define glDispatchComputeIndirect                     glDispatchComputeIndirect
-#define glDrawArrays                                  glDrawArrays
-#define glDrawArraysIndirect                          glDrawArraysIndirect
-#define glDrawArraysInstanced                         glDrawArraysInstanced
-#define glDrawArraysInstancedBaseInstance             glDrawArraysInstancedBaseInstance
-#define glDrawBuffer                                  glDrawBuffer
-#define glDrawBuffers                                 glDrawBuffers
-#define glDrawElements                                glDrawElements
-#define glDrawElementsBaseVertex                      glDrawElementsBaseVertex
-#define glDrawElementsIndirect                        glDrawElementsIndirect
-#define glDrawElementsInstanced                       glDrawElementsInstanced
-#define glDrawElementsInstancedBaseInstance           glDrawElementsInstancedBaseInstance
-#define glDrawElementsInstancedBaseVertex             glDrawElementsInstancedBaseVertex
-#define glDrawElementsInstancedBaseVertexBaseInstance glDrawElementsInstancedBaseVertexBaseInstance
-#define glDrawRangeElements                           glDrawRangeElements
-#define glDrawRangeElementsBaseVertex                 glDrawRangeElementsBaseVertex
-#define glDrawTransformFeedback                       glDrawTransformFeedback
-#define glDrawTransformFeedbackInstanced              glDrawTransformFeedbackInstanced
-#define glDrawTransformFeedbackStream                 glDrawTransformFeedbackStream
-#define glDrawTransformFeedbackStreamInstanced        glDrawTransformFeedbackStreamInstanced
-#define glEnable                                      glEnable
-#define glEnableVertexArrayAttrib                     glEnableVertexArrayAttrib
-#define glEnableVertexAttribArray                     glEnableVertexAttribArray
-#define glEnablei                                     glEnablei
-#define glEndConditionalRender                        glEndConditionalRender
-#define glEndQuery                                    glEndQuery
-#define glEndQueryIndexed                             glEndQueryIndexed
-#define glEndTransformFeedback                        glEndTransformFeedback
-#define glFenceSync                                   glFenceSync
-#define glFinish                                      glFinish
-#define glFlush                                       glFlush
-#define glFlushMappedBufferRange                      glFlushMappedBufferRange
-#define glFlushMappedNamedBufferRange                 glFlushMappedNamedBufferRange
-#define glFramebufferParameteri                       glFramebufferParameteri
-#define glFramebufferRenderbuffer                     glFramebufferRenderbuffer
-#define glFramebufferTexture                          glFramebufferTexture
-#define glFramebufferTexture1D                        glFramebufferTexture1D
-#define glFramebufferTexture2D                        glFramebufferTexture2D
-#define glFramebufferTexture3D                        glFramebufferTexture3D
-#define glFramebufferTextureLayer                     glFramebufferTextureLayer
-#define glFrontFace                                   glFrontFace
-#define glGenBuffers                                  glGenBuffers
-#define glGenFramebuffers                             glGenFramebuffers
-#define glGenProgramPipelines                         glGenProgramPipelines
-#define glGenQueries                                  glGenQueries
-#define glGenRenderbuffers                            glGenRenderbuffers
-#define glGenSamplers                                 glGenSamplers
-#define glGenTextures                                 glGenTextures
-#define glGenTransformFeedbacks                       glGenTransformFeedbacks
-#define glGenVertexArrays                             glGenVertexArrays
-#define glGenerateMipmap                              glGenerateMipmap
-#define glGenerateTextureMipmap                       glGenerateTextureMipmap
-#define glGetActiveAtomicCounterBufferiv              glGetActiveAtomicCounterBufferiv
-#define glGetActiveAttrib                             glGetActiveAttrib
-#define glGetActiveSubroutineName                     glGetActiveSubroutineName
-#define glGetActiveSubroutineUniformName              glGetActiveSubroutineUniformName
-#define glGetActiveSubroutineUniformiv                glGetActiveSubroutineUniformiv
-#define glGetActiveUniform                            glGetActiveUniform
-#define glGetActiveUniformBlockName                   glGetActiveUniformBlockName
-#define glGetActiveUniformBlockiv                     glGetActiveUniformBlockiv
-#define glGetActiveUniformName                        glGetActiveUniformName
-#define glGetActiveUniformsiv                         glGetActiveUniformsiv
-#define glGetAttachedShaders                          glGetAttachedShaders
-#define glGetAttribLocation                           glGetAttribLocation
-#define glGetBooleani_v                               glGetBooleani_v
-#define glGetBooleanv                                 glGetBooleanv
-#define glGetBufferParameteri64v                      glGetBufferParameteri64v
-#define glGetBufferParameteriv                        glGetBufferParameteriv
-#define glGetBufferPointerv                           glGetBufferPointerv
-#define glGetBufferSubData                            glGetBufferSubData
-#define glGetCompressedTexImage                       glGetCompressedTexImage
-#define glGetCompressedTextureImage                   glGetCompressedTextureImage
-#define glGetCompressedTextureSubImage                glGetCompressedTextureSubImage
-#define glGetDebugMessageLog                          glGetDebugMessageLog
-#define glGetDebugMessageLogARB                       glGetDebugMessageLogARB
-#define glGetDoublei_v                                glGetDoublei_v
-#define glGetDoublev                                  glGetDoublev
-#define glGetError                                    glGetError
-#define glGetFloati_v                                 glGetFloati_v
-#define glGetFloatv                                   glGetFloatv
-#define glGetFragDataIndex                            glGetFragDataIndex
-#define glGetFragDataLocation                         glGetFragDataLocation
-#define glGetFramebufferAttachmentParameteriv         glGetFramebufferAttachmentParameteriv
-#define glGetFramebufferParameteriv                   glGetFramebufferParameteriv
-#define glGetGraphicsResetStatus                      glGetGraphicsResetStatus
-#define glGetGraphicsResetStatusARB                   glGetGraphicsResetStatusARB
-#define glGetImageHandleARB                           glGetImageHandleARB
-#define glGetInteger64i_v                             glGetInteger64i_v
-#define glGetInteger64v                               glGetInteger64v
-#define glGetIntegeri_v                               glGetIntegeri_v
-#define glGetIntegerv                                 glGetIntegerv
-#define glGetInternalformati64v                       glGetInternalformati64v
-#define glGetInternalformativ                         glGetInternalformativ
-#define glGetMultisamplefv                            glGetMultisamplefv
-#define glGetNamedBufferParameteri64v                 glGetNamedBufferParameteri64v
-#define glGetNamedBufferParameteriv                   glGetNamedBufferParameteriv
-#define glGetNamedBufferPointerv                      glGetNamedBufferPointerv
-#define glGetNamedBufferSubData                       glGetNamedBufferSubData
-#define glGetNamedFramebufferAttachmentParameteriv    glGetNamedFramebufferAttachmentParameteriv
-#define glGetNamedFramebufferParameteriv              glGetNamedFramebufferParameteriv
-#define glGetNamedRenderbufferParameteriv             glGetNamedRenderbufferParameteriv
-#define glGetNamedStringARB                           glGetNamedStringARB
-#define glGetNamedStringivARB                         glGetNamedStringivARB
-#define glGetObjectLabel                              glGetObjectLabel
-#define glGetObjectPtrLabel                           glGetObjectPtrLabel
-#define glGetPointerv                                 glGetPointerv
-#define glGetProgramBinary                            glGetProgramBinary
-#define glGetProgramInfoLog                           glGetProgramInfoLog
-#define glGetProgramInterfaceiv                       glGetProgramInterfaceiv
-#define glGetProgramPipelineInfoLog                   glGetProgramPipelineInfoLog
-#define glGetProgramPipelineiv                        glGetProgramPipelineiv
-#define glGetProgramResourceIndex                     glGetProgramResourceIndex
-#define glGetProgramResourceLocation                  glGetProgramResourceLocation
-#define glGetProgramResourceLocationIndex             glGetProgramResourceLocationIndex
-#define glGetProgramResourceName                      glGetProgramResourceName
-#define glGetProgramResourceiv                        glGetProgramResourceiv
-#define glGetProgramStageiv                           glGetProgramStageiv
-#define glGetProgramiv                                glGetProgramiv
-#define glGetQueryBufferObjecti64v                    glGetQueryBufferObjecti64v
-#define glGetQueryBufferObjectiv                      glGetQueryBufferObjectiv
-#define glGetQueryBufferObjectui64v                   glGetQueryBufferObjectui64v
-#define glGetQueryBufferObjectuiv                     glGetQueryBufferObjectuiv
-#define glGetQueryIndexediv                           glGetQueryIndexediv
-#define glGetQueryObjecti64v                          glGetQueryObjecti64v
-#define glGetQueryObjectiv                            glGetQueryObjectiv
-#define glGetQueryObjectui64v                         glGetQueryObjectui64v
-#define glGetQueryObjectuiv                           glGetQueryObjectuiv
-#define glGetQueryiv                                  glGetQueryiv
-#define glGetRenderbufferParameteriv                  glGetRenderbufferParameteriv
-#define glGetSamplerParameterIiv                      glGetSamplerParameterIiv
-#define glGetSamplerParameterIuiv                     glGetSamplerParameterIuiv
-#define glGetSamplerParameterfv                       glGetSamplerParameterfv
-#define glGetSamplerParameteriv                       glGetSamplerParameteriv
-#define glGetShaderInfoLog                            glGetShaderInfoLog
-#define glGetShaderPrecisionFormat                    glGetShaderPrecisionFormat
-#define glGetShaderSource                             glGetShaderSource
-#define glGetShaderiv                                 glGetShaderiv
-#define glGetString                                   glGetString
-#define glGetStringi                                  glGetStringi
-#define glGetSubroutineIndex                          glGetSubroutineIndex
-#define glGetSubroutineUniformLocation                glGetSubroutineUniformLocation
-#define glGetSynciv                                   glGetSynciv
-#define glGetTexImage                                 glGetTexImage
-#define glGetTexLevelParameterfv                      glGetTexLevelParameterfv
-#define glGetTexLevelParameteriv                      glGetTexLevelParameteriv
-#define glGetTexParameterIiv                          glGetTexParameterIiv
-#define glGetTexParameterIuiv                         glGetTexParameterIuiv
-#define glGetTexParameterfv                           glGetTexParameterfv
-#define glGetTexParameteriv                           glGetTexParameteriv
-#define glGetTextureHandleARB                         glGetTextureHandleARB
-#define glGetTextureImage                             glGetTextureImage
-#define glGetTextureLevelParameterfv                  glGetTextureLevelParameterfv
-#define glGetTextureLevelParameteriv                  glGetTextureLevelParameteriv
-#define glGetTextureParameterIiv                      glGetTextureParameterIiv
-#define glGetTextureParameterIuiv                     glGetTextureParameterIuiv
-#define glGetTextureParameterfv                       glGetTextureParameterfv
-#define glGetTextureParameteriv                       glGetTextureParameteriv
-#define glGetTextureSamplerHandleARB                  glGetTextureSamplerHandleARB
-#define glGetTextureSubImage                          glGetTextureSubImage
-#define glGetTransformFeedbackVarying                 glGetTransformFeedbackVarying
-#define glGetTransformFeedbacki64_v                   glGetTransformFeedbacki64_v
-#define glGetTransformFeedbacki_v                     glGetTransformFeedbacki_v
-#define glGetTransformFeedbackiv                      glGetTransformFeedbackiv
-#define glGetUniformBlockIndex                        glGetUniformBlockIndex
-#define glGetUniformIndices                           glGetUniformIndices
-#define glGetUniformLocation                          glGetUniformLocation
-#define glGetUniformSubroutineuiv                     glGetUniformSubroutineuiv
-#define glGetUniformdv                                glGetUniformdv
-#define glGetUniformfv                                glGetUniformfv
-#define glGetUniformiv                                glGetUniformiv
-#define glGetUniformuiv                               glGetUniformuiv
-#define glGetVertexArrayIndexed64iv                   glGetVertexArrayIndexed64iv
-#define glGetVertexArrayIndexediv                     glGetVertexArrayIndexediv
-#define glGetVertexArrayiv                            glGetVertexArrayiv
-#define glGetVertexAttribIiv                          glGetVertexAttribIiv
-#define glGetVertexAttribIuiv                         glGetVertexAttribIuiv
-#define glGetVertexAttribLdv                          glGetVertexAttribLdv
-#define glGetVertexAttribLui64vARB                    glGetVertexAttribLui64vARB
-#define glGetVertexAttribPointerv                     glGetVertexAttribPointerv
-#define glGetVertexAttribdv                           glGetVertexAttribdv
-#define glGetVertexAttribfv                           glGetVertexAttribfv
-#define glGetVertexAttribiv                           glGetVertexAttribiv
-#define glGetnCompressedTexImage                      glGetnCompressedTexImage
-#define glGetnCompressedTexImageARB                   glGetnCompressedTexImageARB
-#define glGetnTexImage                                glGetnTexImage
-#define glGetnTexImageARB                             glGetnTexImageARB
-#define glGetnUniformdv                               glGetnUniformdv
-#define glGetnUniformdvARB                            glGetnUniformdvARB
-#define glGetnUniformfv                               glGetnUniformfv
-#define glGetnUniformfvARB                            glGetnUniformfvARB
-#define glGetnUniformiv                               glGetnUniformiv
-#define glGetnUniformivARB                            glGetnUniformivARB
-#define glGetnUniformuiv                              glGetnUniformuiv
-#define glGetnUniformuivARB                           glGetnUniformuivARB
-#define glHint                                        glHint
-#define glInvalidateBufferData                        glInvalidateBufferData
-#define glInvalidateBufferSubData                     glInvalidateBufferSubData
-#define glInvalidateFramebuffer                       glInvalidateFramebuffer
-#define glInvalidateNamedFramebufferData              glInvalidateNamedFramebufferData
-#define glInvalidateNamedFramebufferSubData           glInvalidateNamedFramebufferSubData
-#define glInvalidateSubFramebuffer                    glInvalidateSubFramebuffer
-#define glInvalidateTexImage                          glInvalidateTexImage
-#define glInvalidateTexSubImage                       glInvalidateTexSubImage
-#define glIsBuffer                                    glIsBuffer
-#define glIsEnabled                                   glIsEnabled
-#define glIsEnabledi                                  glIsEnabledi
-#define glIsFramebuffer                               glIsFramebuffer
-#define glIsImageHandleResidentARB                    glIsImageHandleResidentARB
-#define glIsNamedStringARB                            glIsNamedStringARB
-#define glIsProgram                                   glIsProgram
-#define glIsProgramPipeline                           glIsProgramPipeline
-#define glIsQuery                                     glIsQuery
-#define glIsRenderbuffer                              glIsRenderbuffer
-#define glIsSampler                                   glIsSampler
-#define glIsShader                                    glIsShader
-#define glIsSync                                      glIsSync
-#define glIsTexture                                   glIsTexture
-#define glIsTextureHandleResidentARB                  glIsTextureHandleResidentARB
-#define glIsTransformFeedback                         glIsTransformFeedback
-#define glIsVertexArray                               glIsVertexArray
-#define glLineWidth                                   glLineWidth
-#define glLinkProgram                                 glLinkProgram
-#define glLogicOp                                     glLogicOp
-#define glMakeImageHandleNonResidentARB               glMakeImageHandleNonResidentARB
-#define glMakeImageHandleResidentARB                  glMakeImageHandleResidentARB
-#define glMakeTextureHandleNonResidentARB             glMakeTextureHandleNonResidentARB
-#define glMakeTextureHandleResidentARB                glMakeTextureHandleResidentARB
-#define glMapBuffer                                   glMapBuffer
-#define glMapBufferRange                              glMapBufferRange
-#define glMapNamedBuffer                              glMapNamedBuffer
-#define glMapNamedBufferRange                         glMapNamedBufferRange
-#define glMemoryBarrier                               glMemoryBarrier
-#define glMemoryBarrierByRegion                       glMemoryBarrierByRegion
-#define glMinSampleShading                            glMinSampleShading
-#define glMinSampleShadingARB                         glMinSampleShadingARB
-#define glMultiDrawArrays                             glMultiDrawArrays
-#define glMultiDrawArraysIndirect                     glMultiDrawArraysIndirect
-#define glMultiDrawArraysIndirectCountARB             glMultiDrawArraysIndirectCountARB
-#define glMultiDrawElements                           glMultiDrawElements
-#define glMultiDrawElementsBaseVertex                 glMultiDrawElementsBaseVertex
-#define glMultiDrawElementsIndirect                   glMultiDrawElementsIndirect
-#define glMultiDrawElementsIndirectCountARB           glMultiDrawElementsIndirectCountARB
-#define glNamedBufferData                             glNamedBufferData
-#define glNamedBufferPageCommitmentARB                glNamedBufferPageCommitmentARB
-#define glNamedBufferPageCommitmentEXT                glNamedBufferPageCommitmentEXT
-#define glNamedBufferStorage                          glNamedBufferStorage
-#define glNamedBufferSubData                          glNamedBufferSubData
-#define glNamedFramebufferDrawBuffer                  glNamedFramebufferDrawBuffer
-#define glNamedFramebufferDrawBuffers                 glNamedFramebufferDrawBuffers
-#define glNamedFramebufferParameteri                  glNamedFramebufferParameteri
-#define glNamedFramebufferReadBuffer                  glNamedFramebufferReadBuffer
-#define glNamedFramebufferRenderbuffer                glNamedFramebufferRenderbuffer
-#define glNamedFramebufferTexture                     glNamedFramebufferTexture
-#define glNamedFramebufferTextureLayer                glNamedFramebufferTextureLayer
-#define glNamedRenderbufferStorage                    glNamedRenderbufferStorage
-#define glNamedRenderbufferStorageMultisample         glNamedRenderbufferStorageMultisample
-#define glNamedStringARB                              glNamedStringARB
-#define glObjectLabel                                 glObjectLabel
-#define glObjectPtrLabel                              glObjectPtrLabel
-#define glPatchParameterfv                            glPatchParameterfv
-#define glPatchParameteri                             glPatchParameteri
-#define glPauseTransformFeedback                      glPauseTransformFeedback
-#define glPixelStoref                                 glPixelStoref
-#define glPixelStorei                                 glPixelStorei
-#define glPointParameterf                             glPointParameterf
-#define glPointParameterfv                            glPointParameterfv
-#define glPointParameteri                             glPointParameteri
-#define glPointParameteriv                            glPointParameteriv
-#define glPointSize                                   glPointSize
-#define glPolygonMode                                 glPolygonMode
-#define glPolygonOffset                               glPolygonOffset
-#define glPopDebugGroup                               glPopDebugGroup
-#define glPrimitiveRestartIndex                       glPrimitiveRestartIndex
-#define glProgramBinary                               glProgramBinary
-#define glProgramParameteri                           glProgramParameteri
-#define glProgramUniform1d                            glProgramUniform1d
-#define glProgramUniform1dv                           glProgramUniform1dv
-#define glProgramUniform1f                            glProgramUniform1f
-#define glProgramUniform1fv                           glProgramUniform1fv
-#define glProgramUniform1i                            glProgramUniform1i
-#define glProgramUniform1iv                           glProgramUniform1iv
-#define glProgramUniform1ui                           glProgramUniform1ui
-#define glProgramUniform1uiv                          glProgramUniform1uiv
-#define glProgramUniform2d                            glProgramUniform2d
-#define glProgramUniform2dv                           glProgramUniform2dv
-#define glProgramUniform2f                            glProgramUniform2f
-#define glProgramUniform2fv                           glProgramUniform2fv
-#define glProgramUniform2i                            glProgramUniform2i
-#define glProgramUniform2iv                           glProgramUniform2iv
-#define glProgramUniform2ui                           glProgramUniform2ui
-#define glProgramUniform2uiv                          glProgramUniform2uiv
-#define glProgramUniform3d                            glProgramUniform3d
-#define glProgramUniform3dv                           glProgramUniform3dv
-#define glProgramUniform3f                            glProgramUniform3f
-#define glProgramUniform3fv                           glProgramUniform3fv
-#define glProgramUniform3i                            glProgramUniform3i
-#define glProgramUniform3iv                           glProgramUniform3iv
-#define glProgramUniform3ui                           glProgramUniform3ui
-#define glProgramUniform3uiv                          glProgramUniform3uiv
-#define glProgramUniform4d                            glProgramUniform4d
-#define glProgramUniform4dv                           glProgramUniform4dv
-#define glProgramUniform4f                            glProgramUniform4f
-#define glProgramUniform4fv                           glProgramUniform4fv
-#define glProgramUniform4i                            glProgramUniform4i
-#define glProgramUniform4iv                           glProgramUniform4iv
-#define glProgramUniform4ui                           glProgramUniform4ui
-#define glProgramUniform4uiv                          glProgramUniform4uiv
-#define glProgramUniformHandleui64ARB                 glProgramUniformHandleui64ARB
-#define glProgramUniformHandleui64vARB                glProgramUniformHandleui64vARB
-#define glProgramUniformMatrix2dv                     glProgramUniformMatrix2dv
-#define glProgramUniformMatrix2fv                     glProgramUniformMatrix2fv
-#define glProgramUniformMatrix2x3dv                   glProgramUniformMatrix2x3dv
-#define glProgramUniformMatrix2x3fv                   glProgramUniformMatrix2x3fv
-#define glProgramUniformMatrix2x4dv                   glProgramUniformMatrix2x4dv
-#define glProgramUniformMatrix2x4fv                   glProgramUniformMatrix2x4fv
-#define glProgramUniformMatrix3dv                     glProgramUniformMatrix3dv
-#define glProgramUniformMatrix3fv                     glProgramUniformMatrix3fv
-#define glProgramUniformMatrix3x2dv                   glProgramUniformMatrix3x2dv
-#define glProgramUniformMatrix3x2fv                   glProgramUniformMatrix3x2fv
-#define glProgramUniformMatrix3x4dv                   glProgramUniformMatrix3x4dv
-#define glProgramUniformMatrix3x4fv                   glProgramUniformMatrix3x4fv
-#define glProgramUniformMatrix4dv                     glProgramUniformMatrix4dv
-#define glProgramUniformMatrix4fv                     glProgramUniformMatrix4fv
-#define glProgramUniformMatrix4x2dv                   glProgramUniformMatrix4x2dv
-#define glProgramUniformMatrix4x2fv                   glProgramUniformMatrix4x2fv
-#define glProgramUniformMatrix4x3dv                   glProgramUniformMatrix4x3dv
-#define glProgramUniformMatrix4x3fv                   glProgramUniformMatrix4x3fv
-#define glProvokingVertex                             glProvokingVertex
-#define glPushDebugGroup                              glPushDebugGroup
-#define glQueryCounter                                glQueryCounter
-#define glReadBuffer                                  glReadBuffer
-#define glReadPixels                                  glReadPixels
-#define glReadnPixels                                 glReadnPixels
-#define glReadnPixelsARB                              glReadnPixelsARB
-#define glReleaseShaderCompiler                       glReleaseShaderCompiler
-#define glRenderbufferStorage                         glRenderbufferStorage
-#define glRenderbufferStorageMultisample              glRenderbufferStorageMultisample
-#define glResumeTransformFeedback                     glResumeTransformFeedback
-#define glSampleCoverage                              glSampleCoverage
-#define glSampleMaski                                 glSampleMaski
-#define glSamplerParameterIiv                         glSamplerParameterIiv
-#define glSamplerParameterIuiv                        glSamplerParameterIuiv
-#define glSamplerParameterf                           glSamplerParameterf
-#define glSamplerParameterfv                          glSamplerParameterfv
-#define glSamplerParameteri                           glSamplerParameteri
-#define glSamplerParameteriv                          glSamplerParameteriv
-#define glScissor                                     glScissor
-#define glScissorArrayv                               glScissorArrayv
-#define glScissorIndexed                              glScissorIndexed
-#define glScissorIndexedv                             glScissorIndexedv
-#define glShaderBinary                                glShaderBinary
-#define glShaderSource                                glShaderSource
-#define glShaderStorageBlockBinding                   glShaderStorageBlockBinding
-#define glStencilFunc                                 glStencilFunc
-#define glStencilFuncSeparate                         glStencilFuncSeparate
-#define glStencilMask                                 glStencilMask
-#define glStencilMaskSeparate                         glStencilMaskSeparate
-#define glStencilOp                                   glStencilOp
-#define glStencilOpSeparate                           glStencilOpSeparate
-#define glTexBuffer                                   glTexBuffer
-#define glTexBufferRange                              glTexBufferRange
-#define glTexImage1D                                  glTexImage1D
-#define glTexImage2D                                  glTexImage2D
-#define glTexImage2DMultisample                       glTexImage2DMultisample
-#define glTexImage3D                                  glTexImage3D
-#define glTexImage3DMultisample                       glTexImage3DMultisample
-#define glTexPageCommitmentARB                        glTexPageCommitmentARB
-#define glTexParameterIiv                             glTexParameterIiv
-#define glTexParameterIuiv                            glTexParameterIuiv
-#define glTexParameterf                               glTexParameterf
-#define glTexParameterfv                              glTexParameterfv
-#define glTexParameteri                               glTexParameteri
-#define glTexParameteriv                              glTexParameteriv
-#define glTexStorage1D                                glTexStorage1D
-#define glTexStorage2D                                glTexStorage2D
-#define glTexStorage2DMultisample                     glTexStorage2DMultisample
-#define glTexStorage3D                                glTexStorage3D
-#define glTexStorage3DMultisample                     glTexStorage3DMultisample
-#define glTexSubImage1D                               glTexSubImage1D
-#define glTexSubImage2D                               glTexSubImage2D
-#define glTexSubImage3D                               glTexSubImage3D
-#define glTextureBarrier                              glTextureBarrier
-#define glTextureBuffer                               glTextureBuffer
-#define glTextureBufferRange                          glTextureBufferRange
-#define glTextureParameterIiv                         glTextureParameterIiv
-#define glTextureParameterIuiv                        glTextureParameterIuiv
-#define glTextureParameterf                           glTextureParameterf
-#define glTextureParameterfv                          glTextureParameterfv
-#define glTextureParameteri                           glTextureParameteri
-#define glTextureParameteriv                          glTextureParameteriv
-#define glTextureStorage1D                            glTextureStorage1D
-#define glTextureStorage2D                            glTextureStorage2D
-#define glTextureStorage2DMultisample                 glTextureStorage2DMultisample
-#define glTextureStorage3D                            glTextureStorage3D
-#define glTextureStorage3DMultisample                 glTextureStorage3DMultisample
-#define glTextureSubImage1D                           glTextureSubImage1D
-#define glTextureSubImage2D                           glTextureSubImage2D
-#define glTextureSubImage3D                           glTextureSubImage3D
-#define glTextureView                                 glTextureView
-#define glTransformFeedbackBufferBase                 glTransformFeedbackBufferBase
-#define glTransformFeedbackBufferRange                glTransformFeedbackBufferRange
-#define glTransformFeedbackVaryings                   glTransformFeedbackVaryings
-#define glUniform1d                                   glUniform1d
-#define glUniform1dv                                  glUniform1dv
-#define glUniform1f                                   glUniform1f
-#define glUniform1fv                                  glUniform1fv
-#define glUniform1i                                   glUniform1i
-#define glUniform1iv                                  glUniform1iv
-#define glUniform1ui                                  glUniform1ui
-#define glUniform1uiv                                 glUniform1uiv
-#define glUniform2d                                   glUniform2d
-#define glUniform2dv                                  glUniform2dv
-#define glUniform2f                                   glUniform2f
-#define glUniform2fv                                  glUniform2fv
-#define glUniform2i                                   glUniform2i
-#define glUniform2iv                                  glUniform2iv
-#define glUniform2ui                                  glUniform2ui
-#define glUniform2uiv                                 glUniform2uiv
-#define glUniform3d                                   glUniform3d
-#define glUniform3dv                                  glUniform3dv
-#define glUniform3f                                   glUniform3f
-#define glUniform3fv                                  glUniform3fv
-#define glUniform3i                                   glUniform3i
-#define glUniform3iv                                  glUniform3iv
-#define glUniform3ui                                  glUniform3ui
-#define glUniform3uiv                                 glUniform3uiv
-#define glUniform4d                                   glUniform4d
-#define glUniform4dv                                  glUniform4dv
-#define glUniform4f                                   glUniform4f
-#define glUniform4fv                                  glUniform4fv
-#define glUniform4i                                   glUniform4i
-#define glUniform4iv                                  glUniform4iv
-#define glUniform4ui                                  glUniform4ui
-#define glUniform4uiv                                 glUniform4uiv
-#define glUniformBlockBinding                         glUniformBlockBinding
-#define glUniformHandleui64ARB                        glUniformHandleui64ARB
-#define glUniformHandleui64vARB                       glUniformHandleui64vARB
-#define glUniformMatrix2dv                            glUniformMatrix2dv
-#define glUniformMatrix2fv                            glUniformMatrix2fv
-#define glUniformMatrix2x3dv                          glUniformMatrix2x3dv
-#define glUniformMatrix2x3fv                          glUniformMatrix2x3fv
-#define glUniformMatrix2x4dv                          glUniformMatrix2x4dv
-#define glUniformMatrix2x4fv                          glUniformMatrix2x4fv
-#define glUniformMatrix3dv                            glUniformMatrix3dv
-#define glUniformMatrix3fv                            glUniformMatrix3fv
-#define glUniformMatrix3x2dv                          glUniformMatrix3x2dv
-#define glUniformMatrix3x2fv                          glUniformMatrix3x2fv
-#define glUniformMatrix3x4dv                          glUniformMatrix3x4dv
-#define glUniformMatrix3x4fv                          glUniformMatrix3x4fv
-#define glUniformMatrix4dv                            glUniformMatrix4dv
-#define glUniformMatrix4fv                            glUniformMatrix4fv
-#define glUniformMatrix4x2dv                          glUniformMatrix4x2dv
-#define glUniformMatrix4x2fv                          glUniformMatrix4x2fv
-#define glUniformMatrix4x3dv                          glUniformMatrix4x3dv
-#define glUniformMatrix4x3fv                          glUniformMatrix4x3fv
-#define glUniformSubroutinesuiv                       glUniformSubroutinesuiv
-#define glUnmapBuffer                                 glUnmapBuffer
-#define glUnmapNamedBuffer                            glUnmapNamedBuffer
-#define glUseProgram                                  glUseProgram
-#define glUseProgramStages                            glUseProgramStages
-#define glValidateProgram                             glValidateProgram
-#define glValidateProgramPipeline                     glValidateProgramPipeline
-#define glVertexArrayAttribBinding                    glVertexArrayAttribBinding
-#define glVertexArrayAttribFormat                     glVertexArrayAttribFormat
-#define glVertexArrayAttribIFormat                    glVertexArrayAttribIFormat
-#define glVertexArrayAttribLFormat                    glVertexArrayAttribLFormat
-#define glVertexArrayBindingDivisor                   glVertexArrayBindingDivisor
-#define glVertexArrayElementBuffer                    glVertexArrayElementBuffer
-#define glVertexArrayVertexBuffer                     glVertexArrayVertexBuffer
-#define glVertexArrayVertexBuffers                    glVertexArrayVertexBuffers
-#define glVertexAttrib1d                              glVertexAttrib1d
-#define glVertexAttrib1dv                             glVertexAttrib1dv
-#define glVertexAttrib1f                              glVertexAttrib1f
-#define glVertexAttrib1fv                             glVertexAttrib1fv
-#define glVertexAttrib1s                              glVertexAttrib1s
-#define glVertexAttrib1sv                             glVertexAttrib1sv
-#define glVertexAttrib2d                              glVertexAttrib2d
-#define glVertexAttrib2dv                             glVertexAttrib2dv
-#define glVertexAttrib2f                              glVertexAttrib2f
-#define glVertexAttrib2fv                             glVertexAttrib2fv
-#define glVertexAttrib2s                              glVertexAttrib2s
-#define glVertexAttrib2sv                             glVertexAttrib2sv
-#define glVertexAttrib3d                              glVertexAttrib3d
-#define glVertexAttrib3dv                             glVertexAttrib3dv
-#define glVertexAttrib3f                              glVertexAttrib3f
-#define glVertexAttrib3fv                             glVertexAttrib3fv
-#define glVertexAttrib3s                              glVertexAttrib3s
-#define glVertexAttrib3sv                             glVertexAttrib3sv
-#define glVertexAttrib4Nbv                            glVertexAttrib4Nbv
-#define glVertexAttrib4Niv                            glVertexAttrib4Niv
-#define glVertexAttrib4Nsv                            glVertexAttrib4Nsv
-#define glVertexAttrib4Nub                            glVertexAttrib4Nub
-#define glVertexAttrib4Nubv                           glVertexAttrib4Nubv
-#define glVertexAttrib4Nuiv                           glVertexAttrib4Nuiv
-#define glVertexAttrib4Nusv                           glVertexAttrib4Nusv
-#define glVertexAttrib4bv                             glVertexAttrib4bv
-#define glVertexAttrib4d                              glVertexAttrib4d
-#define glVertexAttrib4dv                             glVertexAttrib4dv
-#define glVertexAttrib4f                              glVertexAttrib4f
-#define glVertexAttrib4fv                             glVertexAttrib4fv
-#define glVertexAttrib4iv                             glVertexAttrib4iv
-#define glVertexAttrib4s                              glVertexAttrib4s
-#define glVertexAttrib4sv                             glVertexAttrib4sv
-#define glVertexAttrib4ubv                            glVertexAttrib4ubv
-#define glVertexAttrib4uiv                            glVertexAttrib4uiv
-#define glVertexAttrib4usv                            glVertexAttrib4usv
-#define glVertexAttribBinding                         glVertexAttribBinding
-#define glVertexAttribDivisor                         glVertexAttribDivisor
-#define glVertexAttribFormat                          glVertexAttribFormat
-#define glVertexAttribI1i                             glVertexAttribI1i
-#define glVertexAttribI1iv                            glVertexAttribI1iv
-#define glVertexAttribI1ui                            glVertexAttribI1ui
-#define glVertexAttribI1uiv                           glVertexAttribI1uiv
-#define glVertexAttribI2i                             glVertexAttribI2i
-#define glVertexAttribI2iv                            glVertexAttribI2iv
-#define glVertexAttribI2ui                            glVertexAttribI2ui
-#define glVertexAttribI2uiv                           glVertexAttribI2uiv
-#define glVertexAttribI3i                             glVertexAttribI3i
-#define glVertexAttribI3iv                            glVertexAttribI3iv
-#define glVertexAttribI3ui                            glVertexAttribI3ui
-#define glVertexAttribI3uiv                           glVertexAttribI3uiv
-#define glVertexAttribI4bv                            glVertexAttribI4bv
-#define glVertexAttribI4i                             glVertexAttribI4i
-#define glVertexAttribI4iv                            glVertexAttribI4iv
-#define glVertexAttribI4sv                            glVertexAttribI4sv
-#define glVertexAttribI4ubv                           glVertexAttribI4ubv
-#define glVertexAttribI4ui                            glVertexAttribI4ui
-#define glVertexAttribI4uiv                           glVertexAttribI4uiv
-#define glVertexAttribI4usv                           glVertexAttribI4usv
-#define glVertexAttribIFormat                         glVertexAttribIFormat
-#define glVertexAttribIPointer                        glVertexAttribIPointer
-#define glVertexAttribL1d                             glVertexAttribL1d
-#define glVertexAttribL1dv                            glVertexAttribL1dv
-#define glVertexAttribL1ui64ARB                       glVertexAttribL1ui64ARB
-#define glVertexAttribL1ui64vARB                      glVertexAttribL1ui64vARB
-#define glVertexAttribL2d                             glVertexAttribL2d
-#define glVertexAttribL2dv                            glVertexAttribL2dv
-#define glVertexAttribL3d                             glVertexAttribL3d
-#define glVertexAttribL3dv                            glVertexAttribL3dv
-#define glVertexAttribL4d                             glVertexAttribL4d
-#define glVertexAttribL4dv                            glVertexAttribL4dv
-#define glVertexAttribLFormat                         glVertexAttribLFormat
-#define glVertexAttribLPointer                        glVertexAttribLPointer
-#define glVertexAttribP1ui                            glVertexAttribP1ui
-#define glVertexAttribP1uiv                           glVertexAttribP1uiv
-#define glVertexAttribP2ui                            glVertexAttribP2ui
-#define glVertexAttribP2uiv                           glVertexAttribP2uiv
-#define glVertexAttribP3ui                            glVertexAttribP3ui
-#define glVertexAttribP3uiv                           glVertexAttribP3uiv
-#define glVertexAttribP4ui                            glVertexAttribP4ui
-#define glVertexAttribP4uiv                           glVertexAttribP4uiv
-#define glVertexAttribPointer                         glVertexAttribPointer
-#define glVertexBindingDivisor                        glVertexBindingDivisor
-#define glViewport                                    glViewport
-#define glViewportArrayv                              glViewportArrayv
-#define glViewportIndexedf                            glViewportIndexedf
-#define glViewportIndexedfv                           glViewportIndexedfv
-#define glWaitSync                                    glWaitSync
+// #define glActiveShaderProgram                         glActiveShaderProgram
+// #define glActiveTexture                               glActiveTexture
+// #define glAttachShader                                glAttachShader
+// #define glBeginConditionalRender                      glBeginConditionalRender
+// #define glBeginQuery                                  glBeginQuery
+// #define glBeginQueryIndexed                           glBeginQueryIndexed
+// #define glBeginTransformFeedback                      glBeginTransformFeedback
+// #define glBindAttribLocation                          glBindAttribLocation
+// #define glBindBuffer                                  glBindBuffer
+// #define glBindBufferBase                              glBindBufferBase
+// #define glBindBufferRange                             glBindBufferRange
+// #define glBindBuffersBase                             glBindBuffersBase
+// #define glBindBuffersRange                            glBindBuffersRange
+// #define glBindFragDataLocation                        glBindFragDataLocation
+// #define glBindFragDataLocationIndexed                 glBindFragDataLocationIndexed
+// #define glBindFramebuffer                             glBindFramebuffer
+// #define glBindImageTexture                            glBindImageTexture
+// #define glBindImageTextures                           glBindImageTextures
+// #define glBindProgramPipeline                         glBindProgramPipeline
+// #define glBindRenderbuffer                            glBindRenderbuffer
+// #define glBindSampler                                 glBindSampler
+// #define glBindSamplers                                glBindSamplers
+// #define glBindTexture                                 glBindTexture
+// #define glBindTextureUnit                             glBindTextureUnit
+// #define glBindTextures                                glBindTextures
+// #define glBindTransformFeedback                       glBindTransformFeedback
+// #define glBindVertexArray                             glBindVertexArray
+// #define glBindVertexBuffer                            glBindVertexBuffer
+// #define glBindVertexBuffers                           glBindVertexBuffers
+// #define glBlendColor                                  glBlendColor
+// #define glBlendEquation                               glBlendEquation
+// #define glBlendEquationSeparate                       glBlendEquationSeparate
+// #define glBlendEquationSeparatei                      glBlendEquationSeparatei
+// #define glBlendEquationSeparateiARB                   glBlendEquationSeparateiARB
+// #define glBlendEquationi                              glBlendEquationi
+// #define glBlendEquationiARB                           glBlendEquationiARB
+// #define glBlendFunc                                   glBlendFunc
+// #define glBlendFuncSeparate                           glBlendFuncSeparate
+// #define glBlendFuncSeparatei                          glBlendFuncSeparatei
+// #define glBlendFuncSeparateiARB                       glBlendFuncSeparateiARB
+// #define glBlendFunci                                  glBlendFunci
+// #define glBlendFunciARB                               glBlendFunciARB
+// #define glBlitFramebuffer                             glBlitFramebuffer
+// #define glBlitNamedFramebuffer                        glBlitNamedFramebuffer
+// #define glBufferData                                  glBufferData
+// #define glBufferPageCommitmentARB                     glBufferPageCommitmentARB
+// #define glBufferStorage                               glBufferStorage
+// #define glBufferSubData                               glBufferSubData
+// #define glCheckFramebufferStatus                      glCheckFramebufferStatus
+// #define glCheckNamedFramebufferStatus                 glCheckNamedFramebufferStatus
+// #define glClampColor                                  glClampColor
+// #define glClear                                       glClear
+// #define glClearBufferData                             glClearBufferData
+// #define glClearBufferSubData                          glClearBufferSubData
+// #define glClearBufferfi                               glClearBufferfi
+// #define glClearBufferfv                               glClearBufferfv
+// #define glClearBufferiv                               glClearBufferiv
+// #define glClearBufferuiv                              glClearBufferuiv
+// #define glClearColor                                  glClearColor
+// #define glClearDepth                                  glClearDepth
+// #define glClearDepthf                                 glClearDepthf
+// #define glClearNamedBufferData                        glClearNamedBufferData
+// #define glClearNamedBufferSubData                     glClearNamedBufferSubData
+// #define glClearNamedFramebufferfi                     glClearNamedFramebufferfi
+// #define glClearNamedFramebufferfv                     glClearNamedFramebufferfv
+// #define glClearNamedFramebufferiv                     glClearNamedFramebufferiv
+// #define glClearNamedFramebufferuiv                    glClearNamedFramebufferuiv
+// #define glClearStencil                                glClearStencil
+// #define glClearTexImage                               glClearTexImage
+// #define glClearTexSubImage                            glClearTexSubImage
+// #define glClientWaitSync                              glClientWaitSync
+// #define glClipControl                                 glClipControl
+// #define glColorMask                                   glColorMask
+// #define glColorMaski                                  glColorMaski
+// #define glCompileShader                               glCompileShader
+// #define glCompileShaderIncludeARB                     glCompileShaderIncludeARB
+// #define glCompressedTexImage1D                        glCompressedTexImage1D
+// #define glCompressedTexImage2D                        glCompressedTexImage2D
+// #define glCompressedTexImage3D                        glCompressedTexImage3D
+// #define glCompressedTexSubImage1D                     glCompressedTexSubImage1D
+// #define glCompressedTexSubImage2D                     glCompressedTexSubImage2D
+// #define glCompressedTexSubImage3D                     glCompressedTexSubImage3D
+// #define glCompressedTextureSubImage1D                 glCompressedTextureSubImage1D
+// #define glCompressedTextureSubImage2D                 glCompressedTextureSubImage2D
+// #define glCompressedTextureSubImage3D                 glCompressedTextureSubImage3D
+// #define glCopyBufferSubData                           glCopyBufferSubData
+// #define glCopyImageSubData                            glCopyImageSubData
+// #define glCopyNamedBufferSubData                      glCopyNamedBufferSubData
+// #define glCopyTexImage1D                              glCopyTexImage1D
+// #define glCopyTexImage2D                              glCopyTexImage2D
+// #define glCopyTexSubImage1D                           glCopyTexSubImage1D
+// #define glCopyTexSubImage2D                           glCopyTexSubImage2D
+// #define glCopyTexSubImage3D                           glCopyTexSubImage3D
+// #define glCopyTextureSubImage1D                       glCopyTextureSubImage1D
+// #define glCopyTextureSubImage2D                       glCopyTextureSubImage2D
+// #define glCopyTextureSubImage3D                       glCopyTextureSubImage3D
+// #define glCreateBuffers                               glCreateBuffers
+// #define glCreateFramebuffers                          glCreateFramebuffers
+// #define glCreateProgram                               glCreateProgram
+// #define glCreateProgramPipelines                      glCreateProgramPipelines
+// #define glCreateQueries                               glCreateQueries
+// #define glCreateRenderbuffers                         glCreateRenderbuffers
+// #define glCreateSamplers                              glCreateSamplers
+// #define glCreateShader                                glCreateShader
+// #define glCreateShaderProgramv                        glCreateShaderProgramv
+// #define glCreateSyncFromCLeventARB                    glCreateSyncFromCLeventARB
+// #define glCreateTextures                              glCreateTextures
+// #define glCreateTransformFeedbacks                    glCreateTransformFeedbacks
+// #define glCreateVertexArrays                          glCreateVertexArrays
+// #define glCullFace                                    glCullFace
+// #define glDebugMessageCallback                        glDebugMessageCallback
+// #define glDebugMessageCallbackARB                     glDebugMessageCallbackARB
+// #define glDebugMessageControl                         glDebugMessageControl
+// #define glDebugMessageControlARB                      glDebugMessageControlARB
+// #define glDebugMessageInsert                          glDebugMessageInsert
+// #define glDebugMessageInsertARB                       glDebugMessageInsertARB
+// #define glDeleteBuffers                               glDeleteBuffers
+// #define glDeleteFramebuffers                          glDeleteFramebuffers
+// #define glDeleteNamedStringARB                        glDeleteNamedStringARB
+// #define glDeleteProgram                               glDeleteProgram
+// #define glDeleteProgramPipelines                      glDeleteProgramPipelines
+// #define glDeleteQueries                               glDeleteQueries
+// #define glDeleteRenderbuffers                         glDeleteRenderbuffers
+// #define glDeleteSamplers                              glDeleteSamplers
+// #define glDeleteShader                                glDeleteShader
+// #define glDeleteSync                                  glDeleteSync
+// #define glDeleteTextures                              glDeleteTextures
+// #define glDeleteTransformFeedbacks                    glDeleteTransformFeedbacks
+// #define glDeleteVertexArrays                          glDeleteVertexArrays
+// #define glDepthFunc                                   glDepthFunc
+// #define glDepthMask                                   glDepthMask
+// #define glDepthRange                                  glDepthRange
+// #define glDepthRangeArrayv                            glDepthRangeArrayv
+// #define glDepthRangeIndexed                           glDepthRangeIndexed
+// #define glDepthRangef                                 glDepthRangef
+// #define glDetachShader                                glDetachShader
+// #define glDisable                                     glDisable
+// #define glDisableVertexArrayAttrib                    glDisableVertexArrayAttrib
+// #define glDisableVertexAttribArray                    glDisableVertexAttribArray
+// #define glDisablei                                    glDisablei
+// #define glDispatchCompute                             glDispatchCompute
+// #define glDispatchComputeGroupSizeARB                 glDispatchComputeGroupSizeARB
+// #define glDispatchComputeIndirect                     glDispatchComputeIndirect
+// #define glDrawArrays                                  glDrawArrays
+// #define glDrawArraysIndirect                          glDrawArraysIndirect
+// #define glDrawArraysInstanced                         glDrawArraysInstanced
+// #define glDrawArraysInstancedBaseInstance             glDrawArraysInstancedBaseInstance
+// #define glDrawBuffer                                  glDrawBuffer
+// #define glDrawBuffers                                 glDrawBuffers
+// #define glDrawElements                                glDrawElements
+// #define glDrawElementsBaseVertex                      glDrawElementsBaseVertex
+// #define glDrawElementsIndirect                        glDrawElementsIndirect
+// #define glDrawElementsInstanced                       glDrawElementsInstanced
+// #define glDrawElementsInstancedBaseInstance           glDrawElementsInstancedBaseInstance
+// #define glDrawElementsInstancedBaseVertex             glDrawElementsInstancedBaseVertex
+// #define glDrawElementsInstancedBaseVertexBaseInstance glDrawElementsInstancedBaseVertexBaseInstance
+// #define glDrawRangeElements                           glDrawRangeElements
+// #define glDrawRangeElementsBaseVertex                 glDrawRangeElementsBaseVertex
+// #define glDrawTransformFeedback                       glDrawTransformFeedback
+// #define glDrawTransformFeedbackInstanced              glDrawTransformFeedbackInstanced
+// #define glDrawTransformFeedbackStream                 glDrawTransformFeedbackStream
+// #define glDrawTransformFeedbackStreamInstanced        glDrawTransformFeedbackStreamInstanced
+// #define glEnable                                      glEnable
+// #define glEnableVertexArrayAttrib                     glEnableVertexArrayAttrib
+// #define glEnableVertexAttribArray                     glEnableVertexAttribArray
+// #define glEnablei                                     glEnablei
+// #define glEndConditionalRender                        glEndConditionalRender
+// #define glEndQuery                                    glEndQuery
+// #define glEndQueryIndexed                             glEndQueryIndexed
+// #define glEndTransformFeedback                        glEndTransformFeedback
+// #define glFenceSync                                   glFenceSync
+// #define glFinish                                      glFinish
+// #define glFlush                                       glFlush
+// #define glFlushMappedBufferRange                      glFlushMappedBufferRange
+// #define glFlushMappedNamedBufferRange                 glFlushMappedNamedBufferRange
+// #define glFramebufferParameteri                       glFramebufferParameteri
+// #define glFramebufferRenderbuffer                     glFramebufferRenderbuffer
+// #define glFramebufferTexture                          glFramebufferTexture
+// #define glFramebufferTexture1D                        glFramebufferTexture1D
+// #define glFramebufferTexture2D                        glFramebufferTexture2D
+// #define glFramebufferTexture3D                        glFramebufferTexture3D
+// #define glFramebufferTextureLayer                     glFramebufferTextureLayer
+// #define glFrontFace                                   glFrontFace
+// #define glGenBuffers                                  glGenBuffers
+// #define glGenFramebuffers                             glGenFramebuffers
+// #define glGenProgramPipelines                         glGenProgramPipelines
+// #define glGenQueries                                  glGenQueries
+// #define glGenRenderbuffers                            glGenRenderbuffers
+// #define glGenSamplers                                 glGenSamplers
+// #define glGenTextures                                 glGenTextures
+// #define glGenTransformFeedbacks                       glGenTransformFeedbacks
+// #define glGenVertexArrays                             glGenVertexArrays
+// #define glGenerateMipmap                              glGenerateMipmap
+// #define glGenerateTextureMipmap                       glGenerateTextureMipmap
+// #define glGetActiveAtomicCounterBufferiv              glGetActiveAtomicCounterBufferiv
+// #define glGetActiveAttrib                             glGetActiveAttrib
+// #define glGetActiveSubroutineName                     glGetActiveSubroutineName
+// #define glGetActiveSubroutineUniformName              glGetActiveSubroutineUniformName
+// #define glGetActiveSubroutineUniformiv                glGetActiveSubroutineUniformiv
+// #define glGetActiveUniform                            glGetActiveUniform
+// #define glGetActiveUniformBlockName                   glGetActiveUniformBlockName
+// #define glGetActiveUniformBlockiv                     glGetActiveUniformBlockiv
+// #define glGetActiveUniformName                        glGetActiveUniformName
+// #define glGetActiveUniformsiv                         glGetActiveUniformsiv
+// #define glGetAttachedShaders                          glGetAttachedShaders
+// #define glGetAttribLocation                           glGetAttribLocation
+// #define glGetBooleani_v                               glGetBooleani_v
+// #define glGetBooleanv                                 glGetBooleanv
+// #define glGetBufferParameteri64v                      glGetBufferParameteri64v
+// #define glGetBufferParameteriv                        glGetBufferParameteriv
+// #define glGetBufferPointerv                           glGetBufferPointerv
+// #define glGetBufferSubData                            glGetBufferSubData
+// #define glGetCompressedTexImage                       glGetCompressedTexImage
+// #define glGetCompressedTextureImage                   glGetCompressedTextureImage
+// #define glGetCompressedTextureSubImage                glGetCompressedTextureSubImage
+// #define glGetDebugMessageLog                          glGetDebugMessageLog
+// #define glGetDebugMessageLogARB                       glGetDebugMessageLogARB
+// #define glGetDoublei_v                                glGetDoublei_v
+// #define glGetDoublev                                  glGetDoublev
+// #define glGetError                                    glGetError
+// #define glGetFloati_v                                 glGetFloati_v
+// #define glGetFloatv                                   glGetFloatv
+// #define glGetFragDataIndex                            glGetFragDataIndex
+// #define glGetFragDataLocation                         glGetFragDataLocation
+// #define glGetFramebufferAttachmentParameteriv         glGetFramebufferAttachmentParameteriv
+// #define glGetFramebufferParameteriv                   glGetFramebufferParameteriv
+// #define glGetGraphicsResetStatus                      glGetGraphicsResetStatus
+// #define glGetGraphicsResetStatusARB                   glGetGraphicsResetStatusARB
+// #define glGetImageHandleARB                           glGetImageHandleARB
+// #define glGetInteger64i_v                             glGetInteger64i_v
+// #define glGetInteger64v                               glGetInteger64v
+// #define glGetIntegeri_v                               glGetIntegeri_v
+// #define glGetIntegerv                                 glGetIntegerv
+// #define glGetInternalformati64v                       glGetInternalformati64v
+// #define glGetInternalformativ                         glGetInternalformativ
+// #define glGetMultisamplefv                            glGetMultisamplefv
+// #define glGetNamedBufferParameteri64v                 glGetNamedBufferParameteri64v
+// #define glGetNamedBufferParameteriv                   glGetNamedBufferParameteriv
+// #define glGetNamedBufferPointerv                      glGetNamedBufferPointerv
+// #define glGetNamedBufferSubData                       glGetNamedBufferSubData
+// #define glGetNamedFramebufferAttachmentParameteriv    glGetNamedFramebufferAttachmentParameteriv
+// #define glGetNamedFramebufferParameteriv              glGetNamedFramebufferParameteriv
+// #define glGetNamedRenderbufferParameteriv             glGetNamedRenderbufferParameteriv
+// #define glGetNamedStringARB                           glGetNamedStringARB
+// #define glGetNamedStringivARB                         glGetNamedStringivARB
+// #define glGetObjectLabel                              glGetObjectLabel
+// #define glGetObjectPtrLabel                           glGetObjectPtrLabel
+// #define glGetPointerv                                 glGetPointerv
+// #define glGetProgramBinary                            glGetProgramBinary
+// #define glGetProgramInfoLog                           glGetProgramInfoLog
+// #define glGetProgramInterfaceiv                       glGetProgramInterfaceiv
+// #define glGetProgramPipelineInfoLog                   glGetProgramPipelineInfoLog
+// #define glGetProgramPipelineiv                        glGetProgramPipelineiv
+// #define glGetProgramResourceIndex                     glGetProgramResourceIndex
+// #define glGetProgramResourceLocation                  glGetProgramResourceLocation
+// #define glGetProgramResourceLocationIndex             glGetProgramResourceLocationIndex
+// #define glGetProgramResourceName                      glGetProgramResourceName
+// #define glGetProgramResourceiv                        glGetProgramResourceiv
+// #define glGetProgramStageiv                           glGetProgramStageiv
+// #define glGetProgramiv                                glGetProgramiv
+// #define glGetQueryBufferObjecti64v                    glGetQueryBufferObjecti64v
+// #define glGetQueryBufferObjectiv                      glGetQueryBufferObjectiv
+// #define glGetQueryBufferObjectui64v                   glGetQueryBufferObjectui64v
+// #define glGetQueryBufferObjectuiv                     glGetQueryBufferObjectuiv
+// #define glGetQueryIndexediv                           glGetQueryIndexediv
+// #define glGetQueryObjecti64v                          glGetQueryObjecti64v
+// #define glGetQueryObjectiv                            glGetQueryObjectiv
+// #define glGetQueryObjectui64v                         glGetQueryObjectui64v
+// #define glGetQueryObjectuiv                           glGetQueryObjectuiv
+// #define glGetQueryiv                                  glGetQueryiv
+// #define glGetRenderbufferParameteriv                  glGetRenderbufferParameteriv
+// #define glGetSamplerParameterIiv                      glGetSamplerParameterIiv
+// #define glGetSamplerParameterIuiv                     glGetSamplerParameterIuiv
+// #define glGetSamplerParameterfv                       glGetSamplerParameterfv
+// #define glGetSamplerParameteriv                       glGetSamplerParameteriv
+// #define glGetShaderInfoLog                            glGetShaderInfoLog
+// #define glGetShaderPrecisionFormat                    glGetShaderPrecisionFormat
+// #define glGetShaderSource                             glGetShaderSource
+// #define glGetShaderiv                                 glGetShaderiv
+// #define glGetString                                   glGetString
+// #define glGetStringi                                  glGetStringi
+// #define glGetSubroutineIndex                          glGetSubroutineIndex
+// #define glGetSubroutineUniformLocation                glGetSubroutineUniformLocation
+// #define glGetSynciv                                   glGetSynciv
+// #define glGetTexImage                                 glGetTexImage
+// #define glGetTexLevelParameterfv                      glGetTexLevelParameterfv
+// #define glGetTexLevelParameteriv                      glGetTexLevelParameteriv
+// #define glGetTexParameterIiv                          glGetTexParameterIiv
+// #define glGetTexParameterIuiv                         glGetTexParameterIuiv
+// #define glGetTexParameterfv                           glGetTexParameterfv
+// #define glGetTexParameteriv                           glGetTexParameteriv
+// #define glGetTextureHandleARB                         glGetTextureHandleARB
+// #define glGetTextureImage                             glGetTextureImage
+// #define glGetTextureLevelParameterfv                  glGetTextureLevelParameterfv
+// #define glGetTextureLevelParameteriv                  glGetTextureLevelParameteriv
+// #define glGetTextureParameterIiv                      glGetTextureParameterIiv
+// #define glGetTextureParameterIuiv                     glGetTextureParameterIuiv
+// #define glGetTextureParameterfv                       glGetTextureParameterfv
+// #define glGetTextureParameteriv                       glGetTextureParameteriv
+// #define glGetTextureSamplerHandleARB                  glGetTextureSamplerHandleARB
+// #define glGetTextureSubImage                          glGetTextureSubImage
+// #define glGetTransformFeedbackVarying                 glGetTransformFeedbackVarying
+// #define glGetTransformFeedbacki64_v                   glGetTransformFeedbacki64_v
+// #define glGetTransformFeedbacki_v                     glGetTransformFeedbacki_v
+// #define glGetTransformFeedbackiv                      glGetTransformFeedbackiv
+// #define glGetUniformBlockIndex                        glGetUniformBlockIndex
+// #define glGetUniformIndices                           glGetUniformIndices
+// #define glGetUniformLocation                          glGetUniformLocation
+// #define glGetUniformSubroutineuiv                     glGetUniformSubroutineuiv
+// #define glGetUniformdv                                glGetUniformdv
+// #define glGetUniformfv                                glGetUniformfv
+// #define glGetUniformiv                                glGetUniformiv
+// #define glGetUniformuiv                               glGetUniformuiv
+// #define glGetVertexArrayIndexed64iv                   glGetVertexArrayIndexed64iv
+// #define glGetVertexArrayIndexediv                     glGetVertexArrayIndexediv
+// #define glGetVertexArrayiv                            glGetVertexArrayiv
+// #define glGetVertexAttribIiv                          glGetVertexAttribIiv
+// #define glGetVertexAttribIuiv                         glGetVertexAttribIuiv
+// #define glGetVertexAttribLdv                          glGetVertexAttribLdv
+// #define glGetVertexAttribLui64vARB                    glGetVertexAttribLui64vARB
+// #define glGetVertexAttribPointerv                     glGetVertexAttribPointerv
+// #define glGetVertexAttribdv                           glGetVertexAttribdv
+// #define glGetVertexAttribfv                           glGetVertexAttribfv
+// #define glGetVertexAttribiv                           glGetVertexAttribiv
+// #define glGetnCompressedTexImage                      glGetnCompressedTexImage
+// #define glGetnCompressedTexImageARB                   glGetnCompressedTexImageARB
+// #define glGetnTexImage                                glGetnTexImage
+// #define glGetnTexImageARB                             glGetnTexImageARB
+// #define glGetnUniformdv                               glGetnUniformdv
+// #define glGetnUniformdvARB                            glGetnUniformdvARB
+// #define glGetnUniformfv                               glGetnUniformfv
+// #define glGetnUniformfvARB                            glGetnUniformfvARB
+// #define glGetnUniformiv                               glGetnUniformiv
+// #define glGetnUniformivARB                            glGetnUniformivARB
+// #define glGetnUniformuiv                              glGetnUniformuiv
+// #define glGetnUniformuivARB                           glGetnUniformuivARB
+// #define glHint                                        glHint
+// #define glInvalidateBufferData                        glInvalidateBufferData
+// #define glInvalidateBufferSubData                     glInvalidateBufferSubData
+// #define glInvalidateFramebuffer                       glInvalidateFramebuffer
+// #define glInvalidateNamedFramebufferData              glInvalidateNamedFramebufferData
+// #define glInvalidateNamedFramebufferSubData           glInvalidateNamedFramebufferSubData
+// #define glInvalidateSubFramebuffer                    glInvalidateSubFramebuffer
+// #define glInvalidateTexImage                          glInvalidateTexImage
+// #define glInvalidateTexSubImage                       glInvalidateTexSubImage
+// #define glIsBuffer                                    glIsBuffer
+// #define glIsEnabled                                   glIsEnabled
+// #define glIsEnabledi                                  glIsEnabledi
+// #define glIsFramebuffer                               glIsFramebuffer
+// #define glIsImageHandleResidentARB                    glIsImageHandleResidentARB
+// #define glIsNamedStringARB                            glIsNamedStringARB
+// #define glIsProgram                                   glIsProgram
+// #define glIsProgramPipeline                           glIsProgramPipeline
+// #define glIsQuery                                     glIsQuery
+// #define glIsRenderbuffer                              glIsRenderbuffer
+// #define glIsSampler                                   glIsSampler
+// #define glIsShader                                    glIsShader
+// #define glIsSync                                      glIsSync
+// #define glIsTexture                                   glIsTexture
+// #define glIsTextureHandleResidentARB                  glIsTextureHandleResidentARB
+// #define glIsTransformFeedback                         glIsTransformFeedback
+// #define glIsVertexArray                               glIsVertexArray
+// #define glLineWidth                                   glLineWidth
+// #define glLinkProgram                                 glLinkProgram
+// #define glLogicOp                                     glLogicOp
+// #define glMakeImageHandleNonResidentARB               glMakeImageHandleNonResidentARB
+// #define glMakeImageHandleResidentARB                  glMakeImageHandleResidentARB
+// #define glMakeTextureHandleNonResidentARB             glMakeTextureHandleNonResidentARB
+// #define glMakeTextureHandleResidentARB                glMakeTextureHandleResidentARB
+// #define glMapBuffer                                   glMapBuffer
+// #define glMapBufferRange                              glMapBufferRange
+// #define glMapNamedBuffer                              glMapNamedBuffer
+// #define glMapNamedBufferRange                         glMapNamedBufferRange
+// #define glMemoryBarrier                               glMemoryBarrier
+// #define glMemoryBarrierByRegion                       glMemoryBarrierByRegion
+// #define glMinSampleShading                            glMinSampleShading
+// #define glMinSampleShadingARB                         glMinSampleShadingARB
+// #define glMultiDrawArrays                             glMultiDrawArrays
+// #define glMultiDrawArraysIndirect                     glMultiDrawArraysIndirect
+// #define glMultiDrawArraysIndirectCountARB             glMultiDrawArraysIndirectCountARB
+// #define glMultiDrawElements                           glMultiDrawElements
+// #define glMultiDrawElementsBaseVertex                 glMultiDrawElementsBaseVertex
+// #define glMultiDrawElementsIndirect                   glMultiDrawElementsIndirect
+// #define glMultiDrawElementsIndirectCountARB           glMultiDrawElementsIndirectCountARB
+// #define glNamedBufferData                             glNamedBufferData
+// #define glNamedBufferPageCommitmentARB                glNamedBufferPageCommitmentARB
+// #define glNamedBufferPageCommitmentEXT                glNamedBufferPageCommitmentEXT
+// #define glNamedBufferStorage                          glNamedBufferStorage
+// #define glNamedBufferSubData                          glNamedBufferSubData
+// #define glNamedFramebufferDrawBuffer                  glNamedFramebufferDrawBuffer
+// #define glNamedFramebufferDrawBuffers                 glNamedFramebufferDrawBuffers
+// #define glNamedFramebufferParameteri                  glNamedFramebufferParameteri
+// #define glNamedFramebufferReadBuffer                  glNamedFramebufferReadBuffer
+// #define glNamedFramebufferRenderbuffer                glNamedFramebufferRenderbuffer
+// #define glNamedFramebufferTexture                     glNamedFramebufferTexture
+// #define glNamedFramebufferTextureLayer                glNamedFramebufferTextureLayer
+// #define glNamedRenderbufferStorage                    glNamedRenderbufferStorage
+// #define glNamedRenderbufferStorageMultisample         glNamedRenderbufferStorageMultisample
+// #define glNamedStringARB                              glNamedStringARB
+// #define glObjectLabel                                 glObjectLabel
+// #define glObjectPtrLabel                              glObjectPtrLabel
+// #define glPatchParameterfv                            glPatchParameterfv
+// #define glPatchParameteri                             glPatchParameteri
+// #define glPauseTransformFeedback                      glPauseTransformFeedback
+// #define glPixelStoref                                 glPixelStoref
+// #define glPixelStorei                                 glPixelStorei
+// #define glPointParameterf                             glPointParameterf
+// #define glPointParameterfv                            glPointParameterfv
+// #define glPointParameteri                             glPointParameteri
+// #define glPointParameteriv                            glPointParameteriv
+// #define glPointSize                                   glPointSize
+// #define glPolygonMode                                 glPolygonMode
+// #define glPolygonOffset                               glPolygonOffset
+// #define glPopDebugGroup                               glPopDebugGroup
+// #define glPrimitiveRestartIndex                       glPrimitiveRestartIndex
+// #define glProgramBinary                               glProgramBinary
+// #define glProgramParameteri                           glProgramParameteri
+// #define glProgramUniform1d                            glProgramUniform1d
+// #define glProgramUniform1dv                           glProgramUniform1dv
+// #define glProgramUniform1f                            glProgramUniform1f
+// #define glProgramUniform1fv                           glProgramUniform1fv
+// #define glProgramUniform1i                            glProgramUniform1i
+// #define glProgramUniform1iv                           glProgramUniform1iv
+// #define glProgramUniform1ui                           glProgramUniform1ui
+// #define glProgramUniform1uiv                          glProgramUniform1uiv
+// #define glProgramUniform2d                            glProgramUniform2d
+// #define glProgramUniform2dv                           glProgramUniform2dv
+// #define glProgramUniform2f                            glProgramUniform2f
+// #define glProgramUniform2fv                           glProgramUniform2fv
+// #define glProgramUniform2i                            glProgramUniform2i
+// #define glProgramUniform2iv                           glProgramUniform2iv
+// #define glProgramUniform2ui                           glProgramUniform2ui
+// #define glProgramUniform2uiv                          glProgramUniform2uiv
+// #define glProgramUniform3d                            glProgramUniform3d
+// #define glProgramUniform3dv                           glProgramUniform3dv
+// #define glProgramUniform3f                            glProgramUniform3f
+// #define glProgramUniform3fv                           glProgramUniform3fv
+// #define glProgramUniform3i                            glProgramUniform3i
+// #define glProgramUniform3iv                           glProgramUniform3iv
+// #define glProgramUniform3ui                           glProgramUniform3ui
+// #define glProgramUniform3uiv                          glProgramUniform3uiv
+// #define glProgramUniform4d                            glProgramUniform4d
+// #define glProgramUniform4dv                           glProgramUniform4dv
+// #define glProgramUniform4f                            glProgramUniform4f
+// #define glProgramUniform4fv                           glProgramUniform4fv
+// #define glProgramUniform4i                            glProgramUniform4i
+// #define glProgramUniform4iv                           glProgramUniform4iv
+// #define glProgramUniform4ui                           glProgramUniform4ui
+// #define glProgramUniform4uiv                          glProgramUniform4uiv
+// #define glProgramUniformHandleui64ARB                 glProgramUniformHandleui64ARB
+// #define glProgramUniformHandleui64vARB                glProgramUniformHandleui64vARB
+// #define glProgramUniformMatrix2dv                     glProgramUniformMatrix2dv
+// #define glProgramUniformMatrix2fv                     glProgramUniformMatrix2fv
+// #define glProgramUniformMatrix2x3dv                   glProgramUniformMatrix2x3dv
+// #define glProgramUniformMatrix2x3fv                   glProgramUniformMatrix2x3fv
+// #define glProgramUniformMatrix2x4dv                   glProgramUniformMatrix2x4dv
+// #define glProgramUniformMatrix2x4fv                   glProgramUniformMatrix2x4fv
+// #define glProgramUniformMatrix3dv                     glProgramUniformMatrix3dv
+// #define glProgramUniformMatrix3fv                     glProgramUniformMatrix3fv
+// #define glProgramUniformMatrix3x2dv                   glProgramUniformMatrix3x2dv
+// #define glProgramUniformMatrix3x2fv                   glProgramUniformMatrix3x2fv
+// #define glProgramUniformMatrix3x4dv                   glProgramUniformMatrix3x4dv
+// #define glProgramUniformMatrix3x4fv                   glProgramUniformMatrix3x4fv
+// #define glProgramUniformMatrix4dv                     glProgramUniformMatrix4dv
+// #define glProgramUniformMatrix4fv                     glProgramUniformMatrix4fv
+// #define glProgramUniformMatrix4x2dv                   glProgramUniformMatrix4x2dv
+// #define glProgramUniformMatrix4x2fv                   glProgramUniformMatrix4x2fv
+// #define glProgramUniformMatrix4x3dv                   glProgramUniformMatrix4x3dv
+// #define glProgramUniformMatrix4x3fv                   glProgramUniformMatrix4x3fv
+// #define glProvokingVertex                             glProvokingVertex
+// #define glPushDebugGroup                              glPushDebugGroup
+// #define glQueryCounter                                glQueryCounter
+// #define glReadBuffer                                  glReadBuffer
+// #define glReadPixels                                  glReadPixels
+// #define glReadnPixels                                 glReadnPixels
+// #define glReadnPixelsARB                              glReadnPixelsARB
+// #define glReleaseShaderCompiler                       glReleaseShaderCompiler
+// #define glRenderbufferStorage                         glRenderbufferStorage
+// #define glRenderbufferStorageMultisample              glRenderbufferStorageMultisample
+// #define glResumeTransformFeedback                     glResumeTransformFeedback
+// #define glSampleCoverage                              glSampleCoverage
+// #define glSampleMaski                                 glSampleMaski
+// #define glSamplerParameterIiv                         glSamplerParameterIiv
+// #define glSamplerParameterIuiv                        glSamplerParameterIuiv
+// #define glSamplerParameterf                           glSamplerParameterf
+// #define glSamplerParameterfv                          glSamplerParameterfv
+// #define glSamplerParameteri                           glSamplerParameteri
+// #define glSamplerParameteriv                          glSamplerParameteriv
+// #define glScissor                                     glScissor
+// #define glScissorArrayv                               glScissorArrayv
+// #define glScissorIndexed                              glScissorIndexed
+// #define glScissorIndexedv                             glScissorIndexedv
+// #define glShaderBinary                                glShaderBinary
+// #define glShaderSource                                glShaderSource
+// #define glShaderStorageBlockBinding                   glShaderStorageBlockBinding
+// #define glStencilFunc                                 glStencilFunc
+// #define glStencilFuncSeparate                         glStencilFuncSeparate
+// #define glStencilMask                                 glStencilMask
+// #define glStencilMaskSeparate                         glStencilMaskSeparate
+// #define glStencilOp                                   glStencilOp
+// #define glStencilOpSeparate                           glStencilOpSeparate
+// #define glTexBuffer                                   glTexBuffer
+// #define glTexBufferRange                              glTexBufferRange
+// #define glTexImage1D                                  glTexImage1D
+// #define glTexImage2D                                  glTexImage2D
+// #define glTexImage2DMultisample                       glTexImage2DMultisample
+// #define glTexImage3D                                  glTexImage3D
+// #define glTexImage3DMultisample                       glTexImage3DMultisample
+// #define glTexPageCommitmentARB                        glTexPageCommitmentARB
+// #define glTexParameterIiv                             glTexParameterIiv
+// #define glTexParameterIuiv                            glTexParameterIuiv
+// #define glTexParameterf                               glTexParameterf
+// #define glTexParameterfv                              glTexParameterfv
+// #define glTexParameteri                               glTexParameteri
+// #define glTexParameteriv                              glTexParameteriv
+// #define glTexStorage1D                                glTexStorage1D
+// #define glTexStorage2D                                glTexStorage2D
+// #define glTexStorage2DMultisample                     glTexStorage2DMultisample
+// #define glTexStorage3D                                glTexStorage3D
+// #define glTexStorage3DMultisample                     glTexStorage3DMultisample
+// #define glTexSubImage1D                               glTexSubImage1D
+// #define glTexSubImage2D                               glTexSubImage2D
+// #define glTexSubImage3D                               glTexSubImage3D
+// #define glTextureBarrier                              glTextureBarrier
+// #define glTextureBuffer                               glTextureBuffer
+// #define glTextureBufferRange                          glTextureBufferRange
+// #define glTextureParameterIiv                         glTextureParameterIiv
+// #define glTextureParameterIuiv                        glTextureParameterIuiv
+// #define glTextureParameterf                           glTextureParameterf
+// #define glTextureParameterfv                          glTextureParameterfv
+// #define glTextureParameteri                           glTextureParameteri
+// #define glTextureParameteriv                          glTextureParameteriv
+// #define glTextureStorage1D                            glTextureStorage1D
+// #define glTextureStorage2D                            glTextureStorage2D
+// #define glTextureStorage2DMultisample                 glTextureStorage2DMultisample
+// #define glTextureStorage3D                            glTextureStorage3D
+// #define glTextureStorage3DMultisample                 glTextureStorage3DMultisample
+// #define glTextureSubImage1D                           glTextureSubImage1D
+// #define glTextureSubImage2D                           glTextureSubImage2D
+// #define glTextureSubImage3D                           glTextureSubImage3D
+// #define glTextureView                                 glTextureView
+// #define glTransformFeedbackBufferBase                 glTransformFeedbackBufferBase
+// #define glTransformFeedbackBufferRange                glTransformFeedbackBufferRange
+// #define glTransformFeedbackVaryings                   glTransformFeedbackVaryings
+// #define glUniform1d                                   glUniform1d
+// #define glUniform1dv                                  glUniform1dv
+// #define glUniform1f                                   glUniform1f
+// #define glUniform1fv                                  glUniform1fv
+// #define glUniform1i                                   glUniform1i
+// #define glUniform1iv                                  glUniform1iv
+// #define glUniform1ui                                  glUniform1ui
+// #define glUniform1uiv                                 glUniform1uiv
+// #define glUniform2d                                   glUniform2d
+// #define glUniform2dv                                  glUniform2dv
+// #define glUniform2f                                   glUniform2f
+// #define glUniform2fv                                  glUniform2fv
+// #define glUniform2i                                   glUniform2i
+// #define glUniform2iv                                  glUniform2iv
+// #define glUniform2ui                                  glUniform2ui
+// #define glUniform2uiv                                 glUniform2uiv
+// #define glUniform3d                                   glUniform3d
+// #define glUniform3dv                                  glUniform3dv
+// #define glUniform3f                                   glUniform3f
+// #define glUniform3fv                                  glUniform3fv
+// #define glUniform3i                                   glUniform3i
+// #define glUniform3iv                                  glUniform3iv
+// #define glUniform3ui                                  glUniform3ui
+// #define glUniform3uiv                                 glUniform3uiv
+// #define glUniform4d                                   glUniform4d
+// #define glUniform4dv                                  glUniform4dv
+// #define glUniform4f                                   glUniform4f
+// #define glUniform4fv                                  glUniform4fv
+// #define glUniform4i                                   glUniform4i
+// #define glUniform4iv                                  glUniform4iv
+// #define glUniform4ui                                  glUniform4ui
+// #define glUniform4uiv                                 glUniform4uiv
+// #define glUniformBlockBinding                         glUniformBlockBinding
+// #define glUniformHandleui64ARB                        glUniformHandleui64ARB
+// #define glUniformHandleui64vARB                       glUniformHandleui64vARB
+// #define glUniformMatrix2dv                            glUniformMatrix2dv
+// #define glUniformMatrix2fv                            glUniformMatrix2fv
+// #define glUniformMatrix2x3dv                          glUniformMatrix2x3dv
+// #define glUniformMatrix2x3fv                          glUniformMatrix2x3fv
+// #define glUniformMatrix2x4dv                          glUniformMatrix2x4dv
+// #define glUniformMatrix2x4fv                          glUniformMatrix2x4fv
+// #define glUniformMatrix3dv                            glUniformMatrix3dv
+// #define glUniformMatrix3fv                            glUniformMatrix3fv
+// #define glUniformMatrix3x2dv                          glUniformMatrix3x2dv
+// #define glUniformMatrix3x2fv                          glUniformMatrix3x2fv
+// #define glUniformMatrix3x4dv                          glUniformMatrix3x4dv
+// #define glUniformMatrix3x4fv                          glUniformMatrix3x4fv
+// #define glUniformMatrix4dv                            glUniformMatrix4dv
+// #define glUniformMatrix4fv                            glUniformMatrix4fv
+// #define glUniformMatrix4x2dv                          glUniformMatrix4x2dv
+// #define glUniformMatrix4x2fv                          glUniformMatrix4x2fv
+// #define glUniformMatrix4x3dv                          glUniformMatrix4x3dv
+// #define glUniformMatrix4x3fv                          glUniformMatrix4x3fv
+// #define glUniformSubroutinesuiv                       glUniformSubroutinesuiv
+// #define glUnmapBuffer                                 glUnmapBuffer
+// #define glUnmapNamedBuffer                            glUnmapNamedBuffer
+// #define glUseProgram                                  glUseProgram
+// #define glUseProgramStages                            glUseProgramStages
+// #define glValidateProgram                             glValidateProgram
+// #define glValidateProgramPipeline                     glValidateProgramPipeline
+// #define glVertexArrayAttribBinding                    glVertexArrayAttribBinding
+// #define glVertexArrayAttribFormat                     glVertexArrayAttribFormat
+// #define glVertexArrayAttribIFormat                    glVertexArrayAttribIFormat
+// #define glVertexArrayAttribLFormat                    glVertexArrayAttribLFormat
+// #define glVertexArrayBindingDivisor                   glVertexArrayBindingDivisor
+// #define glVertexArrayElementBuffer                    glVertexArrayElementBuffer
+// #define glVertexArrayVertexBuffer                     glVertexArrayVertexBuffer
+// #define glVertexArrayVertexBuffers                    glVertexArrayVertexBuffers
+// #define glVertexAttrib1d                              glVertexAttrib1d
+// #define glVertexAttrib1dv                             glVertexAttrib1dv
+// #define glVertexAttrib1f                              glVertexAttrib1f
+// #define glVertexAttrib1fv                             glVertexAttrib1fv
+// #define glVertexAttrib1s                              glVertexAttrib1s
+// #define glVertexAttrib1sv                             glVertexAttrib1sv
+// #define glVertexAttrib2d                              glVertexAttrib2d
+// #define glVertexAttrib2dv                             glVertexAttrib2dv
+// #define glVertexAttrib2f                              glVertexAttrib2f
+// #define glVertexAttrib2fv                             glVertexAttrib2fv
+// #define glVertexAttrib2s                              glVertexAttrib2s
+// #define glVertexAttrib2sv                             glVertexAttrib2sv
+// #define glVertexAttrib3d                              glVertexAttrib3d
+// #define glVertexAttrib3dv                             glVertexAttrib3dv
+// #define glVertexAttrib3f                              glVertexAttrib3f
+// #define glVertexAttrib3fv                             glVertexAttrib3fv
+// #define glVertexAttrib3s                              glVertexAttrib3s
+// #define glVertexAttrib3sv                             glVertexAttrib3sv
+// #define glVertexAttrib4Nbv                            glVertexAttrib4Nbv
+// #define glVertexAttrib4Niv                            glVertexAttrib4Niv
+// #define glVertexAttrib4Nsv                            glVertexAttrib4Nsv
+// #define glVertexAttrib4Nub                            glVertexAttrib4Nub
+// #define glVertexAttrib4Nubv                           glVertexAttrib4Nubv
+// #define glVertexAttrib4Nuiv                           glVertexAttrib4Nuiv
+// #define glVertexAttrib4Nusv                           glVertexAttrib4Nusv
+// #define glVertexAttrib4bv                             glVertexAttrib4bv
+// #define glVertexAttrib4d                              glVertexAttrib4d
+// #define glVertexAttrib4dv                             glVertexAttrib4dv
+// #define glVertexAttrib4f                              glVertexAttrib4f
+// #define glVertexAttrib4fv                             glVertexAttrib4fv
+// #define glVertexAttrib4iv                             glVertexAttrib4iv
+// #define glVertexAttrib4s                              glVertexAttrib4s
+// #define glVertexAttrib4sv                             glVertexAttrib4sv
+// #define glVertexAttrib4ubv                            glVertexAttrib4ubv
+// #define glVertexAttrib4uiv                            glVertexAttrib4uiv
+// #define glVertexAttrib4usv                            glVertexAttrib4usv
+// #define glVertexAttribBinding                         glVertexAttribBinding
+// #define glVertexAttribDivisor                         glVertexAttribDivisor
+// #define glVertexAttribFormat                          glVertexAttribFormat
+// #define glVertexAttribI1i                             glVertexAttribI1i
+// #define glVertexAttribI1iv                            glVertexAttribI1iv
+// #define glVertexAttribI1ui                            glVertexAttribI1ui
+// #define glVertexAttribI1uiv                           glVertexAttribI1uiv
+// #define glVertexAttribI2i                             glVertexAttribI2i
+// #define glVertexAttribI2iv                            glVertexAttribI2iv
+// #define glVertexAttribI2ui                            glVertexAttribI2ui
+// #define glVertexAttribI2uiv                           glVertexAttribI2uiv
+// #define glVertexAttribI3i                             glVertexAttribI3i
+// #define glVertexAttribI3iv                            glVertexAttribI3iv
+// #define glVertexAttribI3ui                            glVertexAttribI3ui
+// #define glVertexAttribI3uiv                           glVertexAttribI3uiv
+// #define glVertexAttribI4bv                            glVertexAttribI4bv
+// #define glVertexAttribI4i                             glVertexAttribI4i
+// #define glVertexAttribI4iv                            glVertexAttribI4iv
+// #define glVertexAttribI4sv                            glVertexAttribI4sv
+// #define glVertexAttribI4ubv                           glVertexAttribI4ubv
+// #define glVertexAttribI4ui                            glVertexAttribI4ui
+// #define glVertexAttribI4uiv                           glVertexAttribI4uiv
+// #define glVertexAttribI4usv                           glVertexAttribI4usv
+// #define glVertexAttribIFormat                         glVertexAttribIFormat
+// #define glVertexAttribIPointer                        glVertexAttribIPointer
+// #define glVertexAttribL1d                             glVertexAttribL1d
+// #define glVertexAttribL1dv                            glVertexAttribL1dv
+// #define glVertexAttribL1ui64ARB                       glVertexAttribL1ui64ARB
+// #define glVertexAttribL1ui64vARB                      glVertexAttribL1ui64vARB
+// #define glVertexAttribL2d                             glVertexAttribL2d
+// #define glVertexAttribL2dv                            glVertexAttribL2dv
+// #define glVertexAttribL3d                             glVertexAttribL3d
+// #define glVertexAttribL3dv                            glVertexAttribL3dv
+// #define glVertexAttribL4d                             glVertexAttribL4d
+// #define glVertexAttribL4dv                            glVertexAttribL4dv
+// #define glVertexAttribLFormat                         glVertexAttribLFormat
+// #define glVertexAttribLPointer                        glVertexAttribLPointer
+// #define glVertexAttribP1ui                            glVertexAttribP1ui
+// #define glVertexAttribP1uiv                           glVertexAttribP1uiv
+// #define glVertexAttribP2ui                            glVertexAttribP2ui
+// #define glVertexAttribP2uiv                           glVertexAttribP2uiv
+// #define glVertexAttribP3ui                            glVertexAttribP3ui
+// #define glVertexAttribP3uiv                           glVertexAttribP3uiv
+// #define glVertexAttribP4ui                            glVertexAttribP4ui
+// #define glVertexAttribP4uiv                           glVertexAttribP4uiv
+// #define glVertexAttribPointer                         glVertexAttribPointer
+// #define glVertexBindingDivisor                        glVertexBindingDivisor
+// #define glViewport                                    glViewport
+// #define glViewportArrayv                              glViewportArrayv
+// #define glViewportIndexedf                            glViewportIndexedf
+// #define glViewportIndexedfv                           glViewportIndexedfv
+// #define glWaitSync                                    glWaitSync
 
 #ifdef __cplusplus
 }
