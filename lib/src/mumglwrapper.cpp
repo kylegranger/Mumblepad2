@@ -23,23 +23,14 @@
 //
 
 #include "mumglwrapper.h"
-#include <GLFW/glfw3.h>
-#include "../gl/gl3w.h"
 #include "malloc.h"
 
+#define USE_OPENGL
 #ifdef USE_OPENGL
 
-struct graphics_context
-{
-    GLFWwindow *window;
-    GLuint program;
-    GLint uniform_angle;
-    GLuint vbo_point;
-    GLuint vao_point;
-    double angle;
-    long framecount;
-    double lastframe;
-};
+
+struct graphics_context context;
+
 
 CMumGlWrapper::CMumGlWrapper()
 {
@@ -48,14 +39,13 @@ CMumGlWrapper::CMumGlWrapper()
 
 bool CMumGlWrapper::Init()
 {
-        printf("CMumGlWrapper::Init\n");
+    printf("CMumGlWrapper::Init\n");
 
     /* Options */
     // bool fullscreen = false;
     // const char *title = "OpenGL 3.3 Demo";
 
     /* Create window and OpenGL context */
-    struct graphics_context context;
     if (!glfwInit())
     {
         printf("GLFW3: failed to initialize\n");
@@ -70,12 +60,14 @@ bool CMumGlWrapper::Init()
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
     context.window = glfwCreateWindow(320, 240, "mumblepad", NULL, NULL);
     glfwMakeContextCurrent(context.window);
+    glfwSwapInterval(1);
     if (gl3wInit())
     {
         printf("gl3w: failed to initialize\n");
         return false;
     }
 
+        printf("gl3w: ok to go!\n");
     return true;
 
 }

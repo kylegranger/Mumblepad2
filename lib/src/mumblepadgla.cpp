@@ -25,11 +25,29 @@
 #include "stdio.h"
 #include "malloc.h"
 #include "assert.h"
+#include "string.h"
 #include "../gl/gl3w.h"
 #include "mumblepadgla.h"
 
+#define USE_OPENGL
 #ifdef USE_OPENGL
 
+// struct graphics_context contexti;
+// #define ATTRIB_POINT 0
+// #define ATTRIB_POINT 1
+
+// const float SQUARE[] = {
+//     -1.0f,  1.0f,
+//     -1.0f, -1.0f,
+//      1.0f,  1.0f,
+//      1.0f, -1.0f
+// };
+// const float UV[] = {
+//      0.0f,  1.0f,
+//      0.0f,  0.0f,
+//      1.0f,  1.0f,
+//      1.0f,  0.0f
+// };
 static float wholeSquareVertices[] = {
     -1.0f,
     1.0f,
@@ -91,6 +109,7 @@ void main(void)\n\
         texture2D(bitmasks,vec2(src2[0],0.375))[0] + \
         texture2D(bitmasks,vec2(src3[2],0.625))[0] + \
         texture2D(bitmasks,vec2(src4[3],0.875))[0];\n\
+    gl_FragColor = vec4(1.0, 0.5, 0.25, 1.0);\n\
 }";
 
 static char encryptConfuseText[] =
@@ -112,6 +131,7 @@ void main(void)\n\
     gl_FragColor[1] = texture2D(lutPermute,vec2(xorKey[1],v_texCoord[1]))[0];\n\
     gl_FragColor[2] = texture2D(lutPermute,vec2(xorKey[2],v_texCoord[1]))[0];\n\
     gl_FragColor[3] = texture2D(lutPermute,vec2(xorKey[3],v_texCoord[1]))[0];\n\
+    gl_FragColor = vec4(1.0, 0.5, 0.25, 1.0);\n\
 }";
 
 static char decryptDiffuseText[] =
@@ -144,6 +164,7 @@ void main(void)\n\
         texture2D(bitmasks,vec2(src2[1],0.375))[0] + \
         texture2D(bitmasks,vec2(src3[0],0.625))[0] + \
         texture2D(bitmasks,vec2(src4[3],0.875))[0];\n\
+    gl_FragColor = vec4(1.0, 0.5, 0.25, 1.0);\n\
 }";
 
 static char decryptConfuseText[] =
@@ -166,6 +187,7 @@ void main(void)\n\
     gl_FragColor[1] = texture2D(lutXor,vec2(prm.g,clav.g))[0];\n\
     gl_FragColor[2] = texture2D(lutXor,vec2(prm.b,clav.b))[0];\n\
     gl_FragColor[3] = texture2D(lutXor,vec2(prm.a,clav.a))[0];\n\
+    gl_FragColor = vec4(1.0, 0.5, 0.25, 1.0);\n\
 }";
 
 CMumblepadGla::CMumblepadGla(TMumInfo *mumInfo, CMumGlWrapper *mumGlWrapper) : CMumRenderer(mumInfo)
@@ -241,9 +263,19 @@ CMumblepadGla::~CMumblepadGla()
 
 void CMumblepadGla::EncryptUpload(uint8_t *data)
 {
+    printf("EncryptUpload\n");
     glBindTexture(GL_TEXTURE_2D, mPingPongTexture[0]);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, MUM_CELLS_X,
                     mMumInfo->numRows, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+    for (int b = 0; b < 16; b++) {
+        printf("%02x", data[b] );
+        if ((b % 16 == 15)) {
+            printf("\n");
+        }
+    }
+
+
 }
 
 void CMumblepadGla::DecryptUpload(uint8_t *data)
@@ -292,13 +324,15 @@ bool CMumblepadGla::CreateLutTextures()
 {
     uint32_t round;
 
+    printf("CreateLutTextures\n");
+
     glGenTextures(1, &mLutTextureXor);
     glBindTexture(GL_TEXTURE_2D, mLutTextureXor);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, MUM_NUM_8BIT_VALUES, MUM_NUM_8BIT_VALUES, 0, GL_RED,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, MUM_NUM_8BIT_VALUES, MUM_NUM_8BIT_VALUES, 0, GL_RED,
                  GL_UNSIGNED_BYTE, mMumInfo->xorTextureData);
 
     for (round = 0; round < MUM_NUM_ROUNDS; round++)
@@ -318,7 +352,7 @@ bool CMumblepadGla::CreateLutTextures()
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, MUM_NUM_8BIT_VALUES, MUM_MASK_TABLE_ROWS, 0, GL_RED,
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, MUM_NUM_8BIT_VALUES, MUM_MASK_TABLE_ROWS, 0, GL_RED,
                      GL_UNSIGNED_BYTE, NULL);
 
         glGenTextures(1, &mPositionTexturesX[round]);
@@ -363,7 +397,7 @@ bool CMumblepadGla::CreateLutTextures()
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, MUM_NUM_8BIT_VALUES, mMumInfo->numRows, 0, GL_RED,
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, MUM_NUM_8BIT_VALUES, mMumInfo->numRows, 0, GL_RED,
                      GL_UNSIGNED_BYTE, NULL);
 
         glGenTextures(1, &mLutTexturePermuteI[round]);
@@ -372,7 +406,7 @@ bool CMumblepadGla::CreateLutTextures()
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, MUM_NUM_8BIT_VALUES, mMumInfo->numRows, 0, GL_RED,
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, MUM_NUM_8BIT_VALUES, mMumInfo->numRows, 0, GL_RED,
                      GL_UNSIGNED_BYTE, NULL);
     }
     return true;
@@ -436,6 +470,9 @@ GLuint CMumblepadGla::CreateShader(const char *vertShaderSrc, const char *fragSh
     GLuint programObject;
     GLint linked;
 
+    printf("CreateShader");
+
+
     vertexShader = mGlw->LoadShader(GL_VERTEX_SHADER, vertShaderSrc);
     if (vertexShader == 0)
     {
@@ -489,19 +526,18 @@ GLuint CMumblepadGla::CreateShader(const char *vertShaderSrc, const char *fragSh
 
 bool CMumblepadGla::CreateShaders()
 {
-    printf("do encryptDiffuseText\n");
+    printf("CreateShaders\n");
     mEncryptDiffuseProgram = CreateShader(vertexShaderText, encryptDiffuseText);
-    printf("do encryptConfuseText\n");
     mEncryptConfuseProgram = CreateShader(vertexShaderText, encryptConfuseText);
-    printf("do decryptDiffuseText\n");
     mDecryptDiffuseProgram = CreateShader(vertexShaderText, decryptDiffuseText);
-    printf("do decryptConfuseText\n");
     mDecryptConfuseProgram = CreateShader(vertexShaderText, decryptConfuseText);
     return true;
 }
 
 bool CMumblepadGla::InitTextures()
 {
+                printf("InitTextures ???\n");
+
     glEnable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
@@ -512,6 +548,7 @@ bool CMumblepadGla::InitTextures()
         return false;
     if (!CreateShaders())
         return false;
+    printf("InitTextures ok\n");
     return true;
 }
 
@@ -524,7 +561,7 @@ void CMumblepadGla::EncryptDiffuse(uint32_t round)
     //
     // destination is ping pong 1
     glBindFramebuffer(GL_FRAMEBUFFER, mPingPongFBuffer[1]);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mPingPongTexture[1], 0);
+    // jkl glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mPingPongTexture[1], 0);
     glViewport(0, 0, MUM_CELLS_X, mMumInfo->numRows);
 
     glUseProgram(mEncryptDiffuseProgram);
@@ -540,6 +577,39 @@ void CMumblepadGla::EncryptDiffuse(uint32_t round)
     // precompute!
     positionLoc = glGetAttribLocation(mEncryptDiffuseProgram, "a_position");
     texCoordLoc = glGetAttribLocation(mEncryptDiffuseProgram, "a_texCoord");
+
+
+    // glGenBuffers(1, &contexti.vbo_point);
+    // glBindBuffer(GL_ARRAY_BUFFER, contexti.vbo_point);
+    // glBufferData(GL_ARRAY_BUFFER, sizeof(SQUARE), SQUARE, GL_STATIC_DRAW);
+    // glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    // /* Prepare vertrex array object (VAO) */
+    // glGenVertexArrays(1, &contexti.vao_point);
+    // glBindVertexArray(contexti.vao_point);
+    // glBindBuffer(GL_ARRAY_BUFFER, contexti.vbo_point);
+    // glVertexAttribPointer(ATTRIB_POINT, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    // glEnableVertexAttribArray(ATTRIB_POINT);
+    // glBindBuffer(GL_ARRAY_BUFFER, 0);
+    // glBindVertexArray(0);
+
+    // glGenBuffers(1, &contexti.vbo_uv);
+    // glBindBuffer(GL_ARRAY_BUFFER, contexti.vbo_uv);
+    // glBufferData(GL_ARRAY_BUFFER, sizeof(UV), UV, GL_STATIC_DRAW);
+    // glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    // /* Prepare vertrex array object (VAO) */
+    // glGenVertexArrays(1, &contexti.vao_uv);
+    // glBindVertexArray(contexti.vao_uv);
+    // glBindBuffer(GL_ARRAY_BUFFER, contexti.vbo_uv);
+    // glVertexAttribPointer(ATTRIB_UV, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    // glEnableVertexAttribArray(ATTRIB_UV);
+    // glBindBuffer(GL_ARRAY_BUFFER, 0);
+    // glBindVertexArray(0);
+
+
+
+
 
     glVertexAttribPointer(positionLoc, 3, GL_FLOAT,
                           GL_FALSE, 3 * sizeof(GLfloat), wholeSquareVertices);
@@ -585,7 +655,14 @@ void CMumblepadGla::EncryptConfuse(uint32_t round)
 
     // destination is ping pong 0
     glBindFramebuffer(GL_FRAMEBUFFER, mPingPongFBuffer[0]);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mPingPongTexture[0], 0);
+
+// glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // we're not using the stencil buffer now
+glDisable(GL_DEPTH_TEST);
+
+
+    // jklglEnable(GL_TEXTURE_2D);
+    // jkl glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mPingPongTexture[0], 0);
     glViewport(0, 0, MUM_CELLS_X, mMumInfo->numRows);
 
     glUseProgram(mEncryptConfuseProgram);
@@ -768,11 +845,18 @@ void CMumblepadGla::DecryptConfuse(uint32_t round)
 
 void CMumblepadGla::EncryptDownload(uint8_t *data)
 {
+    printf("EncryptDownload\n");
     glBindFramebuffer(GL_FRAMEBUFFER, mPingPongFBuffer[0]);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mPingPongTexture[0]);
     glReadPixels(0, 0, MUM_CELLS_X, mMumInfo->numRows, GL_RGBA, GL_UNSIGNED_BYTE, data);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    for (int b = 0; b < 16; b++) {
+        printf("%02x", data[b] );
+        if ((b % 16 == 15)) {
+            printf("\n");
+        }
+    }    
 }
 
 void CMumblepadGla::DecryptDownload(uint8_t *data)

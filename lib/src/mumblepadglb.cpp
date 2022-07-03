@@ -326,7 +326,7 @@ bool CMumblepadGlb::CreateLutTextures()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, MUM_NUM_8BIT_VALUES, MUM_NUM_8BIT_VALUES, 0, GL_RED,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, MUM_NUM_8BIT_VALUES, MUM_NUM_8BIT_VALUES, 0, GL_RED,
                  GL_UNSIGNED_BYTE, mMumInfo->xorTextureData);
 
     glGenTextures(1, &mLutTextureBitmask);
@@ -335,7 +335,7 @@ bool CMumblepadGlb::CreateLutTextures()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, MUM_NUM_8BIT_VALUES, MUM_MASK_TABLE_ROWS * MUM_NUM_ROUNDS, 0, GL_RED,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, MUM_NUM_8BIT_VALUES, MUM_MASK_TABLE_ROWS * MUM_NUM_ROUNDS, 0, GL_RED,
                  GL_UNSIGNED_BYTE, NULL);
 
     glGenTextures(1, &mLutTextureBitmaskI);
@@ -344,7 +344,7 @@ bool CMumblepadGlb::CreateLutTextures()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, MUM_NUM_8BIT_VALUES, MUM_MASK_TABLE_ROWS * MUM_NUM_ROUNDS, 0, GL_RED,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, MUM_NUM_8BIT_VALUES, MUM_MASK_TABLE_ROWS * MUM_NUM_ROUNDS, 0, GL_RED,
                  GL_UNSIGNED_BYTE, NULL);
 
     glGenTextures(1, &mPositionTexturesX);
@@ -389,7 +389,7 @@ bool CMumblepadGlb::CreateLutTextures()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, MUM_NUM_8BIT_VALUES, MUM_CELLS_YB, 0, GL_RED,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, MUM_NUM_8BIT_VALUES, MUM_CELLS_YB, 0, GL_RED,
                  GL_UNSIGNED_BYTE, NULL);
 
     glGenTextures(1, &mLutTexturePermuteI);
@@ -398,7 +398,7 @@ bool CMumblepadGlb::CreateLutTextures()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, MUM_NUM_8BIT_VALUES, MUM_CELLS_YB, 0, GL_RED,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, MUM_NUM_8BIT_VALUES, MUM_CELLS_YB, 0, GL_RED,
                  GL_UNSIGNED_BYTE, NULL);
     return true;
 }

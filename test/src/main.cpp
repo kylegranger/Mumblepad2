@@ -346,7 +346,7 @@ bool analyzeBitsChange(uint32_t bitsChanged, uint32_t bitsTotal, uint32_t bytesC
     float bitsPercent = (float)bitsChanged *100.0f / (float)bitsTotal;
     float bytesPart = (float)bytesChanged *256.0f / (float)bytesTotal;
     bool success = true;
-    // printf("analyzeBitsChange %f", bitsPercent);
+    printf("analyzeBitsChange %f", bitsPercent);
     if (bytesTotal > MUM_KEY_SIZE)
     {
         if (bitsPercent < 49)
@@ -370,7 +370,7 @@ bool analyzeBitsChange(uint32_t bitsChanged, uint32_t bitsTotal, uint32_t bytesC
         //    success = false;
     }
     if (!success)
-        printf("   bits %f, bytes %f\n", bitsPercent, bytesPart);
+        printf("   bits pct %f, bytes pct %f\n", bitsPercent, bytesPart);
     return success;
 }
 
@@ -463,18 +463,23 @@ bool testEntropy(void *engine, char *engineDesc, EMumPaddingType paddingType)
     uint32_t encryptedBlockSize, plaintextBlockSize;
     error = MumPlaintextBlockSize(engine, &plaintextBlockSize);
     error = MumEncryptedBlockSize(engine, &encryptedBlockSize);
+    printf("plaintextBlockSize %d encryptedBlockSize %d\n", plaintextBlockSize, encryptedBlockSize);
 
     bitsChanged = 0;
     bitsTotal = 0;
     bytesChanged = 0,
     bytesTotal = 0;
-    for (iter = 0; iter < NUM_ENTROPY_ITERATIONS; iter++)
+    for (iter = 0; iter < 2 /*NUM_ENTROPY_ITERATIONS/100*/; iter++)
     {
         fillRandomly(plaintext, plaintextBlockSize);
         error = MumEncrypt(engine, plaintext, encrypt1, plaintextBlockSize, &outlength, 0);
+        assert(error == MUM_ERROR_OK);
         error = MumEncrypt(engine, plaintext, encrypt2, plaintextBlockSize, &outlength, 0);
+        assert(error == MUM_ERROR_OK);
         error = MumDecrypt(engine, encrypt1, decrypt1, encryptedBlockSize, &outlength);
+        assert(error == MUM_ERROR_OK);
         error = MumDecrypt(engine, encrypt2, decrypt2, encryptedBlockSize, &outlength);
+        assert(error == MUM_ERROR_OK);
         // first, reality check; make sure both encryptions return same plaintext
         if (!blockChecker(decrypt1, plaintext, plaintextBlockSize)) 
         {
@@ -491,6 +496,29 @@ bool testEntropy(void *engine, char *engineDesc, EMumPaddingType paddingType)
         // Now, check deltas between bytes and deltas between bits
         // 255/256 of bytes should be different if blocks are 'random
         // 50% of bits should be different
+        // if (encryptedBlockSize == 128) {
+        //     printf("block A\n");
+        //     for (int b = 0; b < 128; b++) {
+        //         printf("%02x", encrypt1[b] );
+        //         if ((b % 16 == 15)) {
+        //             printf("\n");
+        //         }
+        //     }
+        //     printf("block B\n");
+        //     for (int b = 0; b < 128; b++) {
+        //         printf("%02x", encrypt2[b] );
+        //         if ((b % 16 == 15)) {
+        //             printf("\n");
+        //         }
+        //     }
+        //     printf("block P\n");
+        //     for (int b = 0; b < 112; b++) {
+        //         printf("%02x", plaintext[b] );
+        //         if ((b % 16 == 15)) {
+        //             printf("\n");
+        //         }
+        //     }
+        // }
         for (i = 0; i < encryptedBlockSize; i++)
         {
             if (encrypt1[i] != encrypt2[i])
@@ -504,7 +532,7 @@ bool testEntropy(void *engine, char *engineDesc, EMumPaddingType paddingType)
     bool success = analyzeBitsChange(bitsChanged, bitsTotal, bytesChanged, bytesTotal);
     if (!success)
     {
-        printf("FAILED testEntropy, engine %s\n", engineDesc);
+        printf("FAILED testEntropy E, engine %s\n", engineDesc);
         return false;
     }
 
@@ -516,7 +544,7 @@ bool testEntropy(void *engine, char *engineDesc, EMumPaddingType paddingType)
     bytesChanged = 0,
     bytesTotal = 0;
     memset(plaintext, 0, plaintextBlockSize);
-    for (iter = 0; iter < NUM_ENTROPY_ITERATIONS; iter++)
+    for (iter = 0; iter < 2 /* (NUM_ENTROPY_ITERATIONS*/; iter++)
     {
         error = MumEncrypt(engine, plaintext, encrypt1, plaintextBlockSize, &outlength, 0);
         error = MumEncrypt(engine, plaintext, encrypt2, plaintextBlockSize, &outlength, 0);
@@ -536,23 +564,6 @@ bool testEntropy(void *engine, char *engineDesc, EMumPaddingType paddingType)
             return false;
         }
 
-
-
-        // for (i = 0; i < plaintextBlockSize; i++)
-        // {
-        //     if (decrypt1[i] != plaintext[i])
-        //     {
-        //         printf("FAILED testEntropy C, engine %s, plaintextSize %d, decrypted %d, index %d\n",
-        //             engineDesc, plaintextBlockSize, outlength, i);
-        //         return false;
-        //     }
-        //     if (decrypt2[i] != plaintext[i])
-        //     {
-        //         printf("FAILED testEntropy D, engine %s, plaintextSize %d, decrypted %d, index %d\n",
-        //             engineDesc, plaintextBlockSize, outlength, i);
-        //         return false;
-        //     }
-        // }
         // Now, check deltas between bytes and deltas between bits
         // 255/256 of bytes should be different if blocks are 'random'
         // 50% of bits should be different
@@ -675,14 +686,6 @@ bool testSimpleBlocks(void *engine, char *engineDesc)
         return false;
     }
 
-    // for (i = 0; i < plaintextBlockSize; i++)
-    // {
-    //     if (plaintext[i] != decrypt[i])
-    //     {
-    //         printf("FAILED testSimpleBlocks, engine %s\n", engineDesc);
-    //         return false;
-    //     }
-    // }
     printf("SUCCESS testSimpleBlocks, engine %s\n", engineDesc);
     return true;
 }
@@ -767,16 +770,6 @@ bool testRandomlySizedBlocks(void *engine, char *engineDesc, EMumPaddingType pad
                     engineDesc, plaintextSize);
                 return false;
         }
-
-        // for (uint32_t i = 0; i < plaintextSize; i++)
-        // {
-        //     if (plaintext[i] != decrypt[i])
-        //     {
-        //         printf("FAILED testRandomlySizedBlocks, engine %s, plaintextSize %d\n",
-        //             engineDesc, plaintextSize);
-        //         return false;
-        //     }
-        // }
     }
     printf("SUCCESS testRandomlySizedBlocks, engine %s\n", engineDesc);
     delete[] plaintext;
@@ -833,16 +826,6 @@ bool profileLargeBlocks(void *engine, char *engineDesc)
         return false;
     }
 
-    // for (i = 0; i < plaintextSize; i++)
-    // {
-    //     if (largePlaintext[i] != largeDecrypt[i])
-    //     {
-    //         printf("FAILED profileLargeBlocks, engine %s, plaintextSize %d, decrypted %d, index %d\n",
-    //             engineDesc, plaintextSize, decrypted, i);
-    //         return false;
-    //     }
-    // }
-
 	return true;
 }
 
@@ -853,37 +836,37 @@ bool doTest(void *engine, char *engineDesc, EMumPaddingType paddingType, EMumBlo
 
     printf("doTest: %s, block type %d\n", engineDesc, blockType);
 
-    if (!testUnitializedEngine(engine, engineDesc)) {
-        printf("failed testUnitializedEngine\n");
-        //return false;
-    }
+    // if (!testUnitializedEngine(engine, engineDesc)) {
+    //     printf("failed testUnitializedEngine\n");
+    //     //return false;
+    // }
 
     fillRandomly(clavier, MUM_KEY_SIZE);
     error = MumInitKey(engine, clavier);
-    if (!testSimpleBlocks(engine, engineDesc)) {
-        printf("failed testSimpleBlocks\n");
-        //return false;
-    }
-    if (!testRandomlySizedBlocks(engine, engineDesc, paddingType)) {
-        printf("failed testRandomlySizedBlocks\n");
-        //return false;
-    }
+    // if (!testSimpleBlocks(engine, engineDesc)) {
+    //     printf("failed testSimpleBlocks\n");
+    //     //return false;
+    // }
+    // if (!testRandomlySizedBlocks(engine, engineDesc, paddingType)) {
+    //     printf("failed testRandomlySizedBlocks\n");
+    //     //return false;
+    // }
     if (!testEntropy(engine, engineDesc, paddingType)) {
         printf("failed testEntropy\n");
         //return false;
     }
-    if (!testSubkeyEntropy(engine, engineDesc, paddingType)) {
-        printf("failed testSubkeyEntropy\n");
-        //return false;
-    }
-    if (!testFileEncrypt(engine, engineDesc)) {
-        printf("failed testFileEncrypt\n");
-        //return false;
-    }
-    if (paddingType == MUM_PADDING_TYPE_ON && !testReferenceFileDecrypt(engine, engineDesc, blockType)) {
-        printf("failed testReferenceFileDecrypt\n");
-        return false;
-    }
+    // if (!testSubkeyEntropy(engine, engineDesc, paddingType)) {
+    //     printf("failed testSubkeyEntropy\n");
+    //     //return false;
+    // }
+    // if (!testFileEncrypt(engine, engineDesc)) {
+    //     printf("failed testFileEncrypt\n");
+    //     //return false;
+    // }
+    // if (paddingType == MUM_PADDING_TYPE_ON && !testReferenceFileDecrypt(engine, engineDesc, blockType)) {
+    //     printf("failed testReferenceFileDecrypt\n");
+    //     return false;
+    // }
     return true;
 }
 
@@ -1001,9 +984,11 @@ bool doTests()
 {
 	for (int paddingIndex = 0; paddingIndex < TEST_NUM_PADDING_TYPES; paddingIndex++)
     {
-        for (int engineIndex = 0; engineIndex < TEST_NUM_ENGINES; engineIndex++)
-        {
-            for (int blockType = firstTestBlockTypeList[engineIndex]; blockType <= MUM_BLOCKTYPE_4096; blockType++)
+        // for (int engineIndex = 0; engineIndex < TEST_NUM_ENGINES; engineIndex++)
+        // {
+            int engineIndex = 2;
+            // jkl for (int blockType = firstTestBlockTypeList[engineIndex]; blockType <= MUM_BLOCKTYPE_4096; blockType++)
+            for (int blockType = firstTestBlockTypeList[engineIndex]; blockType <= MUM_BLOCKTYPE_128; blockType++)
             {
                 printf("pi %d ei %d bt %d\n", paddingIndex, engineIndex, blockType);
                 void * engine = MumCreateEngine(engineList[engineIndex], (EMumBlockType)blockType, paddingList[paddingIndex], TEST_MUM_NUM_THREADS);
@@ -1016,7 +1001,7 @@ bool doTests()
                 MumDestroyEngine(engine);
                 engine = NULL;
             }
-        }
+        // }
     }
 	return true;
 }
@@ -1148,8 +1133,8 @@ int main(int argc, char* argv[])
 	if (!doTests() )
         result = -1;
 
-    if (!doProfilings())
-        result = -1;
+    // if (!doProfilings())
+    //     result = -1;
 
     // if (!doMultiEngineTests() )
     // return -1;
@@ -1159,8 +1144,8 @@ int main(int argc, char* argv[])
     else
         printf("Done...but we failed someplace.\n");
 
-    while (true)
-        ;
+    // while (true)
+    //     ;
     return result;
 }
 

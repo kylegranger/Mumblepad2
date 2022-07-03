@@ -30,6 +30,8 @@
 // #include "gl\glu.h"
 // #include "../mgl/glext.h"
 #include "../gl/gl3w.h"
+#include <GLFW/glfw3.h>
+
 //#include "../gl3w/GL/glcorearb.h"
 #include "GL/gl.h"
 #include "GL/glext.h"
@@ -38,8 +40,24 @@
 
 #include "mumrenderer.h"
 
-
+#define USE_OPENGL
 #ifdef USE_OPENGL
+
+
+
+struct graphics_context
+{
+    GLFWwindow *window;
+    GLuint program;
+    GLint uniform_angle;
+    GLuint vbo_point;
+    GLuint vao_point;
+    GLuint vbo_uv;
+    GLuint vao_uv;
+    double angle;
+    long framecount;
+    double lastframe;
+};
 
 
 
