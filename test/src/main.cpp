@@ -31,13 +31,12 @@
 #include <mumpublic.h>
 
 #define NUM_TEST_FILES 2
-#define NUM_ENTROPY_ITERATIONS 1000
+#define NUM_ENTROPY_ITERATIONS 5000
+#define NUM_RANDOMSIZED_ITERATIONS 100
 #define TEST_MUM_NUM_THREADS 8
 #define LARGE_TEST_SIZE 128000000
 
-// store the file as binary chunk
 uint8_t *originalFileData[NUM_TEST_FILES];
-// load the same size decrypted version of encrypted file
 uint8_t *decryptFileData[NUM_TEST_FILES];
 size_t fileLength[NUM_TEST_FILES];
 int bitsSet[256];
@@ -70,7 +69,7 @@ std::string referenceFiles[NUM_REFERENCE_FILES] = {
     "../referencefiles/constitution.pdf"};
 
 #ifdef USE_OPENGL
-#define TEST_NUM_ENGINES 4
+#define TEST_NUM_ENGINES 3
 #else
 #define TEST_NUM_ENGINES 2
 #endif
@@ -79,7 +78,7 @@ EMumEngineType engineList[TEST_NUM_ENGINES] = {
     MUM_ENGINE_TYPE_CPU_MT,
 #ifdef USE_OPENGL
     MUM_ENGINE_TYPE_GPU_A,
-    MUM_ENGINE_TYPE_GPU_B,
+    // MUM_ENGINE_TYPE_GPU_B,
 #endif
 };
 
@@ -89,7 +88,7 @@ EMumBlockType firstTestBlockTypeList[TEST_NUM_ENGINES] = {
     MUM_BLOCKTYPE_128,
 #ifdef USE_OPENGL
     MUM_BLOCKTYPE_512,
-    MUM_BLOCKTYPE_4096
+    // MUM_BLOCKTYPE_4096
 #endif
 };
 
@@ -99,7 +98,7 @@ EMumBlockType firstProfilingBlockTypeList[TEST_NUM_ENGINES] = {
     MUM_BLOCKTYPE_128,
 #ifdef USE_OPENGL
     MUM_BLOCKTYPE_4096,
-    MUM_BLOCKTYPE_4096
+    // MUM_BLOCKTYPE_4096
 #endif
 };
 
@@ -108,7 +107,7 @@ std::string engineName[TEST_NUM_ENGINES] = {
     "CPU-MT-engine",
 #ifdef USE_OPENGL
     "GPU-A-engine",
-    "GPU-B-engine",
+    // "GPU-B-engine",
 #endif
 };
 
@@ -136,6 +135,15 @@ std::string paddingName[TEST_NUM_PADDING_TYPES] = {
     "padding-on"};
 
 #endif
+
+void dumpBlock(const char *msg, uint8_t *a, int size) {
+    printf("%s", msg);
+    for (int i = 0; i < size; i++) {
+        printf("%02x", a[i]);
+        if ((i%16) == 15) 
+            printf("\n");
+    }
+}
 
 bool blockChecker(uint8_t *a, uint8_t *b, int size)
 {
@@ -217,7 +225,7 @@ bool loadFile(std::string filename, uint8_t **data, size_t *length)
     return true;
 }
 
-bool loadUrFiles()
+bool loadTestFiles()
 {
     for (int i = 0; i < NUM_TEST_FILES; i++)
     {
@@ -584,7 +592,6 @@ bool testSimpleBlocks(void *engine, char *engineDesc)
     uint8_t encrypt[4096];
     uint8_t decrypt[4096];
     uint32_t length, i;
-    printf("testSimpleBlocks\n");
 
     uint32_t encryptedBlockSize, plaintextBlockSize;
     error = MumPlaintextBlockSize(engine, &plaintextBlockSize);
@@ -671,13 +678,14 @@ bool testRandomlySizedBlocks(void *engine, char *engineDesc, EMumPaddingType pad
     error = MumPlaintextBlockSize(engine, &plaintextBlockSize);
     error = MumEncryptedBlockSize(engine, &encryptedBlockSize);
 
-    uint8_t *plaintext = new uint8_t[1024 * 1024 + 4096];
-    uint8_t *encrypt = new uint8_t[1280 * 1024];
-    uint8_t *decrypt = new uint8_t[1024 * 1024 + 4096];
-    for (int test = 0; test < 25; test++)
+    int maxsize = 512*1024;
+    uint8_t *plaintext = new uint8_t[maxsize + 4096];
+    uint8_t *encrypt = new uint8_t[maxsize*5/4];
+    uint8_t *decrypt = new uint8_t[maxsize + 4096];
+    for (int test = 0; test < NUM_RANDOMSIZED_ITERATIONS; test++)
     {
-        // Pick random number between 1 and 256*1024
-        uint32_t plaintextSize = (rand() & 0x0003ffff) + 1;
+        // Pick random number between 1 and 512*1024
+        uint32_t plaintextSize = (rand() & (maxsize-1)) + 1;
 
         // Alternate between random fill and 32-bit int sequential fill
         if (test & 1)
@@ -687,8 +695,10 @@ bool testRandomlySizedBlocks(void *engine, char *engineDesc, EMumPaddingType pad
 
         uint32_t encrypted = 0;
         error = MumEncrypt(engine, plaintext, encrypt, plaintextSize, &encrypted, 0);
-        if (error != MUM_ERROR_OK)
+        if (error != MUM_ERROR_OK) {
+            printf("testRandomlySizedBlocks MumEncrypt error %d\n", error);
             return false;
+        }
 
         uint32_t decrypted = 0;
         error = MumDecrypt(engine, encrypt, decrypt, encrypted, &decrypted);
@@ -700,11 +710,11 @@ bool testRandomlySizedBlocks(void *engine, char *engineDesc, EMumPaddingType pad
             printf("testRandomlySizedBlocks plaintextSize != decrypted, %d %d\n", plaintextSize, decrypted);
             return false;
         }
-        if (!blockChecker(plaintext, decrypt, plaintextBlockSize))
+        if (!blockChecker(plaintext, decrypt, plaintextSize))
         {
-            printf("FAILED testRandomlySizedBlocks, engine %s, plaintextSize %d\n",
+            printf("blockChecker failed testRandomlySizedBlocks, engine %s, plaintextSize %d\n",
                    engineDesc, plaintextSize);
-            return false;
+            // return false;
         }
     }
     printf("SUCCESS testRandomlySizedBlocks, engine %s\n", engineDesc);
@@ -917,9 +927,8 @@ bool doTests()
 {
     for (int paddingIndex = 0; paddingIndex < TEST_NUM_PADDING_TYPES; paddingIndex++)
     {
-        // for (int engineIndex = 0; engineIndex < TEST_NUM_ENGINES; engineIndex++)
-        // {
-            int engineIndex = 2;
+        for (int engineIndex = 0; engineIndex < TEST_NUM_ENGINES; engineIndex++)
+        {
             for (int blockType = firstTestBlockTypeList[engineIndex]; blockType <= MUM_BLOCKTYPE_4096; blockType++)
             {
                 void *engine = MumCreateEngine(engineList[engineIndex], (EMumBlockType)blockType, paddingList[paddingIndex], TEST_MUM_NUM_THREADS);
@@ -932,7 +941,7 @@ bool doTests()
                 MumDestroyEngine(engine);
                 engine = NULL;
             }
-        // }
+        }
     }
     return true;
 }
@@ -1056,14 +1065,14 @@ int main(int argc, char *argv[])
 
     srand(utilGetTimeMillis());
 
-    if (!loadUrFiles())
+    if (!loadTestFiles())
         result = -1;
 
     if (!doTests())
         result = -1;
 
-    // if (!doProfilings())
-    //     result = -1;
+    if (!doProfilings())
+        result = -1;
 
     // if (!doMultiEngineTests() )
     // return -1;
@@ -1073,7 +1082,5 @@ int main(int argc, char *argv[])
     else
         printf("Done...but we failed someplace.\n");
 
-    // while (true)
-    //     ;
     return result;
 }
