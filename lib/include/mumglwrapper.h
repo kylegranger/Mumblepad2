@@ -22,7 +22,6 @@
 // SOFTWARE.
 //
 
-
 #ifndef __MUMGLWRAPPER_H
 #define __MUMGLWRAPPER_H
 
@@ -35,23 +34,18 @@
 #include "GLES2/gl2ext.h"
 #include "GLES2/gl2platform.h"
 
-
 #include "mumrenderer.h"
-
 
 #ifdef USE_OPENGL
 
+#define ESUTIL_API __cdecl
+#define ESCALLBACK __cdecl
 
-
-#define ESUTIL_API  __cdecl
-#define ESCALLBACK  __cdecl
-
-
-#define ES_WINDOW_RGB           0
-#define ES_WINDOW_ALPHA         1 
-#define ES_WINDOW_DEPTH         2 
-#define ES_WINDOW_STENCIL       4
-#define ES_WINDOW_MULTISAMPLE   8
+#define ES_WINDOW_RGB 0
+#define ES_WINDOW_ALPHA 1
+#define ES_WINDOW_DEPTH 2
+#define ES_WINDOW_STENCIL 4
+#define ES_WINDOW_MULTISAMPLE 8
 
 struct graphics_context
 {
@@ -67,17 +61,17 @@ struct graphics_context
     double lastframe;
 };
 
-typedef void (APIENTRYP PFNGLBINDTEXTUREPROC ) ( GLenum target, GLuint texture );
-typedef void (APIENTRYP PFNGLDELETETEXTURESPROC ) ( GLsizei n, const GLuint* textures );
-typedef void (APIENTRYP PFNGLDISABLEPROC ) ( GLenum cap );
-typedef void (APIENTRYP PFNGLDRAWELEMENTSPROC ) ( GLenum mode, GLsizei count, GLenum type, const GLvoid* indices );
-typedef void (APIENTRYP PFNGLENABLEPROC ) ( GLenum cap );
-typedef void (APIENTRYP PFNGLGENTEXTURESPROC ) ( GLsizei n, GLuint* textures );
-typedef void (APIENTRYP PFNGLREADPIXELSPROC ) ( GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLvoid* pixels );
-typedef void (APIENTRYP PFNGLTEXIMAGE2DPROC ) ( GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid* pixels );
-typedef void (APIENTRYP PFNGLTEXPARAMETERIPROC ) ( GLenum target, GLenum pname, GLint param );
-typedef void (APIENTRYP PFNGLTEXSUBIMAGE2DPROC ) ( GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid* pixels );
-typedef void (APIENTRYP PFNGLVIEWPORTPROC ) ( GLint x, GLint y, GLsizei width, GLsizei height );
+typedef void(APIENTRYP PFNGLBINDTEXTUREPROC)(GLenum target, GLuint texture);
+typedef void(APIENTRYP PFNGLDELETETEXTURESPROC)(GLsizei n, const GLuint *textures);
+typedef void(APIENTRYP PFNGLDISABLEPROC)(GLenum cap);
+typedef void(APIENTRYP PFNGLDRAWELEMENTSPROC)(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices);
+typedef void(APIENTRYP PFNGLENABLEPROC)(GLenum cap);
+typedef void(APIENTRYP PFNGLGENTEXTURESPROC)(GLsizei n, GLuint *textures);
+typedef void(APIENTRYP PFNGLREADPIXELSPROC)(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLvoid *pixels);
+typedef void(APIENTRYP PFNGLTEXIMAGE2DPROC)(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid *pixels);
+typedef void(APIENTRYP PFNGLTEXPARAMETERIPROC)(GLenum target, GLenum pname, GLint param);
+typedef void(APIENTRYP PFNGLTEXSUBIMAGE2DPROC)(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid *pixels);
+typedef void(APIENTRYP PFNGLVIEWPORTPROC)(GLint x, GLint y, GLsizei width, GLsizei height);
 
 class CMumGlWrapper
 {
@@ -85,7 +79,7 @@ public:
     CMumGlWrapper();
     ~CMumGlWrapper();
     bool Init();
-    GLuint LoadShader ( GLenum type, const char *shaderSrc );
+    GLuint LoadShader(GLenum type, const char *shaderSrc);
 
     PFNGLATTACHSHADERPROC glAttachShader;
     PFNGLBINDTEXTUREPROC glBindTexture;
@@ -98,7 +92,7 @@ public:
     PFNGLDELETEPROGRAMPROC glDeleteProgram;
     PFNGLDELETETEXTURESPROC glDeleteTextures;
     PFNGLDRAWELEMENTSPROC glDrawElements;
-    PFNGLDRAWBUFFERSPROC glDrawBuffers; 
+    PFNGLDRAWBUFFERSPROC glDrawBuffers;
     PFNGLDISABLEPROC glDisable;
     PFNGLENABLEPROC glEnable;
     PFNGLGETPROGRAMINFOLOGPROC glGetProgramInfoLog;
@@ -128,14 +122,10 @@ public:
     PFNGLTEXPARAMETERIPROC glTexParameteri;
     PFNGLVIEWPORTPROC glViewport;
 
-
 private:
-    GLuint LoadProgram ( const char *vertShaderSrc, const char *fragShaderSrc );
-
+    GLuint LoadProgram(const char *vertShaderSrc, const char *fragShaderSrc);
 };
 
-
 #endif
-
 
 #endif

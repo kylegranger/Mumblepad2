@@ -569,7 +569,6 @@ void CMumEngine::InitPermuteTables()
 
 EMumError CMumEngine::InitKey(uint8_t *key)
 {
-    printf("InitKey\n");
     memcpy(mMumInfo.key, key, MUM_KEY_SIZE);
     InitSubkeys();
     InitPermuteTables();
