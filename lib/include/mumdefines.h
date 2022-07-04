@@ -105,7 +105,7 @@ typedef struct TMumBlockR32
     uint8_t paddingA[32];
     uint8_t dataA[MUM_BLOCK_SIZE_A_R32];
     uint8_t paddingB[12];
-    uint8_t crc32[4];
+    uint8_t checksum[4];
     uint8_t length[2];
     uint8_t seqnum[2];
     uint8_t paddingC[12];
@@ -122,7 +122,7 @@ typedef struct TMumBlockR16
     uint8_t paddingA[16];
     uint8_t dataA[MUM_BLOCK_SIZE_A_R16];
     uint8_t paddingB[4];
-    uint8_t crc32[4];
+    uint8_t checksum[4];
     uint8_t length[2];
     uint8_t seqnum[2];
     uint8_t paddingC[4];
@@ -139,7 +139,7 @@ typedef struct TMumBlockR8
     uint8_t paddingA[4];
     uint8_t dataA[MUM_BLOCK_SIZE_A_R8];
     uint8_t paddingB[4];
-    uint8_t crc32[4];
+    uint8_t checksum[4];
     uint8_t length[2];
     uint8_t seqnum[2];
     uint8_t paddingC[4];
@@ -156,7 +156,7 @@ typedef struct TMumBlockR4
     uint8_t paddingA[2];
     uint8_t dataA[MUM_BLOCK_SIZE_A_R4];
     uint8_t paddingB[4];
-    uint8_t crc32[4];
+    uint8_t checksum[4];
     uint8_t length[2];
     uint8_t seqnum[2];
     uint8_t paddingC[4];
@@ -173,7 +173,7 @@ typedef struct TMumBlockR2
     uint8_t paddingA[2];
     uint8_t dataA[MUM_BLOCK_SIZE_A_R2];
     uint8_t paddingB[2];
-    uint8_t crc32[4];
+    uint8_t checksum[4];
     uint8_t length[2];
     uint8_t seqnum[2];
     uint8_t paddingC[2];
@@ -190,7 +190,7 @@ typedef struct TMumBlockR1
     uint8_t paddingA[2];
     uint8_t dataA[MUM_BLOCK_SIZE_A_R1];
     uint8_t paddingB[2];
-    uint8_t crc32[4];
+    uint8_t checksum[4];
     uint8_t length[2];
     uint8_t seqnum[2];
     uint8_t paddingC[2];

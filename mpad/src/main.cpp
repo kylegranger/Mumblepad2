@@ -51,16 +51,22 @@ void printUsage() {
     printf("         decrypt: strip the  mu1|mu2|mu3|mu4|mu5|mu6 extension from input file\n");
     printf("         (encrypted name), to derive original file name\n");
     printf("      -k <key-file> : required\n");
+#ifdef USE_OPENGL
     printf("      -e <engine-type> :: [ cpu | mt | gl | gl8 ]\n");
     printf("         single-threaded, multi-threaded, OpenGL single stage, OpenGL with 8 stages\n");
+#else
+    printf("      -e <engine-type> :: [ cpu | mt ]\n");
+#endif
     printf("         is optional, default is cpu\n");
     printf("      -b <block-size>  : [ 128 | 256 | 512 | 1024 | 2048 | 4096 ]\n");
     printf("         this is the block size\n");
     printf("         is optional for encrypt & decrypt, default is 128\n");
     printf("         if decrypt input file name has extension mu1|mu2|mu3|mu4|mu5|mu6, \n");
     printf("         the extension will determine the block size used for decryption.\n");
+#ifdef USE_OPENGL
     printf("         gl8 only uses blocks of size 4096, and will override a block \n");
     printf("         size in the command line\n\n");
+#endif
 }
 
 bool parseCommandLine(int argc, char *argv[], TJob &job) {
@@ -126,12 +132,14 @@ bool parseCommandLine(int argc, char *argv[], TJob &job) {
         } else if (engine.compare("mt") == 0) {
             job.engineType = MUM_ENGINE_TYPE_CPU_MT;
             printf("engine type is MUM_ENGINE_TYPE_CPU_MT\n");
+#ifdef USE_OPENGL
         } else if (engine.compare("gl") == 0) {
             job.engineType = MUM_ENGINE_TYPE_GPU_A;
             printf("engine type is MUM_ENGINE_TYPE_GPU_A\n");
         } else if (engine.compare("gl8") == 0) {
             job.engineType = MUM_ENGINE_TYPE_GPU_B;
             printf("engine type is MUM_ENGINE_TYPE_GPU_B\n");
+#endif
         } else {
             printf("unknown engine type: %s\n", engine.c_str());
             return 0;

@@ -845,10 +845,10 @@ bool doMultiEngineTest(EMumEngineType engineType1, EMumEngineType engineType2,
 
     fillRandomly(clavier, MUM_KEY_SIZE);
 
-    void *engine1 = MumCreateEngine(MUM_ENGINE_TYPE_CPU, blockType, MUM_PADDING_TYPE_ON, 0);
+    void *engine1 = MumCreateEngine(engineType1, blockType, MUM_PADDING_TYPE_ON, 0);
     error = MumInitKey(engine1, clavier);
 
-    void *engine2 = MumCreateEngine(MUM_ENGINE_TYPE_GPU_A, blockType, MUM_PADDING_TYPE_ON, 0);
+    void *engine2 = MumCreateEngine(engineType2, blockType, MUM_PADDING_TYPE_ON, 0);
     error = MumInitKey(engine2, clavier);
 
     if (!multiTest(engine1, engine2))
@@ -917,21 +917,31 @@ bool doMultiEngineTests()
 {
     for (int blockType = MUM_BLOCKTYPE_128; blockType <= MUM_BLOCKTYPE_4096; blockType++)
     {
+#ifdef USE_OPENGL
         if (!doMultiEngineTest(
                 MUM_ENGINE_TYPE_CPU,
                 MUM_ENGINE_TYPE_GPU_A,
                 (EMumBlockType)blockType,
                 "CPU + GPUA"))
             return false;
+#else
+        if (!doMultiEngineTest(
+                MUM_ENGINE_TYPE_CPU,
+                MUM_ENGINE_TYPE_CPU_MT,
+                (EMumBlockType)blockType,
+                "CPU + MY"))
+            return false;
+#endif
     }
 
+#ifdef USE_OPENGL
     if (!doMultiEngineTest(
             MUM_ENGINE_TYPE_CPU_MT,
             MUM_ENGINE_TYPE_GPU_B,
             MUM_BLOCKTYPE_4096,
             "MT + GPUB"))
         return false;
-
+#endif
     return true;
 }
 
