@@ -1,6 +1,6 @@
 # Mumblepad2
 
-The project is the spiritual successor to Mumblepad.
+This project is the spiritual successor to Mumblepad.
 
 - now ported to Linux
 - MIT license
@@ -34,10 +34,9 @@ The multi-threaded implementation can encrypt or decrypt 210MB per second on an 
 
 
 ## Future directions
-- hash semi-large key files (e.g., 1-5 MB images) to deterministically create a 4096-byte key; right now, we use whatever the first 4K bytes are in the keyfile.
 - port back to Windows, using cmake system.
 - investigate WebGPU render shaders or compute shaders, running at full GPU speed in a browser
-- further optimizations
+- further optimizations, especially multi-threaded and GPU implementations.
 
 # Building
 
@@ -53,7 +52,7 @@ The default build type is Release.  To build debug, run this instead:
 
     cmake -B build -DCMAKE_BUILD_TYPE=Debug
 
-The binaries are copied into the out folder at the project root. You will find:
+The binaries are copied into the `out` folder at the project root. You will find:
 - libmumblepad.a
 - mpad
 - test
@@ -71,7 +70,7 @@ And then
 
 # mpad
 
-This is a demo application that encrypts and decrypts files using a given key.
+`mpad` is a demo application that encrypts and decrypts files using a given key.
 
 
 ```
@@ -80,7 +79,7 @@ Usage of mpad:
    Options:
       -i <input-file> : required
       -o <output-file> 
-         is optional; if missing, and preferred, mpad will auto create file name
+         is optional; if missing, mpad will auto create the output file name
          by appending mu1|mu2|mu3|mu4|mu5|mu6 extension to input file name
       -k <key-file> : required
       -e <engine-type> :: [ cpu | mt | gl | gl8 ]
@@ -100,7 +99,7 @@ Examples:
 
 Defaults to block size 128. Auto generates output file name
 ```
-$ mpad/mpad encrypt -k key.bin -i test.jpg
+$ out/mpad encrypt -k key.bin -i test.jpg
 keyfile: key.bin
 infile: test.jpg
 using output file test.jpg.mu1
@@ -109,7 +108,7 @@ using output file test.jpg.mu1
 
 Using a larger block results is a slighly smaller file because there are less padding bytes per block.
 ```
-$ mpad/mpad encrypt -k key.bin -i test.jpg -b 2048
+$ out/mpad encrypt -k key.bin -i test.jpg -b 2048
 keyfile: key.bin
 infile: test.jpg
 block: 2048
@@ -119,7 +118,7 @@ using output file test.jpg.mu5
 
 Decrypt goes like this:
 ```
-mpad/mpad decrypt -k key.bin -i test.jpg.mu5
+out/mpad decrypt -k key.bin -i test.jpg.mu5
 ```
 
 You will get the same result regardless of which render engine you use.  You could encrypt with with the gl engine and decrypt with the mt engine -- the resulting decrypted file will still match the original.
@@ -127,7 +126,7 @@ You will get the same result regardless of which render engine you use.  You cou
 
 # test
 
-The test application runs various block checking scenarios, and well as profiling each of the render engines.  It must be run from the same directory as the testfiles (i.e., the root).  After successfully building, the executable will be located in the out directory
+The test application runs various block checking scenarios, and well as profiling each of the render engines.  It must be run from the same directory as the testfiles (i.e., the root).  After a successful build, the executable will be located in the `out` directory
 
 To run it:
 
