@@ -218,9 +218,11 @@ bool encrypt(TJob job) {
     auto error = MumLoadKey(engine, job.keyfile.c_str());
     if (error != MUM_ERROR_OK)
     {
-        printf("failed MumLoadKey %s, error %d\n",
-            job.keyfile.c_str(),
-            error);
+        if (error == MUM_ERROR_KEYFILE_SMALL) {
+            printf("key file %s was too small, smaller than 4096 bytes\n",job.keyfile.c_str());
+        } else {
+            printf("could not load key file %s\n",job.keyfile.c_str());
+        }
         MumDestroyEngine(engine);
         return false;
     }
@@ -228,10 +230,13 @@ bool encrypt(TJob job) {
     error = MumEncryptFile(engine, job.infile.c_str(), job.outfile.c_str());
     if (error != MUM_ERROR_OK)
     {
-        printf("failed MumEncryptFile %s %s, error %d\n",
-            job.infile.c_str(),
-            job.outfile.c_str(),
-            error);
+        if (error == MUM_ERROR_FILEIO_INPUT) {
+            printf("could not open input file %s for encryption\n", job.infile.c_str());
+        } else if (error == MUM_ERROR_FILEIO_OUTPUT) {
+            printf("could not open output file %s for encryption\n", job.outfile.c_str());
+        } else {
+            printf("could not perform encryption\n");
+        }
         MumDestroyEngine(engine);
         return false;
     }
@@ -254,10 +259,13 @@ bool decrypt(TJob job) {
     error = MumDecryptFile(engine, job.infile.c_str(), job.outfile.c_str());
     if (error != MUM_ERROR_OK)
     {
-        printf("failed MumEncryptFile %s %s, error %d\n",
-            job.infile.c_str(),
-            job.outfile.c_str(),
-            error);
+        if (error == MUM_ERROR_FILEIO_INPUT) {
+            printf("could not open input file %s for decryption\n", job.infile.c_str());
+        } else if (error == MUM_ERROR_FILEIO_OUTPUT) {
+            printf("could not open output file %s for decryption\n", job.outfile.c_str());
+        } else {
+            printf("could not perform decryption\n");
+        }
         MumDestroyEngine(engine);
         return false;
     }

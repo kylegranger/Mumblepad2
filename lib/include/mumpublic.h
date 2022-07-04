@@ -64,6 +64,7 @@ typedef enum EMumError {
     MUM_ERROR_INVALID_ENCRYPTED_BLOCK_BLOCKTYPE = -1018,
     MUM_ERROR_INVALID_ENCRYPTED_BLOCK_LENGTH = -1019,
     MUM_ERROR_INVALID_ENCRYPTED_BLOCK_CRC32 = -1020,
+    MUM_ERROR_KEYFILE_SMALL = -1021,
 } EMumError;
 
 typedef enum EMumBlockType {
@@ -113,7 +114,7 @@ extern EMumError MumCreateEncryptedFileName(EMumBlockType blockType, const char 
 // returns original filename (stripped of Mumblepad extension), plus block type used.
 extern EMumError MumGetInfoFromEncryptedFileName(const char *encryptname, EMumBlockType *blockType, char *decryptname, size_t outlength);
 // just returns block type, if exists in file extension; returns invalid block if not found
-EMumBlockType MumGetBlockTypeFromEncryptedFileName(const char *encryptname);
+extern EMumBlockType MumGetBlockTypeFromEncryptedFileName(const char *encryptname);
 
 
 #endif

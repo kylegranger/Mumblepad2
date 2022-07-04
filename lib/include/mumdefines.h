@@ -198,9 +198,6 @@ typedef struct TMumBlockR1
     uint8_t paddingD[2];
 } TMumBlockR1;
 
-
-
-
 typedef struct TMumInfo 
 {
     EMumEngineType engineType;
@@ -212,7 +209,6 @@ typedef struct TMumInfo
     uint32_t encryptedBlockSize;
     uint32_t paddingSize;
     uint32_t numRoundsPerBlock;
-
 
     uint8_t key[MUM_KEY_SIZE];
     uint8_t subkeys[MUM_NUM_SUBKEYS][MUM_KEY_SIZE];

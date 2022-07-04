@@ -583,7 +583,6 @@ EMumError CMumEngine::LoadKey(const char *keyfile)
 {
     FILE *f = fopen(keyfile, "rb");
     if (!f) {
-        printf("cannot open file %s\n",keyfile);
         return MUM_ERROR_KEYFILE_READ;
     }
 
@@ -591,8 +590,7 @@ EMumError CMumEngine::LoadKey(const char *keyfile)
     size_t res = fread(key, 1, MUM_KEY_SIZE, f);
     fclose(f);
     if (res != MUM_KEY_SIZE) {
-        printf("bad res for key read %ld\n",res);
-        return MUM_ERROR_KEYFILE_READ;
+        return MUM_ERROR_KEYFILE_SMALL;
     }
     return InitKey(key);
 }
