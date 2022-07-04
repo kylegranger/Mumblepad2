@@ -66,9 +66,8 @@ protected:
     uint8_t mTable[256];
 
 
-    uint32_t ComputeCrc32(uint8_t *data, uint32_t size);
+    uint32_t ComputeChecksum(uint8_t *data, uint32_t size);
     void SetPadding(uint8_t *src, uint32_t length);
-    void GenerateCrc32Table();
 
     EMumError(CMumRenderer::*packData)(uint8_t *unpackedData, uint32_t length, uint32_t seqnum);
     EMumError(CMumRenderer::*unpackData)(uint8_t *unpackedData, uint32_t *length, uint32_t *seqnum);

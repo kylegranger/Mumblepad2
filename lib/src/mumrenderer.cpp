@@ -254,7 +254,7 @@ EMumError CMumRenderer::PackDataR32(uint8_t *unpackedData, uint32_t length, uint
     if (length > MUM_ENCRYPT_SIZE_R32)
         return MUM_ERROR_INVALID_ENCRYPT_SIZE;
 
-    uint32_t crc32 = ComputeCrc32(unpackedData, MUM_ENCRYPT_SIZE_R32);
+    uint32_t checksum = ComputeChecksum(unpackedData, MUM_ENCRYPT_SIZE_R32);
 
     // first third of padding
     memcpy(block->paddingA, &mPadding[0], 32);
@@ -266,13 +266,13 @@ EMumError CMumRenderer::PackDataR32(uint8_t *unpackedData, uint32_t length, uint
     // second part of paddingxx
     memcpy(block->paddingB, &mPadding[32], 12);
 
-    block->crc32[0] = (uint8_t)crc32;
-    crc32 >>= 8;
-    block->crc32[1] = (uint8_t)crc32;
-    crc32 >>= 8;
-    block->crc32[2] = (uint8_t)crc32;
-    crc32 >>= 8;
-    block->crc32[3] = (uint8_t)crc32;
+    block->checksum[0] = (uint8_t)checksum;
+    checksum >>= 8;
+    block->checksum[1] = (uint8_t)checksum;
+    checksum >>= 8;
+    block->checksum[2] = (uint8_t)checksum;
+    checksum >>= 8;
+    block->checksum[3] = (uint8_t)checksum;
     length += (MUM_BLOCKTYPE_4096 << MUM_LENGTH_BLOCKTYPE_SHIFT);
     block->length[0] = (uint8_t)(length % 256);
     block->length[1] = (uint8_t)(length / 256);
@@ -308,16 +308,16 @@ EMumError CMumRenderer::UnpackDataR32(uint8_t *unpackedData, uint32_t *length, u
         return MUM_ERROR_INVALID_ENCRYPTED_BLOCK_LENGTH;
     }
 
-    uint32_t crc32A = block->crc32[0];
-    crc32A += block->crc32[1] << 8;
-    crc32A += block->crc32[2] << 16;
-    crc32A += block->crc32[3] << 24;
-    uint32_t crc32B = ComputeCrc32(unpackedData, MUM_ENCRYPT_SIZE_R32);
-    // if (crc32A != crc32B)
-    // {
-    //     *length = 0;
-    //     return MUM_ERROR_INVALID_ENCRYPTED_BLOCK_CRC32;
-    // }
+    uint32_t checksumA = block->checksum[0];
+    checksumA += block->checksum[1] << 8;
+    checksumA += block->checksum[2] << 16;
+    checksumA += block->checksum[3] << 24;
+    uint32_t checksumB = ComputeChecksum(unpackedData, MUM_ENCRYPT_SIZE_R32);
+    if (checksumA != checksumB)
+    {
+        *length = 0;
+        return MUM_ERROR_INVALID_ENCRYPTED_BLOCK_CHECKSUM;
+    }
 
     *seqnum = block->seqnum[0];
     *seqnum += block->seqnum[1] << 8;
@@ -331,7 +331,7 @@ EMumError CMumRenderer::PackDataR16(uint8_t *unpackedData, uint32_t length, uint
     if (length > MUM_ENCRYPT_SIZE_R16)
         return MUM_ERROR_INVALID_ENCRYPT_SIZE;
 
-    uint32_t crc32 = ComputeCrc32(unpackedData, MUM_ENCRYPT_SIZE_R16);
+    uint32_t checksum = ComputeChecksum(unpackedData, MUM_ENCRYPT_SIZE_R16);
 
     // first third of padding
     memcpy(block->paddingA, &mPadding[0], 16);
@@ -343,13 +343,13 @@ EMumError CMumRenderer::PackDataR16(uint8_t *unpackedData, uint32_t length, uint
     // second part of padding
     memcpy(block->paddingB, &mPadding[16], 4);
 
-    block->crc32[0] = (uint8_t)crc32;
-    crc32 >>= 8;
-    block->crc32[1] = (uint8_t)crc32;
-    crc32 >>= 8;
-    block->crc32[2] = (uint8_t)crc32;
-    crc32 >>= 8;
-    block->crc32[3] = (uint8_t)crc32;
+    block->checksum[0] = (uint8_t)checksum;
+    checksum >>= 8;
+    block->checksum[1] = (uint8_t)checksum;
+    checksum >>= 8;
+    block->checksum[2] = (uint8_t)checksum;
+    checksum >>= 8;
+    block->checksum[3] = (uint8_t)checksum;
     length += (MUM_BLOCKTYPE_2048 << MUM_LENGTH_BLOCKTYPE_SHIFT);
     block->length[0] = (uint8_t)(length % 256);
     block->length[1] = (uint8_t)(length / 256);
@@ -385,16 +385,16 @@ EMumError CMumRenderer::UnpackDataR16(uint8_t *unpackedData, uint32_t *length, u
         return MUM_ERROR_INVALID_ENCRYPTED_BLOCK_LENGTH;
     }
 
-    uint32_t crc32A = block->crc32[0];
-    crc32A += block->crc32[1] << 8;
-    crc32A += block->crc32[2] << 16;
-    crc32A += block->crc32[3] << 24;
-    uint32_t crc32B = ComputeCrc32(unpackedData, MUM_ENCRYPT_SIZE_R16);
-    // if (crc32A != crc32B)
-    // {
-    //     *length = 0;
-    //     return MUM_ERROR_INVALID_ENCRYPTED_BLOCK_CRC32;
-    // }
+    uint32_t checksumA = block->checksum[0];
+    checksumA += block->checksum[1] << 8;
+    checksumA += block->checksum[2] << 16;
+    checksumA += block->checksum[3] << 24;
+    uint32_t checksumB = ComputeChecksum(unpackedData, MUM_ENCRYPT_SIZE_R16);
+    if (checksumA != checksumB)
+    {
+        *length = 0;
+        return MUM_ERROR_INVALID_ENCRYPTED_BLOCK_CHECKSUM;
+    }
 
     *seqnum = block->seqnum[0];
     *seqnum += block->seqnum[1] << 8;
@@ -408,7 +408,7 @@ EMumError CMumRenderer::PackDataR8(uint8_t *unpackedData, uint32_t length, uint3
     if (length > MUM_ENCRYPT_SIZE_R8)
         return MUM_ERROR_INVALID_ENCRYPT_SIZE;
 
-    uint32_t crc32 = ComputeCrc32(unpackedData, MUM_ENCRYPT_SIZE_R8);
+    uint32_t checksum = ComputeChecksum(unpackedData, MUM_ENCRYPT_SIZE_R8);
 
     // first third of padding
     memcpy(block->paddingA, &mPadding[0], 4);
@@ -420,13 +420,13 @@ EMumError CMumRenderer::PackDataR8(uint8_t *unpackedData, uint32_t length, uint3
     // second part of padding
     memcpy(block->paddingB, &mPadding[4], 4);
 
-    block->crc32[0] = (uint8_t)crc32;
-    crc32 >>= 8;
-    block->crc32[1] = (uint8_t)crc32;
-    crc32 >>= 8;
-    block->crc32[2] = (uint8_t)crc32;
-    crc32 >>= 8;
-    block->crc32[3] = (uint8_t)crc32;
+    block->checksum[0] = (uint8_t)checksum;
+    checksum >>= 8;
+    block->checksum[1] = (uint8_t)checksum;
+    checksum >>= 8;
+    block->checksum[2] = (uint8_t)checksum;
+    checksum >>= 8;
+    block->checksum[3] = (uint8_t)checksum;
     length += (MUM_BLOCKTYPE_1024 << MUM_LENGTH_BLOCKTYPE_SHIFT);
     block->length[0] = (uint8_t)(length % 256);
     block->length[1] = (uint8_t)(length / 256);
@@ -462,16 +462,16 @@ EMumError CMumRenderer::UnpackDataR8(uint8_t *unpackedData, uint32_t *length, ui
         return MUM_ERROR_INVALID_ENCRYPTED_BLOCK_LENGTH;
     }
 
-    uint32_t crc32A = block->crc32[0];
-    crc32A += block->crc32[1] << 8;
-    crc32A += block->crc32[2] << 16;
-    crc32A += block->crc32[3] << 24;
-    uint32_t crc32B = ComputeCrc32(unpackedData, MUM_ENCRYPT_SIZE_R8);
-    // if (crc32A != crc32B)
-    // {
-    //     *length = 0;
-    //     return MUM_ERROR_INVALID_ENCRYPTED_BLOCK_CRC32;
-    // }
+    uint32_t checksumA = block->checksum[0];
+    checksumA += block->checksum[1] << 8;
+    checksumA += block->checksum[2] << 16;
+    checksumA += block->checksum[3] << 24;
+    uint32_t checksumB = ComputeChecksum(unpackedData, MUM_ENCRYPT_SIZE_R8);
+    if (checksumA != checksumB)
+    {
+        *length = 0;
+        return MUM_ERROR_INVALID_ENCRYPTED_BLOCK_CHECKSUM;
+    }
 
     *seqnum = block->seqnum[0];
     *seqnum += block->seqnum[1] << 8;
@@ -485,7 +485,7 @@ EMumError CMumRenderer::PackDataR4(uint8_t *unpackedData, uint32_t length, uint3
     if (length > MUM_ENCRYPT_SIZE_R4)
         return MUM_ERROR_INVALID_ENCRYPT_SIZE;
 
-    uint32_t crc32 = ComputeCrc32(unpackedData, MUM_ENCRYPT_SIZE_R4);
+    uint32_t checksum = ComputeChecksum(unpackedData, MUM_ENCRYPT_SIZE_R4);
 
     // first third of padding
     memcpy(block->paddingA, &mPadding[0], 2);
@@ -497,13 +497,13 @@ EMumError CMumRenderer::PackDataR4(uint8_t *unpackedData, uint32_t length, uint3
     // second part of padding
     memcpy(block->paddingB, &mPadding[2], 2);
 
-    block->crc32[0] = (uint8_t)crc32;
-    crc32 >>= 8;
-    block->crc32[1] = (uint8_t)crc32;
-    crc32 >>= 8;
-    block->crc32[2] = (uint8_t)crc32;
-    crc32 >>= 8;
-    block->crc32[3] = (uint8_t)crc32;
+    block->checksum[0] = (uint8_t)checksum;
+    checksum >>= 8;
+    block->checksum[1] = (uint8_t)checksum;
+    checksum >>= 8;
+    block->checksum[2] = (uint8_t)checksum;
+    checksum >>= 8;
+    block->checksum[3] = (uint8_t)checksum;
     length += (MUM_BLOCKTYPE_512 << MUM_LENGTH_BLOCKTYPE_SHIFT);
     block->length[0] = (uint8_t)(length % 256);
     block->length[1] = (uint8_t)(length / 256);
@@ -539,16 +539,16 @@ EMumError CMumRenderer::UnpackDataR4(uint8_t *unpackedData, uint32_t *length, ui
         return MUM_ERROR_INVALID_ENCRYPTED_BLOCK_LENGTH;
     }
 
-    uint32_t crc32A = block->crc32[0];
-    crc32A += block->crc32[1] << 8;
-    crc32A += block->crc32[2] << 16;
-    crc32A += block->crc32[3] << 24;
-    uint32_t crc32B = ComputeCrc32(unpackedData, MUM_ENCRYPT_SIZE_R4);
-    // if (crc32A != crc32B)
-    // {
-    //     *length = 0;
-    //     return MUM_ERROR_INVALID_ENCRYPTED_BLOCK_CRC32;
-    // }
+    uint32_t checksumA = block->checksum[0];
+    checksumA += block->checksum[1] << 8;
+    checksumA += block->checksum[2] << 16;
+    checksumA += block->checksum[3] << 24;
+    uint32_t checksumB = ComputeChecksum(unpackedData, MUM_ENCRYPT_SIZE_R4);
+    if (checksumA != checksumB)
+    {
+        *length = 0;
+        return MUM_ERROR_INVALID_ENCRYPTED_BLOCK_CHECKSUM;
+    }
 
     *seqnum = block->seqnum[0];
     *seqnum += block->seqnum[1] << 8;
@@ -562,7 +562,7 @@ EMumError CMumRenderer::PackDataR2(uint8_t *unpackedData, uint32_t length, uint3
     if (length > MUM_ENCRYPT_SIZE_R2)
         return MUM_ERROR_INVALID_ENCRYPT_SIZE;
 
-    uint32_t crc32 = ComputeCrc32(unpackedData, MUM_ENCRYPT_SIZE_R2);
+    uint32_t checksum = ComputeChecksum(unpackedData, MUM_ENCRYPT_SIZE_R2);
 
     // first third of padding
     memcpy(block->paddingA, &mPadding[0], 2);
@@ -574,13 +574,13 @@ EMumError CMumRenderer::PackDataR2(uint8_t *unpackedData, uint32_t length, uint3
     // second part of padding
     memcpy(block->paddingB, &mPadding[2], 2);
 
-    block->crc32[0] = (uint8_t)crc32;
-    crc32 >>= 8;
-    block->crc32[1] = (uint8_t)crc32;
-    crc32 >>= 8;
-    block->crc32[2] = (uint8_t)crc32;
-    crc32 >>= 8;
-    block->crc32[3] = (uint8_t)crc32;
+    block->checksum[0] = (uint8_t)checksum;
+    checksum >>= 8;
+    block->checksum[1] = (uint8_t)checksum;
+    checksum >>= 8;
+    block->checksum[2] = (uint8_t)checksum;
+    checksum >>= 8;
+    block->checksum[3] = (uint8_t)checksum;
     length += (MUM_BLOCKTYPE_256 << MUM_LENGTH_BLOCKTYPE_SHIFT);
     block->length[0] = (uint8_t)(length % 256);
     block->length[1] = (uint8_t)(length / 256);
@@ -616,16 +616,16 @@ EMumError CMumRenderer::UnpackDataR2(uint8_t *unpackedData, uint32_t *length, ui
         return MUM_ERROR_INVALID_ENCRYPTED_BLOCK_LENGTH;
     }
 
-    uint32_t crc32A = block->crc32[0];
-    crc32A += block->crc32[1] << 8;
-    crc32A += block->crc32[2] << 16;
-    crc32A += block->crc32[3] << 24;
-    uint32_t crc32B = ComputeCrc32(unpackedData, MUM_ENCRYPT_SIZE_R2);
-    // if (crc32A != crc32B)
-    // {
-    //     *length = 0;
-    //     return MUM_ERROR_INVALID_ENCRYPTED_BLOCK_CRC32;
-    // }
+    uint32_t checksumA = block->checksum[0];
+    checksumA += block->checksum[1] << 8;
+    checksumA += block->checksum[2] << 16;
+    checksumA += block->checksum[3] << 24;
+    uint32_t checksumB = ComputeChecksum(unpackedData, MUM_ENCRYPT_SIZE_R2);
+    if (checksumA != checksumB)
+    {
+        *length = 0;
+        return MUM_ERROR_INVALID_ENCRYPTED_BLOCK_CHECKSUM;
+    }
 
     *seqnum = block->seqnum[0];
     *seqnum += block->seqnum[1] << 8;
@@ -639,7 +639,7 @@ EMumError CMumRenderer::PackDataR1(uint8_t *unpackedData, uint32_t length, uint3
     if (length > MUM_ENCRYPT_SIZE_R1)
         return MUM_ERROR_INVALID_ENCRYPT_SIZE;
 
-    uint32_t crc32 = ComputeCrc32(unpackedData, MUM_ENCRYPT_SIZE_R1);
+    uint32_t checksum = ComputeChecksum(unpackedData, MUM_ENCRYPT_SIZE_R1);
 
     // first third of padding
     memcpy(block->paddingA, &mPadding[0], 2);
@@ -651,13 +651,13 @@ EMumError CMumRenderer::PackDataR1(uint8_t *unpackedData, uint32_t length, uint3
     // second part of padding
     memcpy(block->paddingB, &mPadding[2], 2);
 
-    block->crc32[0] = (uint8_t)crc32;
-    crc32 >>= 8;
-    block->crc32[1] = (uint8_t)crc32;
-    crc32 >>= 8;
-    block->crc32[2] = (uint8_t)crc32;
-    crc32 >>= 8;
-    block->crc32[3] = (uint8_t)crc32;
+    block->checksum[0] = (uint8_t)checksum;
+    checksum >>= 8;
+    block->checksum[1] = (uint8_t)checksum;
+    checksum >>= 8;
+    block->checksum[2] = (uint8_t)checksum;
+    checksum >>= 8;
+    block->checksum[3] = (uint8_t)checksum;
     length += (MUM_BLOCKTYPE_128 << MUM_LENGTH_BLOCKTYPE_SHIFT);
     block->length[0] = (uint8_t)(length % 256);
     block->length[1] = (uint8_t)(length / 256);
@@ -693,49 +693,29 @@ EMumError CMumRenderer::UnpackDataR1(uint8_t *unpackedData, uint32_t *length, ui
         return MUM_ERROR_INVALID_ENCRYPTED_BLOCK_LENGTH;
     }
 
-    uint32_t crc32A = block->crc32[0];
-    crc32A += block->crc32[1] << 8;
-    crc32A += block->crc32[2] << 16;
-    crc32A += block->crc32[3] << 24;
-    uint32_t crc32B = ComputeCrc32(unpackedData, MUM_ENCRYPT_SIZE_R1);
-    // if (crc32A != crc32B)
-    // {
-    //     *length = 0;
-    //     return MUM_ERROR_INVALID_ENCRYPTED_BLOCK_CRC32;
-    // }
+    uint32_t checksumA = block->checksum[0];
+    checksumA += block->checksum[1] << 8;
+    checksumA += block->checksum[2] << 16;
+    checksumA += block->checksum[3] << 24;
+    uint32_t checksumB = ComputeChecksum(unpackedData, MUM_ENCRYPT_SIZE_R1);
+    if (checksumA != checksumB)
+    {
+        *length = 0;
+        return MUM_ERROR_INVALID_ENCRYPTED_BLOCK_CHECKSUM;
+    }
 
     *seqnum = block->seqnum[0];
     *seqnum += block->seqnum[1] << 8;
     return MUM_ERROR_OK;
 }
 
-void CMumRenderer::GenerateCrc32Table()
+uint32_t CMumRenderer::ComputeChecksum(uint8_t *data, uint32_t size)
 {
-    uint32_t polynomial = 0xEDB88320;
-    for (uint32_t i = 0; i < 256; i++) 
-    {
-        uint32_t c = i;
-        for (size_t j = 0; j < 8; j++) 
-        {
-            if (c & 1) {
-                c = polynomial ^ (c >> 1);
-            }
-            else {
-                c >>= 1;
-            }
-        }
-        mTable[i] = c;
-    }
-}
-
-uint32_t CMumRenderer::ComputeCrc32(uint8_t *data, uint32_t size)
-{
-    uint32_t c = 0xFFFFFFFF;
-    for (size_t i = 0; i < size; ++i) 
-    {
-        c = mTable[(c ^ data[i]) & 0xFF] ^ (c >> 8);
-    }
-    return c ^ 0xFFFFFFFF;
+    uint32_t checksum = 0;
+    uint32_t *iptr = (uint32_t *)data;
+    for (uint32_t i = 0; i < size / 4; i++)
+        checksum += *iptr++;
+    return checksum;
 }
 
 void CMumRenderer::SetPadding(uint8_t *src, uint32_t length)
