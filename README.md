@@ -95,6 +95,8 @@ Usage of mpad:
 
 ```
 
+Note:  the `gl` and `gl8` engines are not available if the library and utilities are built without the `USE_OPENGL` compile flag.
+
 Examples:
 
 Defaults to block size 128. Auto generates output file name
