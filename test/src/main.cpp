@@ -656,15 +656,16 @@ bool testRandomlySizedBlocks(void *engine, char *engineDesc, EMumPaddingType pad
             printf("testRandomlySizedBlocks error %d, encryptedLen %d\n", error, encryptedLen);
             return false;
         }
+
         if (paddingType == MUM_PADDING_TYPE_ON && plaintextSize != decryptedLen) {
             printf("testRandomlySizedBlocks plaintextSize != decrypted, %d %d\n", plaintextSize, decryptedLen);
             return false;
         }
+
         if (!blockChecker(plaintext, decrypt, plaintextSize))
         {
             printf("blockChecker failed testRandomlySizedBlocks, engine %s, plaintextSize %d\n",
                    engineDesc, plaintextSize);
-            // return false;
         }
     }
     printf("SUCCESS testRandomlySizedBlocks, engine %s\n", engineDesc);
