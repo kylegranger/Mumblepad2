@@ -24,9 +24,9 @@
 
 #include "mumpublic.h"
 #include "mumengine.h"
-#include "stdio.h"
+#include <stdio.h>
 #include <string.h>
-#include "assert.h"
+#include <assert.h>
 
 EMumError MumEncryptedSize(void *mev, uint32_t plaintextSize, uint32_t *encryptedSize)
 {

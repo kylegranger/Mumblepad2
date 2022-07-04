@@ -23,10 +23,10 @@
 //
 
 #include "mumblepad.h"
-#include "malloc.h"
-#include "string.h"
-#include "assert.h"
-#include "stdio.h"
+#include <malloc.h>
+#include <string.h>
+#include <assert.h>
+#include <stdio.h>
 
 CMumblepad::CMumblepad(TMumInfo *mumInfo) : CMumRenderer(mumInfo)
 {

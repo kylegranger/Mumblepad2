@@ -23,10 +23,10 @@
 //
 
 #include "mumblepadthread.h"
-#include "malloc.h"
-#include "string.h"
-#include "assert.h"
-#include "stdio.h"
+#include <malloc.h>
+#include <string.h>
+#include <assert.h>
+#include <stdio.h>
 
 int MumRun(void *param)
 {

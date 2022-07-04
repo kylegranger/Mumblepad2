@@ -24,8 +24,8 @@
 
 #include <assert.h>
 #include <string.h>
-#include "stdio.h"
-#include "stdlib.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include "mumrenderer.h"
 
 CMumRenderer::CMumRenderer(TMumInfo *mumInfo)

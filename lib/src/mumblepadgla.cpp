@@ -22,9 +22,9 @@
 // SOFTWARE.
 //
 
-#include "stdio.h"
-#include "malloc.h"
-#include "assert.h"
+#include <stdio.h>
+#include <malloc.h>
+#include <assert.h>
 #include "mumblepadgla.h"
 
 #ifdef USE_OPENGL

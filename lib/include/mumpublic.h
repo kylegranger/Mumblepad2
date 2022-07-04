@@ -25,8 +25,8 @@
 #ifndef MUMPUBLIC_H
 #define MUMPUBLIC_H
 
-#include "stddef.h"
-#include "stdint.h"
+#include <stddef.h>
+#include <stdint.h>
 
 #define MUM_KEY_SIZE          4096
 #define MUM_MAX_BLOCK_SIZE    4096
