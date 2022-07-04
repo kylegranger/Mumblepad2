@@ -123,7 +123,7 @@ bool parseCommandLine(int argc, char *argv[], TJob &job) {
         if (engine.compare("cpu") == 0) {
             job.engineType = MUM_ENGINE_TYPE_CPU;
             printf("engine type is MUM_ENGINE_TYPE_CPU\n");
-        } else if (engine.compare("mp") == 0) {
+        } else if (engine.compare("mt") == 0) {
             job.engineType = MUM_ENGINE_TYPE_CPU_MT;
             printf("engine type is MUM_ENGINE_TYPE_CPU_MT\n");
         } else if (engine.compare("gl") == 0) {
@@ -140,22 +140,16 @@ bool parseCommandLine(int argc, char *argv[], TJob &job) {
     if (block.length() > 0) {
         if (block.compare("128") == 0) {
             job.blockType = MUM_BLOCKTYPE_128;
-            printf("block type is MUM_BLOCKTYPE_128\n");
         } else if (block.compare("256") == 0) {
             job.blockType = MUM_BLOCKTYPE_256;
-            printf("block type is MUM_BLOCKTYPE_256\n");
         } else if (block.compare("512") == 0) {
             job.blockType = MUM_BLOCKTYPE_512;
-            printf("block type is MUM_BLOCKTYPE_512\n");
         } else if (block.compare("1024") == 0) {
             job.blockType = MUM_BLOCKTYPE_1024;
-            printf("block type is MUM_BLOCKTYPE_1024\n");
         } else if (block.compare("2048") == 0) {
             job.blockType = MUM_BLOCKTYPE_2048;
-            printf("block type is MUM_BLOCKTYPE_2048\n");
         } else if (block.compare("4096") == 0) {
             job.blockType = MUM_BLOCKTYPE_4096;
-            printf("block type is MUM_BLOCKTYPE_4096\n");
         } else {
             printf("unknown block type: %s\n", block.c_str());
             return 0;
