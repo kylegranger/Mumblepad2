@@ -81,6 +81,7 @@ EMumError CMumblepadMt::Encrypt(uint8_t *src, uint8_t *dst, uint32_t length, uin
         mThreads[i]->mEncryptLength = 0;
 
     uint32_t blocksPerJob = MUM_MAX_BYTES_PER_JOB / mMumInfo->plaintextBlockSize;
+    int id = 1;
     while (length > 0)
     {
         TMumJob job;
@@ -92,6 +93,7 @@ EMumError CMumblepadMt::Encrypt(uint8_t *src, uint8_t *dst, uint32_t length, uin
             plaintextSize = length;
         encryptedSize = plaintextSize * mMumInfo->encryptedBlockSize / mMumInfo->plaintextBlockSize;
 
+
         length -= plaintextSize;
         job.state = MUM_JOB_STATE_NONE;
         job.type = MUM_JOB_TYPE_ENCRYPT;
@@ -99,6 +101,7 @@ EMumError CMumblepadMt::Encrypt(uint8_t *src, uint8_t *dst, uint32_t length, uin
         job.dst = dst;
         job.length = plaintextSize;
         job.seqNum = seqNum;
+        job.id = id++;
 
         // Update pointers;
         src += plaintextSize;
@@ -154,6 +157,7 @@ EMumError CMumblepadMt::Decrypt(uint8_t *src, uint8_t *dst, uint32_t length, uin
 
     *outlength = 0;
     uint32_t blocksPerJob = MUM_MAX_BYTES_PER_JOB / mMumInfo->encryptedBlockSize;
+    int id = 1;
     while (length > 0)
     {
         TMumJob job;
@@ -172,6 +176,7 @@ EMumError CMumblepadMt::Decrypt(uint8_t *src, uint8_t *dst, uint32_t length, uin
         job.dst = dst;
         job.length = encryptedSize;
         job.seqNum = 0;
+        job.id = id++;
 
         // Update pointers;
         src += encryptedSize;

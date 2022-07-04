@@ -46,6 +46,7 @@ typedef struct TMumJob
 {
     EMumJobState state;
     EMumJobType type;
+    int id;
     uint8_t *src;
     uint8_t *dst;
     uint32_t length;

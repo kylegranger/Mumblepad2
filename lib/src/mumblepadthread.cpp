@@ -62,6 +62,7 @@ CMumblepadThread::~CMumblepadThread()
         delete mPrng;
         mPrng = nullptr;
     }
+    delete mThreadHandle;
 }
 
 void CMumblepadThread::Stop()
@@ -244,6 +245,7 @@ void CMumblepadThread::Run()
 {
     mRunning = true;
     mJob.state = MUM_JOB_STATE_DONE;
+    EMumError error;
     while (mRunning)
     {
         if (mJob.state != MUM_JOB_STATE_ASSIGNED)
@@ -256,12 +258,18 @@ void CMumblepadThread::Run()
         switch (mJob.type)
         {
         case MUM_JOB_TYPE_ENCRYPT:
-            Encrypt(mJob.src, mJob.dst, mJob.length, &mJob.outlength, mJob.seqNum);
+            error = Encrypt(mJob.src, mJob.dst, mJob.length, &mJob.outlength, mJob.seqNum);
+            if (error != MUM_ERROR_OK) {
+                printf("error: Encrypt id %d outlength %d, mJob.length %d, error %d\n", mJob.id, mJob.outlength, mJob.length, error);
+            }
             mEncryptLength += mJob.outlength;
             break;
 
         case MUM_JOB_TYPE_DECRYPT:
-            Decrypt(mJob.src, mJob.dst, mJob.length, &mJob.outlength);
+            error = Decrypt(mJob.src, mJob.dst, mJob.length, &mJob.outlength);
+            if (error != MUM_ERROR_OK) {
+                printf("error: Decrypt id %d outlength %d, mJob.length %d, error %d\n", mJob.id, mJob.outlength, mJob.length, error);
+            }
             mDecryptLength += mJob.outlength;
             break;
         default:
