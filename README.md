@@ -5,8 +5,39 @@ The project is the spiritual successor to Mumblepad.
 - now ported to Linux
 - MIT license
 - cmake build system
-- crc32 for checksum
 - demo app that encrypts and decrypts files
+
+
+## Mumblepad Block Cipher
+
+This is a symmetric-key block cipher, with a key size 4096 bytes, 32768 bits.
+
+The main features:
+- a relatively large 4096-byte key.
+- padding of plaintext blocks with random number bytes, so different encrypted blocks contain same plaintext.
+- no requirement of a block cipher mode, thus parallelizable.
+- implementation on GPU, in addition to CPU.
+- may work with 6 different block sizes, ranging from 128 to 4096 bytes.
+- the multi-threaded implementation encrypts or decrypts @ 210MB/s on laptop.
+
+The specification may be found in the doc folder.
+
+Encryption and decryption, runs on either CPU or GPU, may run multi-threaded on CPU.  There are eight rounds, two passes -- diffuse, confuse -- per round. There are six different block sizes (mutually exclusive): 128, 256, 512, 1024, 2048, 4096 bytes.
+
+Runs on GPU with OpenGL or OpenGL ES 2.0; encryption and decryption operations implemented in fragment shaders.
+
+Encrypted blocks containing same plaintext are different, due to small amount of per-block random number padding. Encrypted block also contain a 16-bit length, 16-bit sequence number, and 32-bit checksum.  Resulting plaintext is 87.5% to 97.65% of total bytes, depending on block size.
+
+The multi-threaded implementation can encrypt or decrypt 210MB per second on an HP ZBook 17 (Gen1).
+
+
+
+
+## Future directions
+- hash semi-large key files (e.g., 1-5 MB images) to deterministically create a 4096-byte key; right now, we use whatever the first 4K bytes are in the keyfile.
+- port back to Windows, using cmake system.
+- investigate WebGPU render shaders or compute shaders, running at full GPU speed in a browser
+- further optimizations
 
 # Building
 
@@ -42,9 +73,7 @@ And then
 
 This is a demo application that encrypts and decrypts files using a given key.
 
-And the moment
 
-Usage
 ```
 Usage of mpad:
    mpad encrypt|decrypt [options]
@@ -78,7 +107,7 @@ using output file test.jpg.mu1
 -rw-rw-r-- 1 ader ader 727168 Jul  4 13:02 test.jpg.mu1
 ```
 
-Using a larger block results is a slighly smaller file becuase there are less padding bytes per block.
+Using a larger block results is a slighly smaller file because there are less padding bytes per block.
 ```
 $ mpad/mpad encrypt -k key.bin -i test.jpg -b 2048
 keyfile: key.bin
@@ -88,16 +117,12 @@ using output file test.jpg.mu5
 -rw-rw-r-- 1 ader ader 653312 Jul  4 13:04 test.jpg.mu5
 ```
 
-Decrypt goes like this
+Decrypt goes like this:
 ```
 mpad/mpad decrypt -k key.bin -i test.jpg.mu5
 ```
 
-You will get the same result regardless of engine uses.  You could encrypt with with the gl engine and decrypt with the mt engine -- the resulting decrypted file will still match the original.
-
-```
-$ mpad/mpad encrypt -k key.bin -i test.jpg -b 1024 -e gl
-```
+You will get the same result regardless of which render engine you use.  You could encrypt with with the gl engine and decrypt with the mt engine -- the resulting decrypted file will still match the original.
 
 
 # test
