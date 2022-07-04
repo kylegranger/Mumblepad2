@@ -67,6 +67,7 @@ typedef enum EMumError {
 } EMumError;
 
 typedef enum EMumBlockType {
+    MUM_BLOCKTYPE_INVALID = 0,
     // maximum encrypt size is 112 bytes
     MUM_BLOCKTYPE_128 = 1,
     // maximum encrypt size is 240 bytes
@@ -108,9 +109,12 @@ extern EMumError MumEncryptedSize(void *me, uint32_t plaintextSize, uint32_t *en
 // .mu4 = 1024-byte block
 // .mu5 = 2048-byte block
 // .mu6 = 4096-byte block
-extern EMumError MumCreateEncryptedFileName(EMumBlockType blockType, const char *infilename, char *outfilename, size_t outlength);
+extern EMumError MumCreateEncryptedFileName(EMumBlockType blockType, const char *plaintextname, char *encryptname, size_t outlength);
 // returns original filename (stripped of Mumblepad extension), plus block type used.
-extern EMumError MumGetInfoFromEncryptedFileName(char *infilename, EMumBlockType *blockType, char *outfilename, size_t outlength);
+extern EMumError MumGetInfoFromEncryptedFileName(const char *encryptname, EMumBlockType *blockType, char *decryptname, size_t outlength);
+// just returns block type, if exists in file extension; returns invalid block if not found
+EMumBlockType MumGetBlockTypeFromEncryptedFileName(const char *encryptname);
+
 
 #endif
 

@@ -1051,10 +1051,10 @@ bool doMultiEngineTests()
     }
 
     if (!doMultiEngineTest(
-            MUM_ENGINE_TYPE_CPU,
+            MUM_ENGINE_TYPE_CPU_MT,
             MUM_ENGINE_TYPE_GPU_B,
             MUM_BLOCKTYPE_4096,
-            "CPU + GPUB"))
+            "MT + GPUB"))
         return false;
 
     return true;
@@ -1081,14 +1081,14 @@ int main(int argc, char *argv[])
     if (!loadTestFiles())
         result = -1;
 
-    // if (!doTests())
-    //     result = -1;
+    if (!doTests())
+        result = -1;
 
     if (!doProfilings())
         result = -1;
 
-    // if (!doMultiEngineTests() )
-    // return -1;
+    if (!doMultiEngineTests() )
+        result = -1;
 
     if (result != -1)
         printf("Success!!! Done!!!\n");

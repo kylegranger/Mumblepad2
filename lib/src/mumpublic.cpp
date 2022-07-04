@@ -130,20 +130,28 @@ void *MumCreateEngine(EMumEngineType engineType, EMumBlockType blockType, EMumPa
     return me;
 }
 
-EMumError MumCreateEncryptedFileName(EMumBlockType blockType, const char *infilename, char *outfilename, size_t outlength)
+EMumError MumCreateEncryptedFileName(EMumBlockType blockType, const char *plaintextname, char *encryptname, size_t outlength)
 {
-    sprintf(outfilename, "%s.mu%d", infilename, blockType);
+    if (outlength < strlen(plaintextname) + 5) {
+        return MUM_ERROR_LENGTH_TOO_SMALL;
+    }
+    sprintf(encryptname, "%s.mu%d", plaintextname, blockType);
     return MUM_ERROR_OK;
 }
 
-EMumError MumGetInfoFromEncryptedFileName(const char *infilename, EMumBlockType *blockType, char *outfilename, size_t outlength)
+EMumError MumGetInfoFromEncryptedFileName(const char *encryptname, EMumBlockType *blockType, char *decryptname, size_t outlength)
 {
-    size_t len = strlen(infilename);
-    if (len < 4)
+    size_t len = strlen(encryptname);
+    if (len < 4) {
         return MUM_ERROR_INVALID_FILE_EXTENSION;
+    }
+
+    if (outlength < len - 3) {
+        return MUM_ERROR_LENGTH_TOO_SMALL;
+    }
 
     char ext[8];
-    memcpy(ext, &infilename[len - 4], 4);
+    memcpy(ext, &encryptname[len - 4], 4);
     ext[4] = 0;
 
     if (!strcmp(ext, ".mu1"))
@@ -161,10 +169,36 @@ EMumError MumGetInfoFromEncryptedFileName(const char *infilename, EMumBlockType 
     else
         return MUM_ERROR_INVALID_FILE_EXTENSION;
 
-    if (outlength < len - 3)
-        return MUM_ERROR_LENGTH_TOO_SMALL;
 
-    memcpy(outfilename, infilename, len - 4);
-    outfilename[len - 4] = 0;
+    memcpy(decryptname, encryptname, len - 4);
+    decryptname[len - 4] = 0;
     return MUM_ERROR_OK;
+}
+
+EMumBlockType MumGetBlockTypeFromEncryptedFileName(const char *encryptname)
+{
+    EMumBlockType blockType = MUM_BLOCKTYPE_INVALID;
+    size_t len = strlen(encryptname);
+    if (len < 5) {
+        return blockType;
+    }
+
+    char ext[8];
+    memcpy(ext, &encryptname[len - 4], 4);
+    ext[4] = 0;
+
+    if (!strcmp(ext, ".mu1"))
+        blockType = MUM_BLOCKTYPE_128;
+    else if (!strcmp(ext, ".mu2"))
+        blockType = MUM_BLOCKTYPE_256;
+    else if (!strcmp(ext, ".mu3"))
+        blockType = MUM_BLOCKTYPE_512;
+    else if (!strcmp(ext, ".mu4"))
+        blockType = MUM_BLOCKTYPE_1024;
+    else if (!strcmp(ext, ".mu5"))
+        blockType = MUM_BLOCKTYPE_2048;
+    else if (!strcmp(ext, ".mu6"))
+        blockType = MUM_BLOCKTYPE_4096;
+
+    return blockType;
 }

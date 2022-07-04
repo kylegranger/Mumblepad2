@@ -41,18 +41,26 @@ typedef struct TJob {
 } TJob;
 
 void printUsage() {
-    printf("Usage of mpad:\n");
+    printf("\nUsage of mpad:\n");
     printf("   mpad encrypt|decrypt [options]\n");
     printf("   Options:\n");
-    printf("      -i <input-file> \n");
-    printf("      -o <input-file> \n");
-    printf("      -k <key-file> \n");
-    printf("      -e cpu | mt | gl \n");
-    printf("         single-threaded, multi-threaded, or OpenGL\n");
+    printf("      -i <input-file> : required\n");
+    printf("      -o <output-file> \n");
+    printf("         is optional; if missing, and preferred, mpad will auto create file name\n");
+    printf("         encrypt: appending mu1|mu2|mu3|mu4|mu5|mu6 extension to input file name\n");
+    printf("         decrypt: strip the  mu1|mu2|mu3|mu4|mu5|mu6 extension from input file\n");
+    printf("         (encrypted name), to derive original file name\n");
+    printf("      -k <key-file> : required\n");
+    printf("      -e <engine-type> :: [ cpu | mt | gl | gl8 ]\n");
+    printf("         single-threaded, multi-threaded, OpenGL single stage, OpenGL with 8 stages\n");
     printf("         is optional, default is cpu\n");
-    printf("      -b 128 | 256 | 512 | 1024 | 2048 | 4096 \n");
+    printf("      -b <block-size>  : [ 128 | 256 | 512 | 1024 | 2048 | 4096 ]\n");
     printf("         this is the block size\n");
-    printf("         is optional for encrypt, default is 128\n");
+    printf("         is optional for encrypt & decrypt, default is 128\n");
+    printf("         if decrypt input file name has extension mu1|mu2|mu3|mu4|mu5|mu6, \n");
+    printf("         the extension will determine the block size used for decryption.\n");
+    printf("         gl8 only uses blocks of size 4096, and will override a block \n");
+    printf("         size in the command line\n\n");
 }
 
 bool parseCommandLine(int argc, char *argv[], TJob &job) {
@@ -69,8 +77,10 @@ bool parseCommandLine(int argc, char *argv[], TJob &job) {
         return 0;
     }
 
-    std::string engine = "cpu";
-    std::string block = "128";
+    std::string engine;
+    std::string block;
+    job.engineType = MUM_ENGINE_TYPE_CPU;
+    job.blockType = MUM_BLOCKTYPE_INVALID;
     job.numThreads = 8;
 
     for (int i = 2; i < argc; i+= 2) {
@@ -100,50 +110,100 @@ bool parseCommandLine(int argc, char *argv[], TJob &job) {
         printf("no input file specified\n");
         return false;
     }
-    if (job.outfile.length() == 0) {
-        printf("no output file specified\n");
-        return false;
-    }
     if (job.keyfile.length() == 0) {
         printf("no keyfile file specified\n");
         return false;
     }
 
-    if (engine.compare("cpu") == 0) {
-        job.engineType = MUM_ENGINE_TYPE_CPU;
-        printf("engine type is MUM_ENGINE_TYPE_CPU\n");
-    } else if (engine.compare("mp") == 0) {
-        job.engineType = MUM_ENGINE_TYPE_CPU_MT;
-        printf("engine type is MUM_ENGINE_TYPE_CPU_MT\n");
-    } else if (engine.compare("gl") == 0) {
-        job.engineType = MUM_ENGINE_TYPE_GPU_A;
-        printf("engine type is MUM_ENGINE_TYPE_GPU_A\n");
-    } else {
-        printf("unknown engine type: %s\n", engine.c_str());
-        return 0;
+    if (engine.length() > 0) {
+        if (engine.compare("cpu") == 0) {
+            job.engineType = MUM_ENGINE_TYPE_CPU;
+            printf("engine type is MUM_ENGINE_TYPE_CPU\n");
+        } else if (engine.compare("mp") == 0) {
+            job.engineType = MUM_ENGINE_TYPE_CPU_MT;
+            printf("engine type is MUM_ENGINE_TYPE_CPU_MT\n");
+        } else if (engine.compare("gl") == 0) {
+            job.engineType = MUM_ENGINE_TYPE_GPU_A;
+            printf("engine type is MUM_ENGINE_TYPE_GPU_A\n");
+        } else if (engine.compare("gl8") == 0) {
+            job.engineType = MUM_ENGINE_TYPE_GPU_B;
+            printf("engine type is MUM_ENGINE_TYPE_GPU_B\n");
+        } else {
+            printf("unknown engine type: %s\n", engine.c_str());
+            return 0;
+        }
     }
-    if (block.compare("128") == 0) {
-        job.blockType = MUM_BLOCKTYPE_128;
-        printf("block type is MUM_BLOCKTYPE_128\n");
-    } else if (block.compare("256") == 0) {
-        job.blockType = MUM_BLOCKTYPE_256;
-        printf("block type is MUM_BLOCKTYPE_256\n");
-    } else if (block.compare("512") == 0) {
-        job.blockType = MUM_BLOCKTYPE_512;
-        printf("block type is MUM_BLOCKTYPE_512\n");
-    } else if (block.compare("1024") == 0) {
-        job.blockType = MUM_BLOCKTYPE_1024;
-        printf("block type is MUM_BLOCKTYPE_1024\n");
-    } else if (block.compare("2048") == 0) {
-        job.blockType = MUM_BLOCKTYPE_2048;
-        printf("block type is MUM_BLOCKTYPE_2048\n");
-    } else if (block.compare("4096") == 0) {
-        job.blockType = MUM_BLOCKTYPE_4096;
-        printf("block type is MUM_BLOCKTYPE_4096\n");
-    } else {
-        printf("unknown block type: %s\n", block.c_str());
-        return 0;
+
+    if (block.length() > 0) {
+        if (block.compare("128") == 0) {
+            job.blockType = MUM_BLOCKTYPE_128;
+            printf("block type is MUM_BLOCKTYPE_128\n");
+        } else if (block.compare("256") == 0) {
+            job.blockType = MUM_BLOCKTYPE_256;
+            printf("block type is MUM_BLOCKTYPE_256\n");
+        } else if (block.compare("512") == 0) {
+            job.blockType = MUM_BLOCKTYPE_512;
+            printf("block type is MUM_BLOCKTYPE_512\n");
+        } else if (block.compare("1024") == 0) {
+            job.blockType = MUM_BLOCKTYPE_1024;
+            printf("block type is MUM_BLOCKTYPE_1024\n");
+        } else if (block.compare("2048") == 0) {
+            job.blockType = MUM_BLOCKTYPE_2048;
+            printf("block type is MUM_BLOCKTYPE_2048\n");
+        } else if (block.compare("4096") == 0) {
+            job.blockType = MUM_BLOCKTYPE_4096;
+            printf("block type is MUM_BLOCKTYPE_4096\n");
+        } else {
+            printf("unknown block type: %s\n", block.c_str());
+            return 0;
+        }
     }
+
+    if (job.outfile.length() == 0) {
+        if (job.doEncrypt) {
+            // auto generate output name based on input name and block size
+            size_t len = job.infile.length() + 8;
+            char *filename = (char*) malloc(len);
+            MumCreateEncryptedFileName(job.blockType, job.infile.c_str(), filename, len);
+            job.outfile = filename;
+            printf("using output file %s\n", job.outfile.c_str());
+        } else {
+            // auto generate output name based on input name and block size
+            size_t len = job.infile.length();
+            char *filename = (char*) malloc(len);
+            EMumBlockType blockType;
+            auto error = MumGetInfoFromEncryptedFileName(job.infile.c_str(), &blockType, filename, len);
+            if (error == MUM_ERROR_OK) {
+                job.outfile = filename;
+                job.blockType = blockType;
+                free(filename);
+                printf("using output file %s\n", job.outfile.c_str());
+            } else {
+                free(filename);
+                printf("missing output file\n");
+                return false;
+            }
+        }
+    }
+
+    // if blocktype still not set, & decrypt & .mux file extension,
+    // use that for block type
+    // else, use default 128
+    if (job.blockType == MUM_BLOCKTYPE_INVALID) {
+        auto blockType = MumGetBlockTypeFromEncryptedFileName(job.infile.c_str());
+        if (blockType = MUM_BLOCKTYPE_INVALID) {
+            job.blockType = blockType;
+        } 
+        if (job.blockType == MUM_BLOCKTYPE_INVALID) {
+            job.blockType = MUM_BLOCKTYPE_128;
+        }
+    }
+
+    // gl8 can only accept block size 4096
+    if (job.engineType == MUM_ENGINE_TYPE_GPU_B) {
+        job.blockType == MUM_BLOCKTYPE_4096;
+    }
+
     return true;
 }
 
