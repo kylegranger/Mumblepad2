@@ -98,11 +98,11 @@ EMumBlockType firstProfilingBlockTypeList[TEST_NUM_ENGINES] = {
 
 // We'll only profile 4K block size for GPU-A
 uint32_t largeBlockSize[TEST_NUM_ENGINES] = {
-    MAX_TEST_SIZE/4,
+    MAX_TEST_SIZE / 4,
     MAX_TEST_SIZE,
 #ifdef USE_OPENGL
-    MAX_TEST_SIZE/16,
-    MAX_TEST_SIZE/16
+    MAX_TEST_SIZE / 16,
+    MAX_TEST_SIZE / 16
 #endif
 };
 
@@ -140,11 +140,13 @@ std::string paddingName[TEST_NUM_PADDING_TYPES] = {
 
 #endif
 
-void dumpBlock(const char *msg, uint8_t *a, int size) {
+void dumpBlock(const char *msg, uint8_t *a, int size)
+{
     printf("%s", msg);
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++)
+    {
         printf("%02x", a[i]);
-        if ((i%16) == 15) 
+        if ((i % 16) == 15)
             printf("\n");
     }
 }
@@ -554,7 +556,8 @@ bool testSimpleBlocks(void *engine, char *engineDesc)
     {
         error = MumEncryptBlock(engine, random, encrypt, plaintextBlockSize, seqOut++);
     }
-    if (error != MUM_ERROR_OK) {
+    if (error != MUM_ERROR_OK)
+    {
         printf("MumEncryptBlock error %d\n", error);
         return false;
     }
@@ -628,14 +631,14 @@ bool testRandomlySizedBlocks(void *engine, char *engineDesc, EMumPaddingType pad
     error = MumPlaintextBlockSize(engine, &plaintextBlockSize);
     error = MumEncryptedBlockSize(engine, &encryptedBlockSize);
 
-    int maxsize = 512*1024;
+    int maxsize = 512 * 1024;
     uint8_t *plaintext = new uint8_t[maxsize + MUM_MAX_BLOCK_SIZE];
-    uint8_t *encrypt = new uint8_t[maxsize*5/4];
+    uint8_t *encrypt = new uint8_t[maxsize * 5 / 4];
     uint8_t *decrypt = new uint8_t[maxsize + MUM_MAX_BLOCK_SIZE];
     for (int test = 0; test < NUM_RANDOMSIZED_ITERATIONS; test++)
     {
         // Pick random number between 1 and 512*1024
-        uint32_t plaintextSize = (rand() & (maxsize-1)) + 1;
+        uint32_t plaintextSize = (rand() & (maxsize - 1)) + 1;
 
         // Alternate between random fill and 32-bit int sequential fill
         if (test & 1)
@@ -645,19 +648,22 @@ bool testRandomlySizedBlocks(void *engine, char *engineDesc, EMumPaddingType pad
 
         uint32_t encryptedLen = 0;
         error = MumEncrypt(engine, plaintext, encrypt, plaintextSize, &encryptedLen, 0);
-        if (error != MUM_ERROR_OK) {
+        if (error != MUM_ERROR_OK)
+        {
             printf("testRandomlySizedBlocks MumEncrypt error %d\n", error);
             return false;
         }
 
         uint32_t decryptedLen = 0;
         error = MumDecrypt(engine, encrypt, decrypt, encryptedLen, &decryptedLen);
-        if (error != MUM_ERROR_OK) {
+        if (error != MUM_ERROR_OK)
+        {
             printf("testRandomlySizedBlocks error %d, encryptedLen %d\n", error, encryptedLen);
             return false;
         }
 
-        if (paddingType == MUM_PADDING_TYPE_ON && plaintextSize != decryptedLen) {
+        if (paddingType == MUM_PADDING_TYPE_ON && plaintextSize != decryptedLen)
+        {
             printf("testRandomlySizedBlocks plaintextSize != decrypted, %d %d\n", plaintextSize, decryptedLen);
             return false;
         }
@@ -710,7 +716,7 @@ bool profileLargeBlocks(void *engine, char *engineDesc, uint32_t size)
     printf("profileLargeBlocks: engine %s, encrypt size %d, total bytes %d\n",
            engineDesc, plaintextBlockSize, plaintextSize);
     printf("   encrypt time %f sec, MB/sec %f \n", encryptTime, mb / encryptTime);
-    printf("   decrypt time %f sec, MB/sec %f\n\n", decryptTime, mb / decryptTime);
+    printf("   decrypt time %f sec, MB/sec %f\n", decryptTime, mb / decryptTime);
 
     if (!blockChecker(largePlaintext, largeDecrypt, plaintextSize))
     {
@@ -763,103 +769,12 @@ bool doProfiling(void *engine, char *engineDesc, uint32_t size)
     uint8_t clavier[MUM_KEY_SIZE];
     EMumError error;
 
-    printf("  doProfiling %s\n", engineDesc);
+    printf("doProfiling %s\n", engineDesc);
 
     fillRandomly(clavier, MUM_KEY_SIZE);
     error = MumInitKey(engine, clavier);
     if (!profileLargeBlocks(engine, engineDesc, size))
         return false;
-    return true;
-}
-
-bool multiTest(void *engine1, void *engine2)
-{
-    EMumError error;
-    uint32_t decryptSize;
-    uint32_t encryptSize;
-    uint32_t outlength;
-
-    uint32_t encryptedBlockSize, plaintextBlockSize;
-    error = MumPlaintextBlockSize(engine1, &plaintextBlockSize);
-    error = MumEncryptedBlockSize(engine1, &encryptedBlockSize);
-
-    decryptSize = 28657;
-    error = MumEncryptedSize(engine1, decryptSize, &encryptSize);
-    if (error != MUM_ERROR_OK)
-        return false;
-
-    uint8_t *src = new uint8_t[decryptSize];
-    uint8_t *dec1 = new uint8_t[decryptSize + plaintextBlockSize];
-    uint8_t *dec2 = new uint8_t[decryptSize + plaintextBlockSize];
-    uint8_t *enc1 = new uint8_t[encryptSize];
-    uint8_t *enc2 = new uint8_t[encryptSize];
-    for (uint32_t i = 0; i < decryptSize; i++)
-        src[i] = (uint8_t)i;
-
-    error = MumEncrypt(engine1, src, enc1, decryptSize, &outlength, 0);
-    if (error != MUM_ERROR_OK)
-        return false;
-    if (outlength != encryptSize)
-        return false;
-
-    error = MumEncrypt(engine2, src, enc2, decryptSize, &outlength, 0);
-    if (error != MUM_ERROR_OK)
-        return false;
-    if (outlength != encryptSize)
-        return false;
-
-    memset(dec1, 0, encryptSize);
-    error = MumDecrypt(engine1, enc1, dec1, encryptSize, &outlength);
-    if (error != MUM_ERROR_OK)
-        return false;
-    if (outlength != decryptSize)
-        return false;
-
-    memset(dec2, 0, encryptSize);
-    error = MumDecrypt(engine2, enc2, dec2, encryptSize, &outlength);
-    if (error != MUM_ERROR_OK)
-        return false;
-    if (outlength != decryptSize)
-        return false;
-
-    if (memcmp(src, dec1, decryptSize) != 0)
-    {
-        printf("FAILED multiTest!\n");
-        return false;
-    }
-    if (memcmp(src, dec2, decryptSize) != 0)
-    {
-        printf("FAILED multiTest!\n");
-        return false;
-    }
-
-    printf("SUCCESS multiTest!\n");
-    return true;
-}
-
-bool doMultiEngineTest(EMumEngineType engineType1, EMumEngineType engineType2,
-                       EMumBlockType blockType, std::string testString)
-{
-    uint8_t clavier[MUM_KEY_SIZE];
-    EMumError error;
-
-    fillRandomly(clavier, MUM_KEY_SIZE);
-
-    void *engine1 = MumCreateEngine(engineType1, blockType, MUM_PADDING_TYPE_ON, 0);
-    error = MumInitKey(engine1, clavier);
-
-    void *engine2 = MumCreateEngine(engineType2, blockType, MUM_PADDING_TYPE_ON, 0);
-    error = MumInitKey(engine2, clavier);
-
-    if (!multiTest(engine1, engine2))
-        return false;
-
-    uint32_t encryptedBlockSize;
-    error = MumEncryptedBlockSize(engine1, &encryptedBlockSize);
-    printf("SUCCESS doMultiEngineTest, engine %s\n", testString.c_str());
-
-    MumDestroyEngine(engine1);
-    MumDestroyEngine(engine2);
     return true;
 }
 
@@ -885,10 +800,8 @@ bool doTests()
     return true;
 }
 
-
 bool doProfilings()
 {
-    printf("\n");
     for (int engineIndex = 0; engineIndex < TEST_NUM_ENGINES; engineIndex++)
     {
         for (int paddingIndex = 0; paddingIndex < TEST_NUM_PADDING_TYPES; paddingIndex++)
@@ -913,38 +826,6 @@ bool doProfilings()
     return true;
 }
 
-bool doMultiEngineTests()
-{
-    for (int blockType = MUM_BLOCKTYPE_128; blockType <= MUM_BLOCKTYPE_4096; blockType++)
-    {
-#ifdef USE_OPENGL
-        if (!doMultiEngineTest(
-                MUM_ENGINE_TYPE_CPU,
-                MUM_ENGINE_TYPE_GPU_A,
-                (EMumBlockType)blockType,
-                "CPU + GPUA"))
-            return false;
-#else
-        if (!doMultiEngineTest(
-                MUM_ENGINE_TYPE_CPU,
-                MUM_ENGINE_TYPE_CPU_MT,
-                (EMumBlockType)blockType,
-                "CPU + MY"))
-            return false;
-#endif
-    }
-
-#ifdef USE_OPENGL
-    if (!doMultiEngineTest(
-            MUM_ENGINE_TYPE_CPU_MT,
-            MUM_ENGINE_TYPE_GPU_B,
-            MUM_BLOCKTYPE_4096,
-            "MT + GPUB"))
-        return false;
-#endif
-    return true;
-}
-
 int main(int argc, char *argv[])
 {
     int result = 0;
@@ -966,9 +847,6 @@ int main(int argc, char *argv[])
         result = -1;
 
     if (!doProfilings())
-        result = -1;
-
-    if (!doMultiEngineTests() )
         result = -1;
 
     if (result != -1)
