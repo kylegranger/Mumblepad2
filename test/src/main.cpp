@@ -47,26 +47,26 @@ uint8_t *largeDecrypt = nullptr;
 
 // original files
 std::string testfile[NUM_TEST_FILES] = {
-    "../testfiles/image.jpg",
-    "../testfiles/constitution.pdf"};
+    "testfiles/image.jpg",
+    "testfiles/constitution.pdf"};
 
 // encrypted files
 std::string testfileE[NUM_TEST_FILES] = {
-    "../testfiles/imageEncrypted",
-    "../testfiles/constitutionEncrypted"};
+    "testfiles/imageEncrypted",
+    "testfiles/constitutionEncrypted"};
 
 // decrypted files
 std::string testfileD[NUM_TEST_FILES] = {
-    "../testfiles/imageDecrypted.jpg",
-    "../testfiles/constitutionDecrypted.pdf"};
+    "testfiles/imageDecrypted.jpg",
+    "testfiles/constitutionDecrypted.pdf"};
 
 // #define CREATE_REFERENCE_FILES
 #define NUM_REFERENCE_FILES 2
-std::string referenceFileKey = "../referencefiles/key.bin";
-std::string referenceTempFile = "../referencefiles/temp";
+std::string referenceFileKey = "referencefiles/key.bin";
+std::string referenceTempFile = "referencefiles/temp";
 std::string referenceFiles[NUM_REFERENCE_FILES] = {
-    "../referencefiles/image.jpg",
-    "../referencefiles/constitution.pdf"};
+    "referencefiles/image.jpg",
+    "referencefiles/constitution.pdf"};
 
 #ifdef USE_OPENGL
 #define TEST_NUM_ENGINES 4
@@ -979,7 +979,7 @@ bool createReferenceFilesFromEngine(void *engine, EMumBlockType blockType)
 
 bool createReferenceFiles()
 {
-    char *referenceFileKey = "..\\referencefiles\\key.bin";
+    char *referenceFileKey = "referencefiles/key.bin";
 
     // create key
     uint8_t clavier[MUM_KEY_SIZE];
