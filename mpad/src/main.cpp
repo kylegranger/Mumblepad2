@@ -83,6 +83,7 @@ bool parseCommandLine(int argc, char *argv[], TJob &job) {
     job.blockType = MUM_BLOCKTYPE_INVALID;
     job.numThreads = 8;
 
+    // parse all the flags
     for (int i = 2; i < argc; i+= 2) {
         std::string flag = argv[i];
         if (flag.compare("-i") == 0) {
@@ -106,6 +107,7 @@ bool parseCommandLine(int argc, char *argv[], TJob &job) {
         }
     }
 
+    // check if anything required is missing
     if (job.infile.length() == 0) {
         printf("no input file specified\n");
         return false;
@@ -115,6 +117,8 @@ bool parseCommandLine(int argc, char *argv[], TJob &job) {
         return false;
     }
 
+
+    // parse the strings now
     if (engine.length() > 0) {
         if (engine.compare("cpu") == 0) {
             job.engineType = MUM_ENGINE_TYPE_CPU;
@@ -133,7 +137,6 @@ bool parseCommandLine(int argc, char *argv[], TJob &job) {
             return 0;
         }
     }
-
     if (block.length() > 0) {
         if (block.compare("128") == 0) {
             job.blockType = MUM_BLOCKTYPE_128;
@@ -159,9 +162,14 @@ bool parseCommandLine(int argc, char *argv[], TJob &job) {
         }
     }
 
+    // set auto generated output names
     if (job.outfile.length() == 0) {
         if (job.doEncrypt) {
             // auto generate output name based on input name and block size
+            if (job.blockType == MUM_BLOCKTYPE_INVALID) {
+                // set block type to default in none passed in
+                job.blockType = MUM_BLOCKTYPE_128;
+            }
             size_t len = job.infile.length() + 8;
             char *filename = (char*) malloc(len);
             MumCreateEncryptedFileName(job.blockType, job.infile.c_str(), filename, len);
@@ -186,15 +194,18 @@ bool parseCommandLine(int argc, char *argv[], TJob &job) {
         }
     }
 
-    // if blocktype still not set, & decrypt & .mux file extension,
+    // if blocktype still not set, & decrypt & .mu1/2/3/4/5/6 file extension,
     // use that for block type
     // else, use default 128
     if (job.blockType == MUM_BLOCKTYPE_INVALID) {
-        auto blockType = MumGetBlockTypeFromEncryptedFileName(job.infile.c_str());
-        if (blockType = MUM_BLOCKTYPE_INVALID) {
-            job.blockType = blockType;
-        } 
-        if (job.blockType == MUM_BLOCKTYPE_INVALID) {
+        if (!job.doEncrypt) {
+            auto blockType = MumGetBlockTypeFromEncryptedFileName(job.infile.c_str());
+            if (blockType == MUM_BLOCKTYPE_INVALID) {
+                job.blockType = blockType;
+            } else {
+                job.blockType = MUM_BLOCKTYPE_128;
+            }
+        } else {
             job.blockType = MUM_BLOCKTYPE_128;
         }
     }
