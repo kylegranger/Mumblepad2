@@ -29,3 +29,9 @@ else()
         src/signal.cpp
     )
 endif()
+
+add_custom_command(TARGET mumblepad POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:mumblepad> ../../out/libmumblepad.a
+)
+
+
