@@ -60,13 +60,7 @@ std::string testfileD[NUM_TEST_FILES] = {
     "testfiles/imageDecrypted.jpg",
     "testfiles/constitutionDecrypted.pdf"};
 
-// #define CREATE_REFERENCE_FILES
-#define NUM_REFERENCE_FILES 2
-std::string referenceFileKey = "referencefiles/key.bin";
-std::string referenceTempFile = "referencefiles/temp";
-std::string referenceFiles[NUM_REFERENCE_FILES] = {
-    "referencefiles/image.jpg",
-    "referencefiles/constitution.pdf"};
+std::string keyfile = "testfiles/key.bin";
 
 #ifdef USE_OPENGL
 #define TEST_NUM_ENGINES 4
@@ -284,12 +278,10 @@ bool loadDeFiles(int index)
 bool testFileEncrypt(void *engine, char *engineDesc)
 {
     EMumError error;
-    uint8_t clavier[MUM_KEY_SIZE];
     uint32_t encryptedBlockSize;
 
     error = MumEncryptedBlockSize(engine, &encryptedBlockSize);
-    fillRandomly(clavier, MUM_KEY_SIZE);
-    error = MumInitKey(engine, clavier);
+    MumLoadKey(engine, keyfile.c_str());
     for (int i = 0; i < NUM_TEST_FILES; i++)
     {
         error = MumEncryptFile(engine, testfile[i].c_str(), testfileE[i].c_str());
@@ -323,61 +315,6 @@ bool testFileEncrypt(void *engine, char *engineDesc)
             return false;
         }
         printf("SUCCESS testFileEncrypt, engine %s: file %s\n", engineDesc, testfile[i].c_str());
-    }
-    return true;
-}
-
-bool testReferenceFileDecrypt(void *engine, char *engineDesc, EMumBlockType blockType)
-{
-    EMumError error;
-    uint32_t encryptedBlockSize;
-
-    error = MumEncryptedBlockSize(engine, &encryptedBlockSize);
-    if (error != MUM_ERROR_OK)
-        return false;
-    error = MumLoadKey(engine, referenceFileKey.c_str());
-    if (error != MUM_ERROR_OK)
-        return false;
-    for (int i = 0; i < NUM_REFERENCE_FILES; i++)
-    {
-        // Determine name of encrypted file
-        char encryptedname[512];
-        error = MumCreateEncryptedFileName(blockType, referenceFiles[i].c_str(), encryptedname, 512);
-        if (error != MUM_ERROR_OK)
-            return false;
-
-        // Decrypt file into temp file
-        error = MumDecryptFile(engine, encryptedname, referenceTempFile.c_str());
-        if (error != MUM_ERROR_OK)
-            return false;
-
-        size_t originalLength;
-        uint8_t *originalData = nullptr;
-        if (!loadFile(referenceFiles[i], &originalData, &originalLength))
-            return false;
-
-        size_t decryptedLength;
-        uint8_t *decryptedData = nullptr;
-        if (!loadFile(referenceTempFile, &decryptedData, &decryptedLength))
-            return false;
-
-        if (originalLength != decryptedLength)
-        {
-            printf("FAILED testReferenceFileDecrypt, length do not match: %zd %zd\n", originalLength, decryptedLength);
-            return false;
-        }
-
-        // printf("   compare original reference file with decrypted data, block size %d, size %zd\n", encryptedBlockSize, originalLength);
-        if (memcmp(originalData, decryptedData, originalLength) != 0)
-        {
-            printf("FAILED testReferenceFileDecrypt, engine %s\n", engineDesc);
-            return false;
-        }
-        printf("SUCCESS testReferenceFileDecrypt, engine %s, file %s\n", engineDesc, encryptedname);
-
-        // cleanup
-        free(originalData);
-        free(decryptedData);
     }
     return true;
 }
@@ -784,7 +721,7 @@ bool profileLargeBlocks(void *engine, char *engineDesc, uint32_t size)
     return true;
 }
 
-bool doTest(void *engine, char *engineDesc, EMumPaddingType paddingType, EMumBlockType blockType)
+void doTest(void *engine, char *engineDesc, EMumPaddingType paddingType, EMumBlockType blockType)
 {
     uint8_t clavier[MUM_KEY_SIZE];
     EMumError error;
@@ -794,7 +731,6 @@ bool doTest(void *engine, char *engineDesc, EMumPaddingType paddingType, EMumBlo
     if (!testUnitializedEngine(engine, engineDesc))
     {
         printf("failed testUnitializedEngine\n");
-        // return false;
     }
 
     fillRandomly(clavier, MUM_KEY_SIZE);
@@ -802,33 +738,23 @@ bool doTest(void *engine, char *engineDesc, EMumPaddingType paddingType, EMumBlo
     if (!testSimpleBlocks(engine, engineDesc))
     {
         printf("failed testSimpleBlocks\n");
-        // return false;
     }
     if (!testRandomlySizedBlocks(engine, engineDesc, paddingType))
     {
         printf("failed testRandomlySizedBlocks\n");
-        // return false;
     }
     if (!testEntropy(engine, engineDesc, paddingType))
     {
         printf("failed testEntropy\n");
-        // return false;
     }
     if (!testSubkeyEntropy(engine, engineDesc, paddingType))
     {
         printf("failed testSubkeyEntropy\n");
-        // return false;
     }
     if (!testFileEncrypt(engine, engineDesc))
     {
         printf("failed testFileEncrypt\n");
-        // return false;
     }
-    // if (paddingType == MUM_PADDING_TYPE_ON && !testReferenceFileDecrypt(engine, engineDesc, blockType)) {
-    //     printf("failed testReferenceFileDecrypt\n");
-    //     return false;
-    // }
-    return true;
 }
 
 bool doProfiling(void *engine, char *engineDesc, uint32_t size)
@@ -949,8 +875,7 @@ bool doTests()
                 MumEncryptedBlockSize(engine, &encryptedBlockSize);
                 char engineDesc[256];
                 sprintf(engineDesc, "%s:%s:blocksize-%u", engineName[engineIndex].c_str(), paddingName[paddingIndex].c_str(), encryptedBlockSize);
-                if (!doTest(engine, engineDesc, paddingList[paddingIndex], (EMumBlockType)blockType))
-                    return false;
+                doTest(engine, engineDesc, paddingList[paddingIndex], (EMumBlockType)blockType);
                 MumDestroyEngine(engine);
                 engine = NULL;
             }
@@ -959,57 +884,6 @@ bool doTests()
     return true;
 }
 
-#ifdef CREATE_REFERENCE_FILES
-bool createReferenceFilesFromEngine(void *engine, EMumBlockType blockType)
-{
-    EMumError error;
-
-    for (int i = 0; i < NUM_REFERENCE_FILES; i++)
-    {
-        char encryptedname[512];
-        error = MumCreateEncryptedFileName(blockType, referenceFiles[i], .c_str() encryptedname, 512);
-        if (error != MUM_ERROR_OK)
-            return false;
-        error = MumEncryptFile(engine, referenceFiles[i].c_str(), encryptedname);
-        if (error != MUM_ERROR_OK)
-            return false;
-    }
-    return true;
-}
-
-bool createReferenceFiles()
-{
-    char *referenceFileKey = "referencefiles/key.bin";
-
-    // create key
-    uint8_t clavier[MUM_KEY_SIZE];
-    srand(610);
-    fillRandomly(clavier, MUM_KEY_SIZE);
-
-    // write it to disk
-    size_t res;
-    FILE *f = fopen(referenceFileKey, "wb");
-    if (!f)
-        return false;
-    res = fwrite(clavier, 1, MUM_KEY_SIZE, f);
-    fclose(f);
-    if (res != MUM_KEY_SIZE)
-        return false;
-
-    for (int blockType = MUM_BLOCKTYPE_128; blockType <= MUM_BLOCKTYPE_4096; blockType++)
-    {
-        void *engine = MumCreateEngine(MUM_ENGINE_TYPE_CPU, (EMumBlockType)blockType, MUM_PADDING_TYPE_ON, TEST_MUM_NUM_THREADS);
-        EMumError error = MumLoadKey(engine, referenceFileKey);
-        if (error != MUM_ERROR_OK)
-            return false;
-        if (!createReferenceFilesFromEngine(engine, (EMumBlockType)blockType))
-            return false;
-        MumDestroyEngine(engine);
-        engine = NULL;
-    }
-    return true;
-}
-#endif
 
 bool doProfilings()
 {
@@ -1063,10 +937,6 @@ bool doMultiEngineTests()
 int main(int argc, char *argv[])
 {
     int result = 0;
-#ifdef CREATE_REFERENCE_FILES
-    if (createReferenceFiles())
-        return -1;
-#endif
 
 #ifdef USE_OPENGL
     printf("Testing library with OpenGL enabled\n");
